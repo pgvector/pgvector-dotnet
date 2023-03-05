@@ -1,0 +1,18 @@
+name: build
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ankane/setup-postgres@v1
+        with:
+          database: pgvector_dotnet_test
+          dev-files: true
+      - run: |
+          cd /tmp
+          git clone --branch v0.4.0 https://github.com/pgvector/pgvector.git
+          cd pgvector
+          make
+          sudo make install
+      - run: dotnet run
