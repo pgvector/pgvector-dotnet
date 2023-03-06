@@ -23,12 +23,24 @@ await using (var cmd = new NpgsqlCommand("CREATE TABLE items (embedding vector(3
 }
 ```
 
+Add a class to serialize
+
+```csharp
+public static class Pgvector
+{
+    public static string Serialize(float[] v)
+    {
+        return String.Concat("[", String.Join(",", v), "]");
+    }
+}
+```
+
 Insert a vector
 
 ```csharp
 await using (var cmd = new NpgsqlCommand("INSERT INTO items (embedding) VALUES ($1::vector)", conn))
 {
-    cmd.Parameters.AddWithValue("[1,1,1]");
+    cmd.Parameters.AddWithValue(Pgvector.Serialize(new float[] {1, 1, 1}));
     await cmd.ExecuteNonQueryAsync();
 }
 ```
@@ -38,7 +50,7 @@ Get the nearest neighbors
 ```csharp
 await using (var cmd = new NpgsqlCommand("SELECT * FROM items ORDER BY embedding <-> $1::vector LIMIT 5", conn))
 {
-    cmd.Parameters.AddWithValue("[1,1,1]");
+    cmd.Parameters.AddWithValue(Pgvector.Serialize(new float[] {1, 1, 1}));
     cmd.AllResultTypesAreUnknown = true;
 
     await using (var reader = await cmd.ExecuteReaderAsync())

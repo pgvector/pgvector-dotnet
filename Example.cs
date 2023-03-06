@@ -1,5 +1,13 @@
 using Npgsql;
 
+public static class Pgvector
+{
+    public static string Serialize(float[] v)
+    {
+        return String.Concat("[", String.Join(",", v), "]");
+    }
+}
+
 class Example
 {
     static async Task Main()
@@ -26,15 +34,15 @@ class Example
 
         await using (var cmd = new NpgsqlCommand("INSERT INTO items (embedding) VALUES ($1::vector), ($2::vector), ($3::vector)", conn))
         {
-            cmd.Parameters.AddWithValue("[1,1,1]");
-            cmd.Parameters.AddWithValue("[2,2,2]");
-            cmd.Parameters.AddWithValue("[1,1,2]");
+            cmd.Parameters.AddWithValue(Pgvector.Serialize(new float[] {1, 1, 1}));
+            cmd.Parameters.AddWithValue(Pgvector.Serialize(new float[] {2, 2, 2}));
+            cmd.Parameters.AddWithValue(Pgvector.Serialize(new float[] {1, 1, 2}));
             await cmd.ExecuteNonQueryAsync();
         }
 
         await using (var cmd = new NpgsqlCommand("SELECT * FROM items ORDER BY embedding <-> $1::vector LIMIT 5", conn))
         {
-            cmd.Parameters.AddWithValue("[1,1,1]");
+            cmd.Parameters.AddWithValue(Pgvector.Serialize(new float[] {1, 1, 1}));
             cmd.AllResultTypesAreUnknown = true;
 
             await using (var reader = await cmd.ExecuteReaderAsync())
