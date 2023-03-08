@@ -6,6 +6,11 @@ public static class Pgvector
     {
         return String.Concat("[", String.Join(",", v), "]");
     }
+
+    public static float[] Deserialize(string s)
+    {
+        return Array.ConvertAll(s.Substring(1, s.Length - 2).Split(","), v => float.Parse(v));
+    }
 }
 
 class Example
@@ -48,7 +53,7 @@ class Example
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
                 while (await reader.ReadAsync())
-                    Console.WriteLine(reader.GetString(0));
+                    Console.WriteLine(String.Join(",", Pgvector.Deserialize(reader.GetString(0))));
             }
         }
 

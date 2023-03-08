@@ -23,7 +23,7 @@ await using (var cmd = new NpgsqlCommand("CREATE TABLE items (embedding vector(3
 }
 ```
 
-Add a class to serialize
+Add a class to serialize vectors
 
 ```csharp
 public static class Pgvector
