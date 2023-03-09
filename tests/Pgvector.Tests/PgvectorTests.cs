@@ -31,21 +31,25 @@ public class Example
 
         await using (var cmd = new NpgsqlCommand("INSERT INTO items (embedding) VALUES ($1::vector), ($2::vector), ($3::vector)", conn))
         {
-            cmd.Parameters.AddWithValue(Vector.Serialize(new float[] {1, 1, 1}));
-            cmd.Parameters.AddWithValue(Vector.Serialize(new float[] {2, 2, 2}));
-            cmd.Parameters.AddWithValue(Vector.Serialize(new float[] {1, 1, 2}));
+            var embedding1 = new Vector(new float[] {1, 1, 1});
+            var embedding2 = new Vector(new float[] {2, 2, 2});
+            var embedding3 = new Vector(new float[] {1, 1, 2});
+            cmd.Parameters.AddWithValue(embedding1.ToString());
+            cmd.Parameters.AddWithValue(embedding2.ToString());
+            cmd.Parameters.AddWithValue(embedding3.ToString());
             await cmd.ExecuteNonQueryAsync();
         }
 
         await using (var cmd = new NpgsqlCommand("SELECT * FROM items ORDER BY embedding <-> $1::vector LIMIT 5", conn))
         {
-            cmd.Parameters.AddWithValue(Vector.Serialize(new float[] {1, 1, 1}));
+            var embedding = new Vector(new float[] {1, 1, 1});
+            cmd.Parameters.AddWithValue(embedding.ToString());
             cmd.AllResultTypesAreUnknown = true;
 
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
                 while (await reader.ReadAsync())
-                    Console.WriteLine(String.Join(",", Vector.Deserialize(reader.GetString(0))));
+                    Console.WriteLine((new Vector(reader.GetString(0))).ToString());
             }
         }
 
