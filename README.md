@@ -89,5 +89,5 @@ To get started with development:
 git clone https://github.com/pgvector/pgvector-dotnet.git
 cd pgvector-dotnet
 createdb pgvector_dotnet_test
-dotnet run
+dotnet test
 ```

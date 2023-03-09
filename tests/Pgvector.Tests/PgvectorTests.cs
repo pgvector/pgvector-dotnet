@@ -1,9 +1,13 @@
+using Xunit;
 using Npgsql;
 using Pgvector;
 
-class Example
+namespace Pgvector.Tests;
+
+public class Example
 {
-    static async Task Main()
+    [Fact]
+    public async Task Main()
     {
         var connString = "Host=localhost;Database=pgvector_dotnet_test";
 
