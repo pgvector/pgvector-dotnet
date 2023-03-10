@@ -40,7 +40,7 @@ Insert a vector
 ```csharp
 await using (var cmd = new NpgsqlCommand("INSERT INTO items (embedding) VALUES ($1::vector)", conn))
 {
-    var embedding = new Vector(new float[] {1, 1, 1});
+    var embedding = new Vector(new float[] { 1, 1, 1 });
     cmd.Parameters.AddWithValue(embedding.ToString());
     await cmd.ExecuteNonQueryAsync();
 }
@@ -51,7 +51,7 @@ Get the nearest neighbors
 ```csharp
 await using (var cmd = new NpgsqlCommand("SELECT * FROM items ORDER BY embedding <-> $1::vector LIMIT 5", conn))
 {
-    var embedding = new Vector(new float[] {1, 1, 1});
+    var embedding = new Vector(new float[] { 1, 1, 1 });
     cmd.Parameters.AddWithValue(embedding.ToString());
     cmd.AllResultTypesAreUnknown = true;
 

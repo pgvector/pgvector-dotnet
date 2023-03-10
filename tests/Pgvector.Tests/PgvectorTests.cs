@@ -31,9 +31,9 @@ public class Example
 
         await using (var cmd = new NpgsqlCommand("INSERT INTO items (embedding) VALUES ($1::vector), ($2::vector), ($3::vector)", conn))
         {
-            var embedding1 = new Vector(new float[] {1, 1, 1});
-            var embedding2 = new Vector(new float[] {2, 2, 2});
-            var embedding3 = new Vector(new float[] {1, 1, 2});
+            var embedding1 = new Vector(new float[] { 1, 1, 1 });
+            var embedding2 = new Vector(new float[] { 2, 2, 2 });
+            var embedding3 = new Vector(new float[] { 1, 1, 2 });
             cmd.Parameters.AddWithValue(embedding1.ToString());
             cmd.Parameters.AddWithValue(embedding2.ToString());
             cmd.Parameters.AddWithValue(embedding3.ToString());
@@ -42,7 +42,7 @@ public class Example
 
         await using (var cmd = new NpgsqlCommand("SELECT * FROM items ORDER BY embedding <-> $1::vector LIMIT 5", conn))
         {
-            var embedding = new Vector(new float[] {1, 1, 1});
+            var embedding = new Vector(new float[] { 1, 1, 1 });
             cmd.Parameters.AddWithValue(embedding.ToString());
             cmd.AllResultTypesAreUnknown = true;
 
