@@ -1,6 +1,6 @@
 # pgvector-dotnet
 
-[pgvector](https://github.com/pgvector/pgvector) examples for C#
+[pgvector](https://github.com/pgvector/pgvector) support for C#
 
 Supports [Npgsql](https://github.com/npgsql/npgsql)
 
@@ -8,11 +8,23 @@ Supports [Npgsql](https://github.com/npgsql/npgsql)
 
 ## Getting Started
 
-Follow the instructions for your database library:
+Run:
+
+```sh
+dotnet add package Pgvector
+```
+
+And follow the instructions for your database library:
 
 - [Npgsql](#npgsql)
 
 ## Npgsql
+
+Import the library
+
+```csharp
+using Pgvector;
+```
 
 Create a table
 
@@ -20,23 +32,6 @@ Create a table
 await using (var cmd = new NpgsqlCommand("CREATE TABLE items (embedding vector(3))", conn))
 {
     await cmd.ExecuteNonQueryAsync();
-}
-```
-
-Add a class to serialize vectors
-
-```csharp
-public class Vector
-{
-    private float[] vec;
-
-    public Vector(float[] v) {
-        vec = v;
-    }
-
-    public override string ToString() {
-        return String.Concat("[", String.Join(",", vec), "]");
-    }
 }
 ```
 
