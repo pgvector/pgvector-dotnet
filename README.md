@@ -20,7 +20,7 @@ And follow the instructions for your database library:
 
 ## Npgsql
 
-Import the library
+Import the `Vector` class
 
 ```csharp
 using Pgvector;
