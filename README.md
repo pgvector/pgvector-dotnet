@@ -20,10 +20,10 @@ And follow the instructions for your database library:
 
 ## Npgsql
 
-Import the `Vector` class
+Import the library
 
 ```csharp
-using Pgvector;
+using Pgvector.Npgsql;
 ```
 
 Create a table
@@ -38,10 +38,10 @@ await using (var cmd = new NpgsqlCommand("CREATE TABLE items (embedding vector(3
 Insert a vector
 
 ```csharp
-await using (var cmd = new NpgsqlCommand("INSERT INTO items (embedding) VALUES ($1::vector)", conn))
+await using (var cmd = new NpgsqlCommand("INSERT INTO items (embedding) VALUES ($1)", conn))
 {
     var embedding = new Vector(new float[] { 1, 1, 1 });
-    cmd.Parameters.AddWithValue(embedding.ToString());
+    cmd.Parameters.AddWithValue(embedding);
     await cmd.ExecuteNonQueryAsync();
 }
 ```
@@ -49,16 +49,15 @@ await using (var cmd = new NpgsqlCommand("INSERT INTO items (embedding) VALUES (
 Get the nearest neighbors
 
 ```csharp
-await using (var cmd = new NpgsqlCommand("SELECT * FROM items ORDER BY embedding <-> $1::vector LIMIT 5", conn))
+await using (var cmd = new NpgsqlCommand("SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", conn))
 {
     var embedding = new Vector(new float[] { 1, 1, 1 });
-    cmd.Parameters.AddWithValue(embedding.ToString());
-    cmd.AllResultTypesAreUnknown = true;
+    cmd.Parameters.AddWithValue(embedding);
 
     await using (var reader = await cmd.ExecuteReaderAsync())
     {
         while (await reader.ReadAsync())
-            Console.WriteLine(reader.GetString(0));
+            Console.WriteLine((Vector) reader.GetValue(0));
     }
 }
 ```
