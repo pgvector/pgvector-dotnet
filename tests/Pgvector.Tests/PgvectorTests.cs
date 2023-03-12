@@ -49,12 +49,11 @@ public class Example
         {
             var embedding = new Vector(new float[] { 1, 1, 1 });
             cmd.Parameters.AddWithValue(embedding);
-            cmd.AllResultTypesAreUnknown = true;
 
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
                 while (await reader.ReadAsync())
-                    Console.WriteLine(reader.GetValue(0).ToString());
+                    Console.WriteLine((Vector) reader.GetValue(0));
             }
         }
 
