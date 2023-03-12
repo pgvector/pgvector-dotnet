@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Pgvector\Pgvector.csproj" />
-    <PackageReference Include="Npgsql" Version="7.0.2" />
   </ItemGroup>
 
 </Project>

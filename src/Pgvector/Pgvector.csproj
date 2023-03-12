@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <None Include="../../README.md" Pack="true" PackagePath="\" />
+    <PackageReference Include="Npgsql" Version="7.0.2" />
   </ItemGroup>
 
 </Project>

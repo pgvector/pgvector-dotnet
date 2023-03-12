@@ -1,6 +1,6 @@
 using Xunit;
 using Npgsql;
-using Pgvector;
+using Pgvector.Npgsql;
 
 namespace Pgvector.Tests;
 
@@ -11,13 +11,18 @@ public class Example
     {
         var connString = "Host=localhost;Database=pgvector_dotnet_test";
 
-        await using var conn = new NpgsqlConnection(connString);
-        await conn.OpenAsync();
+        var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
+        dataSourceBuilder.UseVector();
+        await using var dataSource = dataSourceBuilder.Build();
+
+        var conn = dataSource.OpenConnection();
 
         await using (var cmd = new NpgsqlCommand("CREATE EXTENSION IF NOT EXISTS vector", conn))
         {
             await cmd.ExecuteNonQueryAsync();
         }
+
+        conn.ReloadTypes();
 
         await using (var cmd = new NpgsqlCommand("DROP TABLE IF EXISTS items", conn))
         {
@@ -29,27 +34,27 @@ public class Example
             await cmd.ExecuteNonQueryAsync();
         }
 
-        await using (var cmd = new NpgsqlCommand("INSERT INTO items (embedding) VALUES ($1::vector), ($2::vector), ($3::vector)", conn))
+        await using (var cmd = new NpgsqlCommand("INSERT INTO items (embedding) VALUES ($1), ($2), ($3)", conn))
         {
             var embedding1 = new Vector(new float[] { 1, 1, 1 });
             var embedding2 = new Vector(new float[] { 2, 2, 2 });
             var embedding3 = new Vector(new float[] { 1, 1, 2 });
-            cmd.Parameters.AddWithValue(embedding1.ToString());
-            cmd.Parameters.AddWithValue(embedding2.ToString());
-            cmd.Parameters.AddWithValue(embedding3.ToString());
+            cmd.Parameters.AddWithValue(embedding1);
+            cmd.Parameters.AddWithValue(embedding2);
+            cmd.Parameters.AddWithValue(embedding3);
             await cmd.ExecuteNonQueryAsync();
         }
 
-        await using (var cmd = new NpgsqlCommand("SELECT * FROM items ORDER BY embedding <-> $1::vector LIMIT 5", conn))
+        await using (var cmd = new NpgsqlCommand("SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", conn))
         {
             var embedding = new Vector(new float[] { 1, 1, 1 });
-            cmd.Parameters.AddWithValue(embedding.ToString());
+            cmd.Parameters.AddWithValue(embedding);
             cmd.AllResultTypesAreUnknown = true;
 
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
                 while (await reader.ReadAsync())
-                    Console.WriteLine((new Vector(reader.GetString(0))).ToString());
+                    Console.WriteLine(reader.GetValue(0).ToString());
             }
         }
 
