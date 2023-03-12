@@ -73,7 +73,11 @@ await using (var cmd = new NpgsqlCommand("CREATE INDEX my_index ON items USING i
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](tests/Pgvector.Tests/PgvectorTests.cs)
+See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.Tests/PgvectorTests.cs)
+
+## History
+
+View the [changelog](https://github.com/pgvector/pgvector-dotnet/blob/master/CHANGELOG.md)
 
 ## Contributing
 
