@@ -65,7 +65,7 @@ await using (var cmd = new NpgsqlCommand("SELECT * FROM items ORDER BY embedding
 Add an approximate index
 
 ```csharp
-await using (var cmd = new NpgsqlCommand("CREATE INDEX my_index ON items USING ivfflat (embedding vector_l2_ops)", conn))
+await using (var cmd = new NpgsqlCommand("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops)", conn))
 {
     await cmd.ExecuteNonQueryAsync();
 }
