@@ -32,7 +32,7 @@ public class DapperTests
         var embedding1 = new Vector(new float[] { 1, 1, 1 });
         var embedding2 = new Vector(new float[] { 2, 2, 2 });
         var embedding3 = new Vector(new float[] { 1, 1, 2 });
-        conn.Execute(@"INSERT INTO dapper_items (embedding) VALUES (@e1::vector), (@e2::vector), (@e3::vector)", new { e1 = embedding1.ToString(), e2 = embedding2.ToString(), e3 = embedding3.ToString() });
+        conn.Execute(@"INSERT INTO dapper_items (embedding) VALUES (@embedding1::vector), (@embedding2::vector), (@embedding3::vector)", new { embedding1 = embedding1.ToString(), embedding2 = embedding2.ToString(), embedding3 = embedding3.ToString() });
 
         var embedding = new Vector(new float[] { 1, 1, 1 });
         var items = conn.Query<DapperItem>("SELECT * FROM dapper_items ORDER BY embedding <-> @embedding::vector LIMIT 5", new { embedding = embedding.ToString() });
