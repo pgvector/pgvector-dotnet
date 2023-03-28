@@ -2,7 +2,7 @@
 
 [pgvector](https://github.com/pgvector/pgvector) support for C#
 
-Supports [Npgsql](https://github.com/npgsql/npgsql)
+Supports [Npgsql](https://github.com/npgsql/npgsql) and [Dapper](https://github.com/DapperLib/Dapper)
 
 [![Build Status](https://github.com/pgvector/pgvector-dotnet/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-dotnet/actions)
 
@@ -17,6 +17,7 @@ dotnet add package Pgvector
 And follow the instructions for your database library:
 
 - [Npgsql](#npgsql)
+- [Dapper](#dapper)
 
 ## Npgsql
 
@@ -74,6 +75,55 @@ await using (var cmd = new NpgsqlCommand("CREATE INDEX ON items USING ivfflat (e
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
 See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.Tests/PgvectorTests.cs)
+
+## Dapper
+
+Import the library
+
+```csharp
+using Pgvector.Npgsql;
+```
+
+Define a class
+
+```csharp
+public class Item
+{
+    public Vector Embedding { get; set; } = null!;
+}
+```
+
+Create a table
+
+```csharp
+conn.Execute("CREATE TABLE items (embedding vector(3))");
+```
+
+Insert a vector
+
+```csharp
+var embedding = new Vector(new float[] { 1, 1, 1 });
+conn.Execute(@"INSERT INTO items (embedding) VALUES (@embedding::vector)", new { embedding = embedding.ToString() });
+```
+
+Get the nearest neighbors
+
+```csharp
+var embedding = new Vector(new float[] { 1, 1, 1 });
+var items = conn.Query<Item>("SELECT * FROM items ORDER BY embedding <-> @embedding::vector LIMIT 5", new { embedding = embedding.ToString() });
+foreach (Item item in items)
+    Console.WriteLine(item.Embedding);
+```
+
+Add an approximate index
+
+```csharp
+conn.Execute("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops)");
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
+
+See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.Tests/DapperTests.cs)
 
 ## History
 
