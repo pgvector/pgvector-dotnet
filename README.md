@@ -85,7 +85,7 @@ await using (var cmd = new NpgsqlCommand("CREATE INDEX ON items USING ivfflat (e
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.Tests/PgvectorTests.cs)
+See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.Tests/NpgsqlTests.cs)
 
 ## Dapper
 
