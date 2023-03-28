@@ -2,7 +2,7 @@
 
 [pgvector](https://github.com/pgvector/pgvector) support for C#
 
-Supports [Npgsql](https://github.com/npgsql/npgsql) and [Dapper](https://github.com/DapperLib/Dapper)
+Supports [Npgsql](https://github.com/npgsql/npgsql), [Dapper](https://github.com/DapperLib/Dapper), and [Entity Framework Core](https://github.com/dotnet/efcore)
 
 [![Build Status](https://github.com/pgvector/pgvector-dotnet/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-dotnet/actions)
 
@@ -18,6 +18,7 @@ And follow the instructions for your database library:
 
 - [Npgsql](#npgsql)
 - [Dapper](#dapper)
+- [Entity Framework Core](#entity-framework-core)
 
 ## Npgsql
 
@@ -144,6 +145,56 @@ conn.Execute("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops)");
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
 See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.Tests/DapperTests.cs)
+
+## Entity Framework Core
+
+Note: EF Core support is limited at the moment
+
+Import the library
+
+```csharp
+using Pgvector.Npgsql;
+```
+
+Define a model
+
+```csharp
+public class Item
+{
+    [Column(TypeName = "vector(3)")]
+    public string Embedding { get; set; } = null!;
+}
+```
+
+Insert a vector
+
+```csharp
+var embedding = new Vector(new float[] { 1, 1, 1 });
+ctx.Database.ExecuteSql($"INSERT INTO items (embedding) VALUES ({embedding.ToString()}::vector)");
+```
+
+Get the nearest neighbors
+
+```csharp
+var embedding = new Vector(new float[] { 1, 1, 1 });
+var items = await ctx.Items.FromSql($"SELECT id, embedding::text FROM items ORDER BY embedding <-> {embedding.ToString()}::vector LIMIT 5").ToListAsync();
+foreach (Item item in items)
+    Console.WriteLine(new Vector(item.Embedding));
+```
+
+Add an approximate index
+
+```csharp
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+    => modelBuilder.Entity<Item>()
+        .HasIndex(i => i.Embedding)
+        .HasMethod("ivfflat")
+        .HasOperators("vector_l2_ops");
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
+
+See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.Tests/EntityFrameworkCoreTests.cs)
 
 ## History
 
