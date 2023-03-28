@@ -1,6 +1,7 @@
 using Xunit;
 using Dapper;
 using Npgsql;
+using Pgvector.Dapper;
 using Pgvector.Npgsql;
 
 namespace Pgvector.Tests;
@@ -15,6 +16,8 @@ public class DapperTests
     [Fact]
     public async Task Main()
     {
+        SqlMapper.AddTypeHandler(new VectorTypeHandler());
+
         var connString = "Host=localhost;Database=pgvector_dotnet_test";
 
         var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
@@ -32,10 +35,10 @@ public class DapperTests
         var embedding1 = new Vector(new float[] { 1, 1, 1 });
         var embedding2 = new Vector(new float[] { 2, 2, 2 });
         var embedding3 = new Vector(new float[] { 1, 1, 2 });
-        conn.Execute(@"INSERT INTO dapper_items (embedding) VALUES (@embedding1::vector), (@embedding2::vector), (@embedding3::vector)", new { embedding1 = embedding1.ToString(), embedding2 = embedding2.ToString(), embedding3 = embedding3.ToString() });
+        conn.Execute(@"INSERT INTO dapper_items (embedding) VALUES (@embedding1), (@embedding2), (@embedding3)", new { embedding1, embedding2, embedding3 });
 
         var embedding = new Vector(new float[] { 1, 1, 1 });
-        var items = conn.Query<DapperItem>("SELECT * FROM dapper_items ORDER BY embedding <-> @embedding::vector LIMIT 5", new { embedding = embedding.ToString() });
+        var items = conn.Query<DapperItem>("SELECT * FROM dapper_items ORDER BY embedding <-> @embedding LIMIT 5", new { embedding });
         foreach (DapperItem item in items)
         {
             Console.WriteLine(item.Embedding);

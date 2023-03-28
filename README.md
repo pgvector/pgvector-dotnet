@@ -8,19 +8,19 @@ Supports [Npgsql](https://github.com/npgsql/npgsql), [Dapper](https://github.com
 
 ## Getting Started
 
-Run:
-
-```sh
-dotnet add package Pgvector
-```
-
-And follow the instructions for your database library:
+Follow the instructions for your database library:
 
 - [Npgsql](#npgsql)
 - [Dapper](#dapper)
 - [Entity Framework Core](#entity-framework-core)
 
 ## Npgsql
+
+Run:
+
+```sh
+dotnet add package Pgvector
+```
 
 Import the library
 
@@ -91,15 +91,24 @@ See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tes
 
 ## Dapper
 
+Run:
+
+```sh
+dotnet add package Pgvector.Dapper
+```
+
 Import the library
 
 ```csharp
+using Pgvector.Dapper;
 using Pgvector.Npgsql;
 ```
 
 Create a connection
 
 ```csharp
+SqlMapper.AddTypeHandler(new VectorTypeHandler());
+
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
 dataSourceBuilder.UseVector();
 await using var dataSource = dataSourceBuilder.Build();
@@ -126,14 +135,14 @@ Insert a vector
 
 ```csharp
 var embedding = new Vector(new float[] { 1, 1, 1 });
-conn.Execute(@"INSERT INTO items (embedding) VALUES (@embedding::vector)", new { embedding = embedding.ToString() });
+conn.Execute(@"INSERT INTO items (embedding) VALUES (@embedding)", new { embedding });
 ```
 
 Get the nearest neighbors
 
 ```csharp
 var embedding = new Vector(new float[] { 1, 1, 1 });
-var items = conn.Query<Item>("SELECT * FROM items ORDER BY embedding <-> @embedding::vector LIMIT 5", new { embedding = embedding.ToString() });
+var items = conn.Query<Item>("SELECT * FROM items ORDER BY embedding <-> @embedding LIMIT 5", new { embedding });
 foreach (Item item in items)
 {
     Console.WriteLine(item.Embedding);
@@ -153,6 +162,12 @@ See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tes
 ## Entity Framework Core
 
 Note: EF Core support is limited at the moment
+
+Run:
+
+```sh
+dotnet add package Pgvector
+```
 
 Import the library
 
@@ -207,7 +222,8 @@ See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tes
 
 ## History
 
-View the [changelog](https://github.com/pgvector/pgvector-dotnet/blob/master/CHANGELOG.md)
+- [Pgvector](https://github.com/pgvector/pgvector-dotnet/blob/master/src/Pgvector/CHANGELOG.md)
+- [Pgvector.Dapper](https://github.com/pgvector/pgvector-dotnet/blob/master/src/Pgvector.Dapper/CHANGELOG.md)
 
 ## Contributing
 

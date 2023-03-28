@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Pgvector\Pgvector.csproj" />
-    <PackageReference Include="Dapper" Version="2.0.123" />
+    <ProjectReference Include="..\..\src\Pgvector.Dapper\Pgvector.Dapper.csproj" />
     <PackageReference Include="EFCore.NamingConventions" Version="7.0.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3" />
   </ItemGroup>
