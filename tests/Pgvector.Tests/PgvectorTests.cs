@@ -4,7 +4,7 @@ using Pgvector.Npgsql;
 
 namespace Pgvector.Tests;
 
-public class Example
+public class PgvectorTests
 {
     [Fact]
     public async Task Main()
