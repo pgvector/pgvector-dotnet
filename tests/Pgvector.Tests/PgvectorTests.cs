@@ -53,7 +53,7 @@ public class Example
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
                 while (await reader.ReadAsync())
-                    Console.WriteLine((Vector) reader.GetValue(0));
+                    Console.WriteLine((Vector)reader.GetValue(0));
             }
         }
 
