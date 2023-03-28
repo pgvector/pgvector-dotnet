@@ -27,6 +27,16 @@ Import the library
 using Pgvector.Npgsql;
 ```
 
+Create a connection
+
+```csharp
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
+dataSourceBuilder.UseVector();
+await using var dataSource = dataSourceBuilder.Build();
+
+var conn = dataSource.OpenConnection();
+```
+
 Create a table
 
 ```csharp
@@ -82,6 +92,16 @@ Import the library
 
 ```csharp
 using Pgvector.Npgsql;
+```
+
+Create a connection
+
+```csharp
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
+dataSourceBuilder.UseVector();
+await using var dataSource = dataSourceBuilder.Build();
+
+var conn = dataSource.OpenConnection();
 ```
 
 Define a class
