@@ -69,7 +69,9 @@ await using (var cmd = new NpgsqlCommand("SELECT * FROM items ORDER BY embedding
     await using (var reader = await cmd.ExecuteReaderAsync())
     {
         while (await reader.ReadAsync())
+        {
             Console.WriteLine((Vector)reader.GetValue(0));
+        }
     }
 }
 ```
@@ -133,7 +135,9 @@ Get the nearest neighbors
 var embedding = new Vector(new float[] { 1, 1, 1 });
 var items = conn.Query<Item>("SELECT * FROM items ORDER BY embedding <-> @embedding::vector LIMIT 5", new { embedding = embedding.ToString() });
 foreach (Item item in items)
+{
     Console.WriteLine(item.Embedding);
+}
 ```
 
 Add an approximate index
@@ -181,7 +185,9 @@ var items = await ctx.Items.FromSql($"SELECT embedding::text FROM items ORDER BY
 foreach (Item item in items)
 {
     if (item.Embedding != null)
+    {
         Console.WriteLine(new Vector(item.Embedding));
+    }
 }
 ```
 

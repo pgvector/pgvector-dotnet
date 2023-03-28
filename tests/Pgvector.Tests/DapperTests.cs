@@ -37,7 +37,9 @@ public class DapperTests
         var embedding = new Vector(new float[] { 1, 1, 1 });
         var items = conn.Query<DapperItem>("SELECT * FROM dapper_items ORDER BY embedding <-> @embedding::vector LIMIT 5", new { embedding = embedding.ToString() });
         foreach (DapperItem item in items)
+        {
             Console.WriteLine(item.Embedding);
+        }
 
         conn.Execute("CREATE INDEX ON dapper_items USING ivfflat (embedding vector_l2_ops)");
     }

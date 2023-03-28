@@ -16,7 +16,9 @@ public class VectorTypeHandlerResolver : TypeHandlerResolver
 
         var pgVectorType = PgType("vector");
         if (pgVectorType is not null)
+        {
             _vectorHandler = new VectorHandler(pgVectorType);
+        }
     }
 
     public override NpgsqlTypeHandler? ResolveByDataTypeName(string typeName)
@@ -37,7 +39,9 @@ public class VectorTypeHandlerResolver : TypeHandlerResolver
     internal static string? ClrTypeToDataTypeName(Type type)
     {
         if (type == typeof(Vector))
+        {
             return "vector";
+        }
 
         return null;
     }
