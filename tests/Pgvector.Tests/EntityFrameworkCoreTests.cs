@@ -27,10 +27,9 @@ public class ItemContext : DbContext
     }
 }
 
-[Table("efcore_items")]
+[Table("efcore_items"), Keyless]
 public class Item
 {
-    public int Id { get; set; }
     [Column(TypeName = "vector(3)")]
     public string Embedding { get; set; } = null!;
 }
@@ -50,7 +49,7 @@ public class EntityFrameworkCoreTests
         ctx.Database.ExecuteSql($"INSERT INTO efcore_items (embedding) VALUES ({embedding1.ToString()}::vector), ({embedding2.ToString()}::vector), ({embedding3.ToString()}::vector)");
 
         var embedding = new Vector(new float[] { 1, 1, 1 });
-        var items = await ctx.Items.FromSql($"SELECT id, embedding::text FROM efcore_items ORDER BY embedding <-> {embedding.ToString()}::vector LIMIT 5").ToListAsync();
+        var items = await ctx.Items.FromSql($"SELECT embedding::text FROM efcore_items ORDER BY embedding <-> {embedding.ToString()}::vector LIMIT 5").ToListAsync();
         foreach (Item item in items)
             Console.WriteLine(new Vector(item.Embedding));
     }

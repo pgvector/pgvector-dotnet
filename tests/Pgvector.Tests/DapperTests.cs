@@ -7,7 +7,6 @@ namespace Pgvector.Tests;
 
 public class DapperItem
 {
-    public int Id { get; set; }
     public Vector Embedding { get; set; } = null!;
 }
 
