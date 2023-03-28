@@ -177,7 +177,7 @@ Get the nearest neighbors
 
 ```csharp
 var embedding = new Vector(new float[] { 1, 1, 1 });
-var items = await ctx.Items.FromSql($"SELECT id, embedding::text FROM items ORDER BY embedding <-> {embedding.ToString()}::vector LIMIT 5").ToListAsync();
+var items = await ctx.Items.FromSql($"SELECT embedding::text FROM items ORDER BY embedding <-> {embedding.ToString()}::vector LIMIT 5").ToListAsync();
 foreach (Item item in items)
     Console.WriteLine(new Vector(item.Embedding));
 ```
