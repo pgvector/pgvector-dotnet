@@ -25,6 +25,8 @@ public class DapperTests
         var conn = dataSource.OpenConnection();
 
         conn.Execute("CREATE EXTENSION IF NOT EXISTS vector");
+        conn.ReloadTypes();
+
         conn.Execute("DROP TABLE IF EXISTS dapper_items");
         conn.Execute("CREATE TABLE dapper_items (embedding vector(3))");
 
