@@ -1,6 +1,6 @@
 using Xunit;
 using Microsoft.EntityFrameworkCore;
-using Pgvector.Npgsql;
+using Pgvector.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pgvector.Tests;
@@ -12,7 +12,7 @@ public class ItemContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var connString = "Host=localhost;Database=pgvector_dotnet_test";
-        optionsBuilder.UseNpgsql(connString).UseSnakeCaseNamingConvention();
+        optionsBuilder.UseNpgsql(connString, o => o.UseVector()).UseSnakeCaseNamingConvention();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,11 +27,13 @@ public class ItemContext : DbContext
     }
 }
 
-[Table("efcore_items"), Keyless]
+[Table("efcore_items")]
 public class Item
 {
+    public int Id { get; set; }
+
     [Column(TypeName = "vector(3)")]
-    public string? Embedding { get; set; }
+    public Vector? Embedding { get; set; }
 }
 
 public class EntityFrameworkCoreTests
@@ -43,18 +45,18 @@ public class EntityFrameworkCoreTests
         await ctx.Database.EnsureDeletedAsync();
         await ctx.Database.EnsureCreatedAsync();
 
-        var embedding1 = new Vector(new float[] { 1, 1, 1 });
-        var embedding2 = new Vector(new float[] { 2, 2, 2 });
-        var embedding3 = new Vector(new float[] { 1, 1, 2 });
-        ctx.Database.ExecuteSql($"INSERT INTO efcore_items (embedding) VALUES ({embedding1.ToString()}::vector), ({embedding2.ToString()}::vector), ({embedding3.ToString()}::vector)");
+        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 1 }) });
+        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 2, 2, 2 }) });
+        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 2 }) });
+        ctx.SaveChanges();
 
         var embedding = new Vector(new float[] { 1, 1, 1 });
-        var items = await ctx.Items.FromSql($"SELECT embedding::text FROM efcore_items ORDER BY embedding <-> {embedding.ToString()}::vector LIMIT 5").ToListAsync();
+        var items = await ctx.Items.FromSql($"SELECT * FROM efcore_items ORDER BY embedding <-> {embedding} LIMIT 5").ToListAsync();
         foreach (Item item in items)
         {
             if (item.Embedding != null)
             {
-                Console.WriteLine(new Vector(item.Embedding));
+                Console.WriteLine(item.Embedding);
             }
         }
     }

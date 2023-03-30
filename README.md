@@ -161,18 +161,25 @@ See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tes
 
 ## Entity Framework Core
 
-Note: EF Core support is limited at the moment
-
 Run:
 
 ```sh
-dotnet add package Pgvector
+dotnet add package Pgvector.EntityFrameworkCore
 ```
 
 Import the library
 
 ```csharp
-using Pgvector.Npgsql;
+using Pgvector.EntityFrameworkCore;
+```
+
+Configure the connection
+
+```csharp
+protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+{
+    optionsBuilder.UseNpgsql("connString", o => o.UseVector());
+}
 ```
 
 Define a model
@@ -181,22 +188,22 @@ Define a model
 public class Item
 {
     [Column(TypeName = "vector(3)")]
-    public string? Embedding { get; set; }
+    public Vector? Embedding { get; set; }
 }
 ```
 
 Insert a vector
 
 ```csharp
-var embedding = new Vector(new float[] { 1, 1, 1 });
-ctx.Database.ExecuteSql($"INSERT INTO items (embedding) VALUES ({embedding.ToString()}::vector)");
+ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 1 }) });
+ctx.SaveChanges();
 ```
 
 Get the nearest neighbors
 
 ```csharp
 var embedding = new Vector(new float[] { 1, 1, 1 });
-var items = await ctx.Items.FromSql($"SELECT embedding::text FROM items ORDER BY embedding <-> {embedding.ToString()}::vector LIMIT 5").ToListAsync();
+var items = await ctx.Items.FromSql($"SELECT * FROM items ORDER BY embedding <-> {embedding} LIMIT 5").ToListAsync();
 foreach (Item item in items)
 {
     if (item.Embedding != null)
@@ -224,6 +231,7 @@ See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tes
 
 - [Pgvector](https://github.com/pgvector/pgvector-dotnet/blob/master/src/Pgvector/CHANGELOG.md)
 - [Pgvector.Dapper](https://github.com/pgvector/pgvector-dotnet/blob/master/src/Pgvector.Dapper/CHANGELOG.md)
+- [Pgvector.EntityFrameworkCore](https://github.com/pgvector/pgvector-dotnet/blob/master/src/Pgvector.EntityFrameworkCore/CHANGELOG.md)
 
 ## Contributing
 
