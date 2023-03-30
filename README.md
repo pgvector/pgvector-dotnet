@@ -217,10 +217,12 @@ Add an approximate index
 
 ```csharp
 protected override void OnModelCreating(ModelBuilder modelBuilder)
-    => modelBuilder.Entity<Item>()
+{
+    modelBuilder.Entity<Item>()
         .HasIndex(i => i.Embedding)
         .HasMethod("ivfflat")
         .HasOperators("vector_l2_ops");
+}
 ```
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
