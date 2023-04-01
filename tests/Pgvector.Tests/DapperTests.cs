@@ -44,6 +44,6 @@ public class DapperTests
             Console.WriteLine(item.Embedding);
         }
 
-        conn.Execute("CREATE INDEX ON dapper_items USING ivfflat (embedding vector_l2_ops)");
+        conn.Execute("CREATE INDEX ON dapper_items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)");
     }
 }

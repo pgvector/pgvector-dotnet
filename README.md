@@ -79,7 +79,7 @@ await using (var cmd = new NpgsqlCommand("SELECT * FROM items ORDER BY embedding
 Add an approximate index
 
 ```csharp
-await using (var cmd = new NpgsqlCommand("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops)", conn))
+await using (var cmd = new NpgsqlCommand("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)", conn))
 {
     await cmd.ExecuteNonQueryAsync();
 }
@@ -152,7 +152,7 @@ foreach (Item item in items)
 Add an approximate index
 
 ```csharp
-conn.Execute("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops)");
+conn.Execute("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)");
 ```
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance

@@ -59,7 +59,7 @@ public class NpgsqlTests
             }
         }
 
-        await using (var cmd = new NpgsqlCommand("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops)", conn))
+        await using (var cmd = new NpgsqlCommand("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)", conn))
         {
             await cmd.ExecuteNonQueryAsync();
         }
