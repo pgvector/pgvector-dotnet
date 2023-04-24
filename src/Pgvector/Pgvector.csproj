@@ -1,21 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<PackageId>Pgvector</PackageId>
-	<Version>0.1.1</Version>
-	<Authors>ankane</Authors>
-	<Description>pgvector support for C#</Description>
-	<PackageLicenseExpression>MIT</PackageLicenseExpression>
-	<PackageProjectUrl>https://github.com/pgvector/pgvector-dotnet</PackageProjectUrl>
-	<PackageReadmeFile>README.md</PackageReadmeFile>
-	
-	<TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Pgvector</PackageId>
+    <Version>0.1.1</Version>
+    <Authors>ankane</Authors>
+    <Description>pgvector support for C#</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/pgvector/pgvector-dotnet</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-	<None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" />
-	<None Include="..\..\README.md" Pack="true" PackagePath="\" />
-	<PackageReference Include="Npgsql" Version="7.0.2" />
+    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <PackageReference Include="Npgsql" Version="7.0.2" />
   </ItemGroup>
 
 </Project>

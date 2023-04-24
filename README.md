@@ -43,7 +43,7 @@ Create a table
 ```csharp
 await using (var cmd = new NpgsqlCommand("CREATE TABLE items (embedding vector(3))", conn))
 {
-	await cmd.ExecuteNonQueryAsync();
+    await cmd.ExecuteNonQueryAsync();
 }
 ```
 
@@ -52,9 +52,9 @@ Insert a vector
 ```csharp
 await using (var cmd = new NpgsqlCommand("INSERT INTO items (embedding) VALUES ($1)", conn))
 {
-	var embedding = new Vector(new float[] { 1, 1, 1 });
-	cmd.Parameters.AddWithValue(embedding);
-	await cmd.ExecuteNonQueryAsync();
+    var embedding = new Vector(new float[] { 1, 1, 1 });
+    cmd.Parameters.AddWithValue(embedding);
+    await cmd.ExecuteNonQueryAsync();
 }
 ```
 
@@ -63,16 +63,16 @@ Get the nearest neighbors
 ```csharp
 await using (var cmd = new NpgsqlCommand("SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", conn))
 {
-	var embedding = new Vector(new float[] { 1, 1, 1 });
-	cmd.Parameters.AddWithValue(embedding);
+    var embedding = new Vector(new float[] { 1, 1, 1 });
+    cmd.Parameters.AddWithValue(embedding);
 
-	await using (var reader = await cmd.ExecuteReaderAsync())
-	{
-		while (await reader.ReadAsync())
-		{
-			Console.WriteLine((Vector)reader.GetValue(0));
-		}
-	}
+    await using (var reader = await cmd.ExecuteReaderAsync())
+    {
+        while (await reader.ReadAsync())
+        {
+            Console.WriteLine((Vector)reader.GetValue(0));
+        }
+    }
 }
 ```
 
@@ -81,7 +81,7 @@ Add an approximate index
 ```csharp
 await using (var cmd = new NpgsqlCommand("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)", conn))
 {
-	await cmd.ExecuteNonQueryAsync();
+    await cmd.ExecuteNonQueryAsync();
 }
 ```
 
@@ -121,7 +121,7 @@ Define a class
 ```csharp
 public class Item
 {
-	public Vector? Embedding { get; set; }
+    public Vector? Embedding { get; set; }
 }
 ```
 
@@ -145,7 +145,7 @@ var embedding = new Vector(new float[] { 1, 1, 1 });
 var items = conn.Query<Item>("SELECT * FROM items ORDER BY embedding <-> @embedding LIMIT 5", new { embedding });
 foreach (Item item in items)
 {
-	Console.WriteLine(item.Embedding);
+    Console.WriteLine(item.Embedding);
 }
 ```
 
@@ -178,7 +178,7 @@ Configure the connection
 ```csharp
 protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 {
-	optionsBuilder.UseNpgsql("connString", o => o.UseVector());
+    optionsBuilder.UseNpgsql("connString", o => o.UseVector());
 }
 ```
 
@@ -187,8 +187,8 @@ Define a model
 ```csharp
 public class Item
 {
-	[Column(TypeName = "vector(3)")]
-	public Vector? Embedding { get; set; }
+    [Column(TypeName = "vector(3)")]
+    public Vector? Embedding { get; set; }
 }
 ```
 
@@ -206,10 +206,10 @@ var embedding = new Vector(new float[] { 1, 1, 1 });
 var items = await ctx.Items.FromSql($"SELECT * FROM items ORDER BY embedding <-> {embedding} LIMIT 5").ToListAsync();
 foreach (Item item in items)
 {
-	if (item.Embedding != null)
-	{
-		Console.WriteLine(new Vector(item.Embedding));
-	}
+    if (item.Embedding != null)
+    {
+        Console.WriteLine(new Vector(item.Embedding));
+    }
 }
 ```
 
@@ -218,10 +218,10 @@ Add an approximate index
 ```csharp
 protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
-	modelBuilder.Entity<Item>()
-		.HasIndex(i => i.Embedding)
-		.HasMethod("ivfflat")
-		.HasOperators("vector_l2_ops");
+    modelBuilder.Entity<Item>()
+        .HasIndex(i => i.Embedding)
+        .HasMethod("ivfflat")
+        .HasOperators("vector_l2_ops");
 }
 ```
 
