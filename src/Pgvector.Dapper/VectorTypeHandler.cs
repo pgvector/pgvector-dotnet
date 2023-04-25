@@ -8,7 +8,7 @@ namespace Pgvector.Dapper
 {
     public class VectorTypeHandler : SqlMapper.TypeHandler<Vector>
     {
-        public override Vector? Parse(object value)
+        public override Vector Parse(object value)
         {
             if (value == null || value is DBNull)
             {
