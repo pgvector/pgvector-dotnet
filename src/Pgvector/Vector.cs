@@ -11,14 +11,14 @@ namespace Pgvector
             vec = v;
         }
 
-        public Vector(String s)
+        public Vector(string s)
         {
             vec = Array.ConvertAll(s.Substring(1, s.Length - 2).Split(','), v => float.Parse(v));
         }
 
         public override string ToString()
         {
-            return String.Concat("[", String.Join(",", vec), "]");
+            return string.Concat("[", string.Join(",", vec), "]");
         }
 
         public float[] ToArray()
