@@ -13,7 +13,7 @@ namespace Pgvector
 
         public Vector(String s)
         {
-            vec = Array.ConvertAll(s.Substring(1, s.Length - 2).Split(","), v => float.Parse(v));
+            vec = Array.ConvertAll(s.Substring(1, s.Length - 2).Split(','), v => float.Parse(v));
         }
 
         public override string ToString()

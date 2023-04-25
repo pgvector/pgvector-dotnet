@@ -9,7 +9,7 @@ namespace Pgvector.Npgsql
     public class VectorTypeHandlerResolver : TypeHandlerResolver
     {
         readonly NpgsqlDatabaseInfo _databaseInfo;
-        readonly VectorHandler? _vectorHandler;
+        readonly VectorHandler _vectorHandler;
 
         internal VectorTypeHandlerResolver(NpgsqlConnector connector)
         {
@@ -22,22 +22,31 @@ namespace Pgvector.Npgsql
             }
         }
 
-        public override NpgsqlTypeHandler? ResolveByDataTypeName(string typeName)
-            => typeName switch
+        public override NpgsqlTypeHandler ResolveByDataTypeName(string typeName)
+        {
+            if (typeName == "vector")
+                return _vectorHandler;
+
+            return null;
+        }
+
+        public override NpgsqlTypeHandler ResolveByClrType(Type type)
+        {
+            var dataTypeName = ClrTypeToDataTypeName(type);
+            if (dataTypeName != null)
             {
-                "vector" => _vectorHandler,
-                _ => null
-            };
+                var handler = ResolveByDataTypeName(dataTypeName);
+                if (handler != null)
+                    return handler;
+            }
 
-        public override NpgsqlTypeHandler? ResolveByClrType(Type type)
-            => ClrTypeToDataTypeName(type) is { } dataTypeName && ResolveByDataTypeName(dataTypeName) is { } handler
-                ? handler
-                : null;
+            return null;
+        }
 
-        public override TypeMappingInfo? GetMappingByDataTypeName(string dataTypeName)
+        public override TypeMappingInfo GetMappingByDataTypeName(string dataTypeName)
             => DoGetMappingByDataTypeName(dataTypeName);
 
-        internal static string? ClrTypeToDataTypeName(Type type)
+        internal static string ClrTypeToDataTypeName(Type type)
         {
             if (type == typeof(Vector))
             {
@@ -47,13 +56,14 @@ namespace Pgvector.Npgsql
             return null;
         }
 
-        internal static TypeMappingInfo? DoGetMappingByDataTypeName(string dataTypeName)
-            => dataTypeName switch
-            {
-                "vector" => new TypeMappingInfo(NpgsqlDbType.Unknown, "vector"),
-                _ => null
-            };
+        internal static TypeMappingInfo DoGetMappingByDataTypeName(string dataTypeName)
+        {
+            if (dataTypeName == "vector")
+                return new TypeMappingInfo(NpgsqlDbType.Unknown, "vector");
 
-        PostgresType? PgType(string pgTypeName) => _databaseInfo.TryGetPostgresTypeByName(pgTypeName, out var pgType) ? pgType : null;
+            return null;
+        }
+
+        PostgresType PgType(string pgTypeName) => _databaseInfo.TryGetPostgresTypeByName(pgTypeName, out var pgType) ? pgType : null;
     }
 }

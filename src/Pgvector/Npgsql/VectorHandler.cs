@@ -13,7 +13,7 @@ namespace Pgvector.Npgsql
     {
         public VectorHandler(PostgresType pgType) : base(pgType) { }
 
-        public override Vector Read(NpgsqlReadBuffer buf, int len, FieldDescription? fieldDescription = null)
+        public override Vector Read(NpgsqlReadBuffer buf, int len, FieldDescription fieldDescription = null)
         {
             var dim = buf.ReadUInt16();
             var unused = buf.ReadUInt16();
@@ -27,10 +27,10 @@ namespace Pgvector.Npgsql
             return new Vector(vec);
         }
 
-        public override int ValidateAndGetLength(Vector value, NpgsqlParameter? parameter)
+        public override int ValidateAndGetLength(Vector value, NpgsqlParameter parameter)
             => sizeof(UInt16) * 2 + sizeof(Single) * value.ToArray().Length;
 
-        public override void Write(Vector value, NpgsqlWriteBuffer buf, NpgsqlParameter? parameter)
+        public override void Write(Vector value, NpgsqlWriteBuffer buf, NpgsqlParameter parameter)
         {
             var vec = value.ToArray();
             var dim = vec.Length;
@@ -41,7 +41,7 @@ namespace Pgvector.Npgsql
                 buf.WriteSingle(vec[i]);
         }
 
-        public override int ValidateObjectAndGetLength(object? value, ref NpgsqlLengthCache? lengthCache, NpgsqlParameter? parameter)
+        public override int ValidateObjectAndGetLength(object value, ref NpgsqlLengthCache lengthCache, NpgsqlParameter parameter)
         {
             if (value is Vector converted)
                 return ValidateAndGetLength(converted, parameter);
@@ -52,7 +52,7 @@ namespace Pgvector.Npgsql
             throw new InvalidCastException($"Can't write CLR type {value.GetType()} with handler type VectorHandler");
         }
 
-        public override Task WriteObjectWithLength(object? value, NpgsqlWriteBuffer buf, NpgsqlLengthCache? lengthCache, NpgsqlParameter? parameter, bool async, CancellationToken cancellationToken = default)
+        public override Task WriteObjectWithLength(object value, NpgsqlWriteBuffer buf, NpgsqlLengthCache lengthCache, NpgsqlParameter parameter, bool async, CancellationToken cancellationToken = default)
         {
             if (value is Vector converted)
                 return WriteWithLength(converted, buf, lengthCache, parameter, async, cancellationToken);
