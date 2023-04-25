@@ -1,3 +1,7 @@
+## 0.1.2 (unreleased)
+
+- Added support for .NET 6
+
 ## 0.1.1 (2023-03-12)
 
 - Added type mapping
