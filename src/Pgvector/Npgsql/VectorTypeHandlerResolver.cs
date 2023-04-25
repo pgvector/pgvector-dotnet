@@ -2,56 +2,58 @@ using Npgsql.Internal;
 using Npgsql.Internal.TypeHandling;
 using Npgsql.PostgresTypes;
 using NpgsqlTypes;
+using System;
 
-namespace Pgvector.Npgsql;
-
-public class VectorTypeHandlerResolver : TypeHandlerResolver
+namespace Pgvector.Npgsql
 {
-    readonly NpgsqlDatabaseInfo _databaseInfo;
-    readonly VectorHandler? _vectorHandler;
-
-    internal VectorTypeHandlerResolver(NpgsqlConnector connector)
+    public class VectorTypeHandlerResolver : TypeHandlerResolver
     {
-        _databaseInfo = connector.DatabaseInfo;
+        readonly NpgsqlDatabaseInfo _databaseInfo;
+        readonly VectorHandler? _vectorHandler;
 
-        var pgVectorType = PgType("vector");
-        if (pgVectorType is not null)
+        internal VectorTypeHandlerResolver(NpgsqlConnector connector)
         {
-            _vectorHandler = new VectorHandler(pgVectorType);
-        }
-    }
+            _databaseInfo = connector.DatabaseInfo;
 
-    public override NpgsqlTypeHandler? ResolveByDataTypeName(string typeName)
-        => typeName switch
-        {
-            "vector" => _vectorHandler,
-            _ => null
-        };
-
-    public override NpgsqlTypeHandler? ResolveByClrType(Type type)
-        => ClrTypeToDataTypeName(type) is { } dataTypeName && ResolveByDataTypeName(dataTypeName) is { } handler
-            ? handler
-            : null;
-
-    public override TypeMappingInfo? GetMappingByDataTypeName(string dataTypeName)
-        => DoGetMappingByDataTypeName(dataTypeName);
-
-    internal static string? ClrTypeToDataTypeName(Type type)
-    {
-        if (type == typeof(Vector))
-        {
-            return "vector";
+            var pgVectorType = PgType("vector");
+            if (pgVectorType != null)
+            {
+                _vectorHandler = new VectorHandler(pgVectorType);
+            }
         }
 
-        return null;
-    }
+        public override NpgsqlTypeHandler? ResolveByDataTypeName(string typeName)
+            => typeName switch
+            {
+                "vector" => _vectorHandler,
+                _ => null
+            };
 
-    internal static TypeMappingInfo? DoGetMappingByDataTypeName(string dataTypeName)
-        => dataTypeName switch
+        public override NpgsqlTypeHandler? ResolveByClrType(Type type)
+            => ClrTypeToDataTypeName(type) is { } dataTypeName && ResolveByDataTypeName(dataTypeName) is { } handler
+                ? handler
+                : null;
+
+        public override TypeMappingInfo? GetMappingByDataTypeName(string dataTypeName)
+            => DoGetMappingByDataTypeName(dataTypeName);
+
+        internal static string? ClrTypeToDataTypeName(Type type)
         {
-            "vector" => new(NpgsqlDbType.Unknown, "vector"),
-            _ => null
-        };
+            if (type == typeof(Vector))
+            {
+                return "vector";
+            }
 
-    PostgresType? PgType(string pgTypeName) => _databaseInfo.TryGetPostgresTypeByName(pgTypeName, out var pgType) ? pgType : null;
+            return null;
+        }
+
+        internal static TypeMappingInfo? DoGetMappingByDataTypeName(string dataTypeName)
+            => dataTypeName switch
+            {
+                "vector" => new TypeMappingInfo(NpgsqlDbType.Unknown, "vector"),
+                _ => null
+            };
+
+        PostgresType? PgType(string pgTypeName) => _databaseInfo.TryGetPostgresTypeByName(pgTypeName, out var pgType) ? pgType : null;
+    }
 }
