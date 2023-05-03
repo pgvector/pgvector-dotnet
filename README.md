@@ -208,7 +208,7 @@ foreach (Item item in items)
 {
     if (item.Embedding != null)
     {
-        Console.WriteLine(new Vector(item.Embedding));
+        Console.WriteLine(item.Embedding);
     }
 }
 ```
