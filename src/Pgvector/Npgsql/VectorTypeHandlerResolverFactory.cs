@@ -1,18 +1,19 @@
 using Npgsql.Internal;
 using Npgsql.Internal.TypeHandling;
+using Npgsql.Internal.TypeMapping;
 using System;
 
 namespace Pgvector.Npgsql
 {
     public class VectorTypeHandlerResolverFactory : TypeHandlerResolverFactory
     {
-        public override TypeHandlerResolver Create(NpgsqlConnector connector)
+        public override TypeHandlerResolver Create(TypeMapper typeMapper, NpgsqlConnector connector)
             => new VectorTypeHandlerResolver(connector);
 
-        public override string GetDataTypeNameByClrType(Type type)
-            => VectorTypeHandlerResolver.ClrTypeToDataTypeName(type);
+        public override TypeMappingResolver CreateMappingResolver()
+            => new VectorTypeMappingResolver();
 
-        public override TypeMappingInfo GetMappingByDataTypeName(string dataTypeName)
-            => VectorTypeHandlerResolver.DoGetMappingByDataTypeName(dataTypeName);
+        public override TypeMappingResolver CreateGlobalMappingResolver()
+            => new VectorTypeMappingResolver();
     }
 }

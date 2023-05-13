@@ -32,7 +32,7 @@ namespace Pgvector.Npgsql
 
         public override NpgsqlTypeHandler ResolveByClrType(Type type)
         {
-            var dataTypeName = ClrTypeToDataTypeName(type);
+            var dataTypeName = VectorTypeMappingResolver.ClrTypeToDataTypeName(type);
             if (dataTypeName != null)
             {
                 var handler = ResolveByDataTypeName(dataTypeName);
@@ -43,23 +43,15 @@ namespace Pgvector.Npgsql
             return null;
         }
 
-        public override TypeMappingInfo GetMappingByDataTypeName(string dataTypeName)
-            => DoGetMappingByDataTypeName(dataTypeName);
-
-        internal static string ClrTypeToDataTypeName(Type type)
+        public override NpgsqlTypeHandler ResolveByNpgsqlDbType(NpgsqlDbType npgsqlDbType)
         {
-            if (type == typeof(Vector))
-            {
-                return "vector";
-            }
-
             return null;
         }
 
-        internal static TypeMappingInfo DoGetMappingByDataTypeName(string dataTypeName)
+        public override NpgsqlTypeHandler ResolveValueTypeGenerically<T>(T value)
         {
-            if (dataTypeName == "vector")
-                return new TypeMappingInfo(NpgsqlDbType.Unknown, "vector");
+            if (typeof(T) == typeof(Vector))
+                return _vectorHandler;
 
             return null;
         }
