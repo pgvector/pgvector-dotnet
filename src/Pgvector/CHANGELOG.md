@@ -1,3 +1,7 @@
+## 0.1.3 (unreleased)
+
+- Updated text representation to be culture-invariant
+
 ## 0.1.2 (2023-04-25)
 
 - Added support for .NET 6 and .NET Standard 2.0
