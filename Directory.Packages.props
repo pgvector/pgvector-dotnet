@@ -1,0 +1,16 @@
+<Project>
+
+  <ItemGroup>
+    <PackageVersion Include="Npgsql" Version="7" />
+    <PackageVersion Include="Dapper" Version="2.0.4" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7" />
+
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+    <PackageVersion Include="xunit" Version="2.4.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5" />
+    <PackageVersion Include="coverlet.collector" Version="3.1.2" />
+    <PackageVersion Include="EFCore.NamingConventions" Version="7.0.2" />
+
+  </ItemGroup>
+
+</Project>

@@ -1,45 +1,20 @@
 using Dapper;
-using Pgvector;
 using System;
 using System.Data;
-using System.Data.SqlClient;
 
-namespace Pgvector.Dapper
+namespace Pgvector.Dapper;
+
+public class VectorTypeHandler : SqlMapper.TypeHandler<Vector>
 {
-    public class VectorTypeHandler : SqlMapper.TypeHandler<Vector>
-    {
-        public override Vector Parse(object value)
+    public override Vector Parse(object value)
+        => value switch
         {
-            if (value == null || value is DBNull)
-            {
-                return null;
-            }
-            else if (value is Vector vec)
-            {
-                return vec;
-            }
-            else
-            {
-                var s = value.ToString();
-                return s != null ? new Vector(s) : null;
-            }
-        }
+            Vector vec => vec,
+            null or DBNull => null!,
 
-        public override void SetValue(IDbDataParameter parameter, Vector value)
-        {
-            if (value == null)
-            {
-                parameter.Value = DBNull.Value;
-            }
-            else
-            {
-                parameter.Value = value;
-            }
+            _ => value.ToString() is string s ? new Vector(s) : null!
+        };
 
-            if (parameter is SqlParameter sqlParameter)
-            {
-                sqlParameter.UdtTypeName = "vector";
-            }
-        }
-    }
+    public override void SetValue(IDbDataParameter parameter, Vector value)
+        => parameter.Value = value == null ? DBNull.Value : value;
 }

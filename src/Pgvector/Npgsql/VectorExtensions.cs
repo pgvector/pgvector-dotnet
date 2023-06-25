@@ -1,13 +1,12 @@
 using Npgsql.TypeMapping;
 
-namespace Pgvector.Npgsql
+namespace Pgvector.Npgsql;
+
+public static class VectorExtensions
 {
-    public static class VectorExtensions
+    public static INpgsqlTypeMapper UseVector(this INpgsqlTypeMapper mapper)
     {
-        public static INpgsqlTypeMapper UseVector(this INpgsqlTypeMapper mapper)
-        {
-            mapper.AddTypeResolverFactory(new VectorTypeHandlerResolverFactory());
-            return mapper;
-        }
+        mapper.AddTypeResolverFactory(new VectorTypeHandlerResolverFactory());
+        return mapper;
     }
 }
