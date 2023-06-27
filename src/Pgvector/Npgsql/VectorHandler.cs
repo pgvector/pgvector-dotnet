@@ -61,7 +61,7 @@ namespace Pgvector.Npgsql
             {
                 if (buf.WriteSpaceLeft < sizeof(float))
                     await buf.Flush(async, cancellationToken);
-                buf.WriteSingle(i);
+                buf.WriteSingle(vec[i]);
             }
         }
 
