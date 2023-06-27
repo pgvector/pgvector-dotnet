@@ -1,3 +1,7 @@
+## 0.1.4 (unreleased)
+
+- Fixed error with large vectors
+
 ## 0.1.3 (2023-05-20)
 
 - Updated text representation to be culture-invariant
