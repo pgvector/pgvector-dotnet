@@ -52,10 +52,14 @@ public class NpgsqlTests
 
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
-                while (await reader.ReadAsync())
-                {
-                    Console.WriteLine((Vector)reader.GetValue(0));
-                }
+                await reader.ReadAsync();
+                Assert.Equal(new float[] { 1, 1, 1 }, ((Vector)reader.GetValue(0)).ToArray());
+
+                await reader.ReadAsync();
+                Assert.Equal(new float[] { 1, 1, 2 }, ((Vector)reader.GetValue(0)).ToArray());
+
+                await reader.ReadAsync();
+                Assert.Equal(new float[] { 2, 2, 2 }, ((Vector)reader.GetValue(0)).ToArray());
             }
         }
 
