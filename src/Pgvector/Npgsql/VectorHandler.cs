@@ -53,11 +53,11 @@ namespace Pgvector.Npgsql
                 await buf.Flush(async, cancellationToken);
 
             var vec = value.ToArray();
+            var dim = vec.Length;
+            buf.WriteUInt16(Convert.ToUInt16(dim));
+            buf.WriteUInt16(0);
 
-            buf.WriteUInt16((ushort)vec.Length);
-            buf.WriteUInt16(0); // unused, must be zero
-
-            foreach (var i in vec)
+            for (int i = 0; i < dim; i++)
             {
                 if (buf.WriteSpaceLeft < sizeof(float))
                     await buf.Flush(async, cancellationToken);
