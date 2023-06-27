@@ -4,7 +4,6 @@ using Npgsql.Internal;
 using Npgsql.Internal.TypeHandling;
 using Npgsql.PostgresTypes;
 using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
