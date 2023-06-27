@@ -54,7 +54,6 @@ namespace Pgvector.Npgsql
 
             var vec = value.ToArray();
 
-            Debug.Assert(vec.Length < ushort.MaxValue);
             buf.WriteUInt16((ushort)vec.Length);
             buf.WriteUInt16(0); // unused, must be zero
 
