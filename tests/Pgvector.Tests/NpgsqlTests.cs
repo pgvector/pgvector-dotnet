@@ -74,8 +74,12 @@ public class NpgsqlTests
         {
             var embedding = new Vector(new float[16000]);
             cmd.Parameters.AddWithValue(embedding);
-            // TODO fix
-            await Assert.ThrowsAsync<System.InvalidOperationException>(() => cmd.ExecuteReaderAsync());
+
+            await using (var reader = await cmd.ExecuteReaderAsync())
+            {
+                await reader.ReadAsync();
+                Assert.Equal(embedding.ToArray(), ((Vector)reader.GetValue(0)).ToArray());
+            }
         }
 
         await using (var cmd = new NpgsqlCommand("SELECT $1", conn))

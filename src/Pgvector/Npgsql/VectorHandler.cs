@@ -33,13 +33,7 @@ namespace Pgvector.Npgsql
         }
 
         public override int ValidateAndGetLength(Vector value, ref NpgsqlLengthCache lengthCache, NpgsqlParameter parameter)
-        {
-            var length = value.ToArray().Length;
-
-            return length < ushort.MaxValue
-                ? sizeof(ushort) * 2 + sizeof(float) * length
-                : throw new NotSupportedException($"The vector has a length of {length}; lengths {ushort.MaxValue} aren't supported.");
-        }
+            => sizeof(UInt16) * 2 + sizeof(Single) * value.ToArray().Length;
 
         public override async Task Write(
             Vector value,
