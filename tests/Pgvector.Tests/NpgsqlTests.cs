@@ -63,5 +63,21 @@ public class NpgsqlTests
         {
             await cmd.ExecuteNonQueryAsync();
         }
+
+        await using (var cmd = new NpgsqlCommand("SELECT $1", conn))
+        {
+            var embedding = new Vector(new float[16000]);
+            cmd.Parameters.AddWithValue(embedding);
+            // TODO fix
+            await Assert.ThrowsAsync<System.InvalidOperationException>(() => cmd.ExecuteReaderAsync());
+        }
+
+        await using (var cmd = new NpgsqlCommand("SELECT $1", conn))
+        {
+            var embedding = new Vector(new float[65536]);
+            cmd.Parameters.AddWithValue(embedding);
+            var exception = await Assert.ThrowsAsync<System.OverflowException>(() => cmd.ExecuteReaderAsync());
+            Assert.Equal("Value was either too large or too small for a UInt16.", exception.Message);
+        }
     }
 }
