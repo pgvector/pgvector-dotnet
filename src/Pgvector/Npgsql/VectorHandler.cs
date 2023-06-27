@@ -4,47 +4,71 @@ using Npgsql.Internal;
 using Npgsql.Internal.TypeHandling;
 using Npgsql.PostgresTypes;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Pgvector.Npgsql
 {
-    public partial class VectorHandler : NpgsqlSimpleTypeHandler<Vector>
+    public partial class VectorHandler : NpgsqlTypeHandler<Vector>
     {
         public VectorHandler(PostgresType pgType) : base(pgType) { }
 
-        public override Vector Read(NpgsqlReadBuffer buf, int len, FieldDescription fieldDescription = null)
+        public override async ValueTask<Vector> Read(NpgsqlReadBuffer buf, int len, bool async, FieldDescription fieldDescription = null)
         {
+            await buf.Ensure(2 * sizeof(ushort), async);
             var dim = buf.ReadUInt16();
             var unused = buf.ReadUInt16();
             if (unused != 0)
                 throw new InvalidCastException("expected unused to be 0");
 
             var vec = new float[dim];
-            for (int i = 0; i < dim; i++)
+            for (var i = 0; i < dim; i++)
+            {
+                await buf.Ensure(sizeof(float), async);
                 vec[i] = buf.ReadSingle();
+            }
 
             return new Vector(vec);
         }
 
-        public override int ValidateAndGetLength(Vector value, NpgsqlParameter parameter)
-            => sizeof(UInt16) * 2 + sizeof(Single) * value.ToArray().Length;
-
-        public override void Write(Vector value, NpgsqlWriteBuffer buf, NpgsqlParameter parameter)
+        public override int ValidateAndGetLength(Vector value, ref NpgsqlLengthCache lengthCache, NpgsqlParameter parameter)
         {
+            var length = value.ToArray().Length;
+
+            return length < ushort.MaxValue
+                ? sizeof(ushort) * 2 + sizeof(float) * length
+                : throw new NotSupportedException($"The vector has a length of {length}; lengths {ushort.MaxValue} aren't supported.");
+        }
+
+        public override async Task Write(
+            Vector value,
+            NpgsqlWriteBuffer buf,
+            NpgsqlLengthCache lengthCache,
+            NpgsqlParameter parameter,
+            bool async,
+            CancellationToken cancellationToken = default)
+        {
+            if (buf.WriteSpaceLeft < sizeof(ushort) * 2)
+                await buf.Flush(async, cancellationToken);
+
             var vec = value.ToArray();
             var dim = vec.Length;
             buf.WriteUInt16(Convert.ToUInt16(dim));
             buf.WriteUInt16(0);
 
             for (int i = 0; i < dim; i++)
-                buf.WriteSingle(vec[i]);
+            {
+                if (buf.WriteSpaceLeft < sizeof(float))
+                    await buf.Flush(async, cancellationToken);
+                buf.WriteSingle(i);
+            }
         }
 
         public override int ValidateObjectAndGetLength(object value, ref NpgsqlLengthCache lengthCache, NpgsqlParameter parameter)
         {
             if (value is Vector converted)
-                return ValidateAndGetLength(converted, parameter);
+                return ValidateAndGetLength(converted, ref lengthCache, parameter);
 
             if (value is DBNull || value is null)
                 return 0;
