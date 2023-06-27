@@ -52,7 +52,7 @@ public class NpgsqlTests
 
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
-                List<Vector> embeddings = new List<Vector>();
+                var embeddings = new List<Vector>();
 
                 while (await reader.ReadAsync())
                 {
