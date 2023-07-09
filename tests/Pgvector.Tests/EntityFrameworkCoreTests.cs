@@ -1,4 +1,3 @@
-using Xunit;
 using Microsoft.EntityFrameworkCore;
 using Pgvector.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;

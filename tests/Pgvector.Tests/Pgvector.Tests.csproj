@@ -28,4 +28,9 @@
     <PackageReference Include="EFCore.NamingConventions" Version="7.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Using Include="Npgsql" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+
 </Project>
