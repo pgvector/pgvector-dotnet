@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Pgvector.Npgsql;
 
-public partial class VectorHandler : NpgsqlTypeHandler<Vector>
+public class VectorHandler : NpgsqlTypeHandler<Vector>
 {
     public VectorHandler(PostgresType pgType) : base(pgType) { }
 
@@ -32,7 +32,7 @@ public partial class VectorHandler : NpgsqlTypeHandler<Vector>
     }
 
     public override int ValidateAndGetLength(Vector value, ref NpgsqlLengthCache? lengthCache, NpgsqlParameter? parameter)
-        => sizeof(UInt16) * 2 + sizeof(Single) * value.ToArray().Length;
+        => sizeof(ushort) * 2 + sizeof(float) * value.ToArray().Length;
 
     public override async Task Write(
         Vector value,
@@ -59,24 +59,19 @@ public partial class VectorHandler : NpgsqlTypeHandler<Vector>
     }
 
     public override int ValidateObjectAndGetLength(object? value, ref NpgsqlLengthCache? lengthCache, NpgsqlParameter? parameter)
-    {
-        if (value is Vector converted)
-            return ValidateAndGetLength(converted, ref lengthCache, parameter);
-
-        if (value is DBNull || value is null)
-            return 0;
-
-        throw new InvalidCastException($"Can't write CLR type {value.GetType()} with handler type VectorHandler");
-    }
+        => value switch
+        {
+            Vector converted => ValidateAndGetLength(converted, ref lengthCache, parameter),
+            DBNull or null => 0,
+            _ => throw new InvalidCastException($"Can't write CLR type {value.GetType()} with handler type VectorHandler")
+        };
 
     public override Task WriteObjectWithLength(object? value, NpgsqlWriteBuffer buf, NpgsqlLengthCache? lengthCache, NpgsqlParameter? parameter, bool async, CancellationToken cancellationToken = default)
-    {
-        if (value is Vector converted)
-            return WriteWithLength(converted, buf, lengthCache, parameter, async, cancellationToken);
-
-        if (value is DBNull || value is null)
-            return WriteWithLength(DBNull.Value, buf, lengthCache, parameter, async, cancellationToken);
-
-        throw new InvalidCastException($"Can't write CLR type {value.GetType()} with handler type VectorHandler");
-    }
+        => value switch
+        {
+            Vector converted => WriteWithLength(converted, buf, lengthCache, parameter, async, cancellationToken),
+            DBNull or null => WriteWithLength(DBNull.Value, buf, lengthCache, parameter, async, cancellationToken),
+            _ => throw new InvalidCastException(
+                $"Can't write CLR type {value.GetType()} with handler type VectorHandler")
+        };
 }
