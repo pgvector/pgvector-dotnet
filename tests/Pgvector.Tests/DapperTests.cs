@@ -1,6 +1,4 @@
-using Xunit;
 using Dapper;
-using Npgsql;
 using Pgvector.Dapper;
 using Pgvector.Npgsql;
 

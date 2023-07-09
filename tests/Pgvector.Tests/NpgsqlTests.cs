@@ -1,5 +1,3 @@
-using Xunit;
-using Npgsql;
 using Pgvector.Npgsql;
 
 namespace Pgvector.Tests;
