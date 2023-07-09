@@ -23,12 +23,7 @@ public class VectorTypeHandlerResolver : TypeHandlerResolver
     }
 
     public override NpgsqlTypeHandler? ResolveByDataTypeName(string typeName)
-    {
-        if (typeName == "vector")
-            return _vectorHandler;
-
-        return null;
-    }
+        => typeName == "vector" ? _vectorHandler : null;
 
     public override NpgsqlTypeHandler? ResolveByClrType(Type type)
     {
@@ -47,22 +42,11 @@ public class VectorTypeHandlerResolver : TypeHandlerResolver
         => DoGetMappingByDataTypeName(dataTypeName);
 
     internal static string? ClrTypeToDataTypeName(Type type)
-    {
-        if (type == typeof(Vector))
-        {
-            return "vector";
-        }
-
-        return null;
-    }
+        => type == typeof(Vector) ? "vector" : null;
 
     internal static TypeMappingInfo? DoGetMappingByDataTypeName(string dataTypeName)
-    {
-        if (dataTypeName == "vector")
-            return new TypeMappingInfo(NpgsqlDbType.Unknown, "vector");
+        => dataTypeName == "vector" ? new TypeMappingInfo(NpgsqlDbType.Unknown, "vector") : null;
 
-        return null;
-    }
-
-    PostgresType? PgType(string pgTypeName) => _databaseInfo.TryGetPostgresTypeByName(pgTypeName, out var pgType) ? pgType : null;
+    PostgresType? PgType(string pgTypeName)
+        => _databaseInfo.TryGetPostgresTypeByName(pgTypeName, out var pgType) ? pgType : null;
 }
