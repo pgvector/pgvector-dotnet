@@ -1,5 +1,3 @@
-using Xunit;
-using Npgsql;
 using Pgvector.Npgsql;
 
 namespace Pgvector.Tests;
@@ -52,16 +50,42 @@ public class NpgsqlTests
 
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
+                var embeddings = new List<Vector>();
+
                 while (await reader.ReadAsync())
                 {
-                    Console.WriteLine((Vector)reader.GetValue(0));
+                    embeddings.Add((Vector)reader.GetValue(0));
                 }
+
+                Assert.Equal(new float[] { 1, 1, 1 }, embeddings[0].ToArray());
+                Assert.Equal(new float[] { 1, 1, 2 }, embeddings[1].ToArray());
+                Assert.Equal(new float[] { 2, 2, 2 }, embeddings[2].ToArray());
             }
         }
 
         await using (var cmd = new NpgsqlCommand("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)", conn))
         {
             await cmd.ExecuteNonQueryAsync();
+        }
+
+        await using (var cmd = new NpgsqlCommand("SELECT $1", conn))
+        {
+            var embedding = new Vector(new float[16000]);
+            cmd.Parameters.AddWithValue(embedding);
+
+            await using (var reader = await cmd.ExecuteReaderAsync())
+            {
+                await reader.ReadAsync();
+                Assert.Equal(embedding.ToArray(), ((Vector)reader.GetValue(0)).ToArray());
+            }
+        }
+
+        await using (var cmd = new NpgsqlCommand("SELECT $1", conn))
+        {
+            var embedding = new Vector(new float[65536]);
+            cmd.Parameters.AddWithValue(embedding);
+            var exception = await Assert.ThrowsAsync<System.OverflowException>(() => cmd.ExecuteReaderAsync());
+            Assert.Equal("Value was either too large or too small for a UInt16.", exception.Message);
         }
     }
 }
