@@ -6,9 +6,9 @@ using System.Data.SqlClient;
 
 namespace Pgvector.Dapper;
 
-public class VectorTypeHandler : SqlMapper.TypeHandler<Vector>
+public class VectorTypeHandler : SqlMapper.TypeHandler<Vector?>
 {
-    public override Vector Parse(object value)
+    public override Vector? Parse(object value)
         => value switch
         {
             null or DBNull => null,
@@ -16,7 +16,7 @@ public class VectorTypeHandler : SqlMapper.TypeHandler<Vector>
             _ => value.ToString() is string s ? new Vector(s) : null
         };
 
-    public override void SetValue(IDbDataParameter parameter, Vector value)
+    public override void SetValue(IDbDataParameter parameter, Vector? value)
     {
         parameter.Value = value is null ? DBNull.Value : value;
 
