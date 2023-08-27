@@ -203,7 +203,11 @@ Get the nearest neighbors
 
 ```csharp
 var embedding = new Vector(new float[] { 1, 1, 1 });
-var items = await ctx.Items.FromSql($"SELECT * FROM items ORDER BY embedding <-> {embedding} LIMIT 5").ToListAsync();
+var items = await ctx.Items
+    .OrderBy(x => x.Embedding!.EuclideanDistance(embedding))
+    .Take(5)
+    .ToListAsync();
+
 foreach (Item item in items)
 {
     if (item.Embedding != null)
