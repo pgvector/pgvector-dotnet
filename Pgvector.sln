@@ -5,23 +5,23 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B76AB67C-094F-433B-AF25-807B50D2888E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pgvector", "src\Pgvector\Pgvector.csproj", "{3C580CE2-B935-4656-BCC9-4FB4035089E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pgvector", "src\Pgvector\Pgvector.csproj", "{3C580CE2-B935-4656-BCC9-4FB4035089E4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4C5546A5-6119-4D42-A65B-2327280E1881}"
+	ProjectSection(SolutionItems) = preProject
+		testEnvironments.json = testEnvironments.json
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pgvector.Tests", "tests\Pgvector.Tests\Pgvector.Tests.csproj", "{E9267E87-A783-414F-8916-49D5A5F55634}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pgvector.Tests", "tests\Pgvector.Tests\Pgvector.Tests.csproj", "{E9267E87-A783-414F-8916-49D5A5F55634}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pgvector.Dapper", "src\Pgvector.Dapper\Pgvector.Dapper.csproj", "{FF6D3EDD-C96A-4AD5-A298-0A7E53BB3A07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pgvector.Dapper", "src\Pgvector.Dapper\Pgvector.Dapper.csproj", "{FF6D3EDD-C96A-4AD5-A298-0A7E53BB3A07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pgvector.EntityFrameworkCore", "src\Pgvector.EntityFrameworkCore\Pgvector.EntityFrameworkCore.csproj", "{4493B7D8-112B-4867-9373-C08B6F996875}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pgvector.EntityFrameworkCore", "src\Pgvector.EntityFrameworkCore\Pgvector.EntityFrameworkCore.csproj", "{4493B7D8-112B-4867-9373-C08B6F996875}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{3C580CE2-B935-4656-BCC9-4FB4035089E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -41,10 +41,16 @@ Global
 		{4493B7D8-112B-4867-9373-C08B6F996875}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4493B7D8-112B-4867-9373-C08B6F996875}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3C580CE2-B935-4656-BCC9-4FB4035089E4} = {B76AB67C-094F-433B-AF25-807B50D2888E}
 		{E9267E87-A783-414F-8916-49D5A5F55634} = {4C5546A5-6119-4D42-A65B-2327280E1881}
 		{FF6D3EDD-C96A-4AD5-A298-0A7E53BB3A07} = {B76AB67C-094F-433B-AF25-807B50D2888E}
 		{4493B7D8-112B-4867-9373-C08B6F996875} = {B76AB67C-094F-433B-AF25-807B50D2888E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8D25D8F0-2B5A-411F-9F9D-92B7077A2530}
 	EndGlobalSection
 EndGlobal
