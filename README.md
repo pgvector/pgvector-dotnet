@@ -153,6 +153,8 @@ Add an approximate index
 
 ```csharp
 conn.Execute("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)");
+// or
+conn.Execute("CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)");
 ```
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
@@ -220,7 +222,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
     modelBuilder.Entity<Item>()
         .HasIndex(i => i.Embedding)
-        .HasMethod("ivfflat")
+        .HasMethod("ivfflat") // or hnsw
         .HasOperators("vector_l2_ops");
 }
 ```
