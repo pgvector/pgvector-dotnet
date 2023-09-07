@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+    <PackageReference Include="EFCore.NamingConventions" Version="7.0.2" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -25,7 +26,6 @@
     <ProjectReference Include="..\..\src\Pgvector\Pgvector.csproj" />
     <ProjectReference Include="..\..\src\Pgvector.Dapper\Pgvector.Dapper.csproj" />
     <ProjectReference Include="..\..\src\Pgvector.EntityFrameworkCore\Pgvector.EntityFrameworkCore.csproj" />
-    <PackageReference Include="EFCore.NamingConventions" Version="7.0.2" />
   </ItemGroup>
 
   <ItemGroup>
