@@ -175,6 +175,15 @@ Import the library
 using Pgvector.EntityFrameworkCore;
 ```
 
+Create the extension
+
+```csharp
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    modelBuilder.HasPostgresExtension("vector");
+}
+```
+
 Configure the connection
 
 ```csharp
