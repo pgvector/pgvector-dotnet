@@ -18,11 +18,10 @@ public class ItemContext : DbContext
     {
         modelBuilder.HasPostgresExtension("vector");
 
-        // TODO set lists = 1
-        // modelBuilder.Entity<Item>()
-        //     .HasIndex(i => i.Embedding)
-        //     .HasMethod("ivfflat")
-        //     .HasOperators("vector_l2_ops");
+        modelBuilder.Entity<Item>()
+            .HasIndex(i => i.Embedding)
+            .HasMethod("hnsw")
+            .HasOperators("vector_l2_ops");
     }
 }
 
