@@ -38,6 +38,17 @@ await using var dataSource = dataSourceBuilder.Build();
 var conn = dataSource.OpenConnection();
 ```
 
+Enable the extension
+
+```csharp
+await using (var cmd = new NpgsqlCommand("CREATE EXTENSION IF NOT EXISTS vector", conn))
+{
+    await cmd.ExecuteNonQueryAsync();
+}
+
+conn.ReloadTypes();
+```
+
 Create a table
 
 ```csharp
@@ -116,6 +127,13 @@ await using var dataSource = dataSourceBuilder.Build();
 var conn = dataSource.OpenConnection();
 ```
 
+Enable the extension
+
+```csharp
+conn.Execute("CREATE EXTENSION IF NOT EXISTS vector");
+conn.ReloadTypes();
+```
+
 Define a class
 
 ```csharp
@@ -175,7 +193,7 @@ Import the library
 using Pgvector.EntityFrameworkCore;
 ```
 
-Create the extension
+Enable the extension
 
 ```csharp
 protected override void OnModelCreating(ModelBuilder modelBuilder)
