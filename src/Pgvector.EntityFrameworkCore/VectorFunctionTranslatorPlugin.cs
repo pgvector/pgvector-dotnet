@@ -25,13 +25,13 @@ public class VectorFunctionTranslatorPlugin : IMethodCallTranslatorPlugin
         private readonly ISqlExpressionFactory _sqlExpressionFactory;
         private readonly ITypeMappingSource _typeMappingSource;
 
-        private static readonly MethodInfo _methodEuclideanDistance = typeof(VectorExtensions)
-            .GetRuntimeMethod(nameof(VectorExtensions.EuclideanDistance), new[]
+        private static readonly MethodInfo _methodL2Distance = typeof(VectorExtensions)
+            .GetRuntimeMethod(nameof(VectorExtensions.L2Distance), new[]
             {
                 typeof(Vector),
                 typeof(Vector),
             })
-            ?? throw new InvalidOperationException($"Method {nameof(VectorExtensions.EuclideanDistance)} is not found");
+            ?? throw new InvalidOperationException($"Method {nameof(VectorExtensions.L2Distance)} is not found");
 
         private static readonly MethodInfo _methodCosineDistance = typeof(VectorExtensions)
             .GetRuntimeMethod(nameof(VectorExtensions.CosineDistance), new[]
@@ -41,13 +41,13 @@ public class VectorFunctionTranslatorPlugin : IMethodCallTranslatorPlugin
             })
             ?? throw new InvalidOperationException($"Method {nameof(VectorExtensions.CosineDistance)} is not found");
 
-        private static readonly MethodInfo _methodInnerProduct = typeof(VectorExtensions)
-            .GetRuntimeMethod(nameof(VectorExtensions.InnerProduct), new[]
+        private static readonly MethodInfo _methodMaxInnerProduct = typeof(VectorExtensions)
+            .GetRuntimeMethod(nameof(VectorExtensions.MaxInnerProduct), new[]
             {
                 typeof(Vector),
                 typeof(Vector),
             })
-            ?? throw new InvalidOperationException($"Method {nameof(VectorExtensions.InnerProduct)} is not found");
+            ?? throw new InvalidOperationException($"Method {nameof(VectorExtensions.MaxInnerProduct)} is not found");
 
         public VectorFunctionTranslator(ISqlExpressionFactory sqlExpressionFactory, ITypeMappingSource typeMappingSource)
         {
@@ -65,9 +65,9 @@ public class VectorFunctionTranslatorPlugin : IMethodCallTranslatorPlugin
         {
             var vectorOperator = method switch
             {
-                _ when ReferenceEquals(method, _methodEuclideanDistance) => "<->",
+                _ when ReferenceEquals(method, _methodL2Distance) => "<->",
                 _ when ReferenceEquals(method, _methodCosineDistance) => "<=>",
-                _ when ReferenceEquals(method, _methodInnerProduct) => "<#>",
+                _ when ReferenceEquals(method, _methodMaxInnerProduct) => "<#>",
                 _ => null
             };
 

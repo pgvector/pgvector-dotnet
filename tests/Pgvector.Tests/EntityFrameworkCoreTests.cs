@@ -71,7 +71,7 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
     }
 
     [Fact]
-    public async Task EuclideanDistanceSelectOredered()
+    public async Task L2DistanceSelectOredered()
     {
         var db = _fixture.Db;
 
@@ -82,7 +82,7 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
             .ToListAsync();
 
         var itemsB = await db.Items
-            .OrderBy(x => x.Embedding!.EuclideanDistance(embedding))
+            .OrderBy(x => x.Embedding!.L2Distance(embedding))
             .Take(5)
             .ToListAsync();
 
@@ -127,7 +127,7 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
     }
 
     [Fact]
-    public async Task InnerProductSelectOredered()
+    public async Task MaxInnerProductSelectOredered()
     {
         var db = _fixture.Db;
 
@@ -138,7 +138,7 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
             .ToListAsync();
 
         var itemsB = await db.Items
-            .OrderBy(x => x.Embedding!.InnerProduct(embedding))
+            .OrderBy(x => x.Embedding!.MaxInnerProduct(embedding))
             .Take(5)
             .ToListAsync();
 
@@ -155,14 +155,14 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
     }
 
     [Fact]
-    public void EuclideanDistanceQuery()
+    public void L2DistanceQuery()
     {
         var db = _fixture.Db;
 
         var embedding = new Vector(new float[] { 1, 1, 1 });
 
         var query = db.Items
-            .OrderBy(x => x.Embedding!.EuclideanDistance(embedding))
+            .OrderBy(x => x.Embedding!.L2Distance(embedding))
             .Take(5);
 
         var queryString = query.ToQueryString();
@@ -191,14 +191,14 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
     }
 
     [Fact]
-    public void InnerProductQuery()
+    public void MaxInnerProductQuery()
     {
         var db = _fixture.Db;
 
         var embedding = new Vector(new float[] { 1, 1, 1 });
 
         var query = db.Items
-            .OrderBy(x => x.Embedding!.InnerProduct(embedding))
+            .OrderBy(x => x.Embedding!.MaxInnerProduct(embedding))
             .Take(5);
 
         var queryString = query.ToQueryString();
