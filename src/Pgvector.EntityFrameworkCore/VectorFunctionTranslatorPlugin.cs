@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.EntityFrameworkCore.Storage;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Query.Expressions.Internal;
 using System.Reflection;
 
 namespace Pgvector.EntityFrameworkCore;
@@ -54,6 +55,7 @@ public class VectorFunctionTranslatorPlugin : IMethodCallTranslatorPlugin
             _typeMappingSource = typeMappingSource;
         }
 
+#pragma warning disable EF1001
         public SqlExpression? Translate(
             SqlExpression? instance,
             MethodInfo method,
@@ -61,46 +63,30 @@ public class VectorFunctionTranslatorPlugin : IMethodCallTranslatorPlugin
             IDiagnosticsLogger<DbLoggerCategory.Query> logger
         )
         {
-            string? GetFunctionName()
+            var vectorOperator = method switch
             {
-                if (ReferenceEquals(method, _methodEuclideanDistance))
-                {
-                    return "l2_distance";
-                }
+                _ when ReferenceEquals(method, _methodEuclideanDistance) => "<->",
+                _ when ReferenceEquals(method, _methodCosineDistance) => "<=>",
+                _ when ReferenceEquals(method, _methodInnerProduct) => "<#>",
+                _ => null
+            };
 
-                if (ReferenceEquals(method, _methodCosineDistance))
-                {
-                    return "cosine_distance";
-                }
-
-                if (ReferenceEquals(method, _methodInnerProduct))
-                {
-                    return "vector_negative_inner_product";
-                }
-
-                return null;
-            }
-
-            var functionName = GetFunctionName();
-
-            if (functionName != null)
+            if (vectorOperator != null)
             {
                 var left = arguments[0];
                 var right = arguments[1];
 
-                var expression = _sqlExpressionFactory.Function(
-                    name: functionName,
-                    arguments: new[] { left, right },
-                    nullable: false,
-                    argumentsPropagateNullability: new[] { false, false },
-                    returnType: typeof(double),
-                    typeMapping: left.TypeMapping
+                return new PostgresUnknownBinaryExpression(
+                    _sqlExpressionFactory.ApplyDefaultTypeMapping(left),
+                    _sqlExpressionFactory.ApplyDefaultTypeMapping(right),
+                    vectorOperator,
+                    typeof(double),
+                    left.TypeMapping
                 );
-
-                return expression;
             }
 
             return null;
         }
+#pragma warning restore EF1001
     }
 }
