@@ -30,24 +30,21 @@ public class VectorFunctionTranslatorPlugin : IMethodCallTranslatorPlugin
             {
                 typeof(Vector),
                 typeof(Vector),
-            })
-            ?? throw new InvalidOperationException($"Method {nameof(VectorExtensions.L2Distance)} is not found");
+            })!;
 
         private static readonly MethodInfo _methodCosineDistance = typeof(VectorExtensions)
             .GetRuntimeMethod(nameof(VectorExtensions.CosineDistance), new[]
             {
                 typeof(Vector),
                 typeof(Vector),
-            })
-            ?? throw new InvalidOperationException($"Method {nameof(VectorExtensions.CosineDistance)} is not found");
+            })!;
 
         private static readonly MethodInfo _methodMaxInnerProduct = typeof(VectorExtensions)
             .GetRuntimeMethod(nameof(VectorExtensions.MaxInnerProduct), new[]
             {
                 typeof(Vector),
                 typeof(Vector),
-            })
-            ?? throw new InvalidOperationException($"Method {nameof(VectorExtensions.MaxInnerProduct)} is not found");
+            })!;
 
         public VectorFunctionTranslator(ISqlExpressionFactory sqlExpressionFactory, ITypeMappingSource typeMappingSource)
         {

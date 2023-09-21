@@ -1,4 +1,6 @@
-﻿namespace Pgvector.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+
+namespace Pgvector.EntityFrameworkCore;
 
 public static class VectorExtensions
 {
@@ -7,7 +9,7 @@ public static class VectorExtensions
     /// </summary>
     public static double CosineDistance(this Vector a, Vector b)
     {
-        throw new InvalidOperationException("This method can only be used in Linq expressions");
+        throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(CosineDistance)));
     }
 
     /// <summary>
@@ -15,7 +17,7 @@ public static class VectorExtensions
     /// </summary>
     public static double L2Distance(this Vector a, Vector b)
     {
-        throw new InvalidOperationException("This method can only be used in Linq expressions");
+        throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(L2Distance)));
     }
 
     /// <summary>
@@ -23,7 +25,7 @@ public static class VectorExtensions
     /// </summary>
     public static double MaxInnerProduct(this Vector a, Vector b)
     {
-        throw new InvalidOperationException("This method can only be used in Linq expressions");
+        throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(MaxInnerProduct)));
     }
 }
 
