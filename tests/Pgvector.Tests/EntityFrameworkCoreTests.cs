@@ -71,7 +71,7 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
     }
 
     [Fact]
-    public async Task L2DistanceSelectOredered()
+    public async Task L2DistanceSelectOrdered()
     {
         var db = _fixture.Db;
 
@@ -99,7 +99,7 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
     }
 
     [Fact]
-    public async Task CosineDistanceSelectOredered()
+    public async Task CosineDistanceSelectOrdered()
     {
         var db = _fixture.Db;
 
@@ -127,7 +127,7 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
     }
 
     [Fact]
-    public async Task MaxInnerProductSelectOredered()
+    public async Task MaxInnerProductSelectOrdered()
     {
         var db = _fixture.Db;
 
