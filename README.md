@@ -1,4 +1,4 @@
-# pgvector-dotnet
+﻿# pgvector-dotnet
 
 [pgvector](https://github.com/pgvector/pgvector) support for C#
 
@@ -210,12 +210,17 @@ ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 1 }) });
 ctx.SaveChanges();
 ```
 
+The `Vector` type has extension methods for vector operations:
+* `double CosineDistance(this Vector a, Vector b)` — Gets the Euclidean distance (`<->` or `cosine_distance` in SQL)
+* `double L2Distance(this Vector a, Vector b)` — Gets the cosine distance (`<=>` or `l2_distance` in SQL)
+* `double MaxInnerProduct(this Vector a, Vector b)` —  Gets the inner negative product (`<#>` or `vector_negative_inner_product` in SQL)
+
 Get the nearest neighbors
 
 ```csharp
 var embedding = new Vector(new float[] { 1, 1, 1 });
 var items = await ctx.Items
-    .OrderBy(x => x.Embedding!.EuclideanDistance(embedding))
+    .OrderBy(x => x.Embedding!.L2Distance(embedding))
     .Take(5)
     .ToListAsync();
 
