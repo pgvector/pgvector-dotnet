@@ -34,112 +34,177 @@ public class Item
     public Vector? Embedding { get; set; }
 }
 
-public class EntityFrameworkCoreTests
+public class EntityFrameworkCoreFixture : IDisposable
 {
-    private async Task<ItemContext> GetContextAsync()
+    public ItemContext Db { get; private set; }
+
+    public EntityFrameworkCoreFixture()
     {
-        var ctx = new ItemContext();
-        await ctx.Database.EnsureDeletedAsync();
-        await ctx.Database.EnsureCreatedAsync();
-        return ctx;
+        var db = new ItemContext();
+        db.Database.EnsureDeleted();
+        db.Database.EnsureCreated();
+
+        for (int i = -5; i <= 5; i++)
+        {
+            db.Items.Add(new Item { Embedding = new Vector(new float[] { i, i, i }) });
+        }
+
+        db.SaveChanges();
+
+        Db = db;
+    }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        Db.Dispose();
+    }
+}
+
+public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture>
+{
+    private readonly EntityFrameworkCoreFixture _fixture;
+
+    public EntityFrameworkCoreTests(EntityFrameworkCoreFixture fixture)
+    {
+        _fixture = fixture;
     }
 
     [Fact]
-    public async Task Main()
+    public async Task EuclideanDistanceSelectOredered()
     {
-        await using var ctx = await GetContextAsync();
-
-        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 1 }) });
-        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 2, 2, 2 }) });
-        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 2 }) });
-        ctx.SaveChanges();
+        var db = _fixture.Db;
 
         var embedding = new Vector(new float[] { 1, 1, 1 });
-        var items = await ctx.Items
+
+        var itemsA = await db.Items
             .FromSql($"SELECT * FROM efcore_items ORDER BY embedding <-> {embedding} LIMIT 5")
             .ToListAsync();
 
-        foreach (Item item in items)
-        {
-            if (item.Embedding != null)
-            {
-                Console.WriteLine(item.Embedding);
-            }
-        }
-    }
-
-    [Fact]
-    public async Task EuclideanDistance()
-    {
-        await using var ctx = await GetContextAsync();
-
-        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 1 }) });
-        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 2, 2, 2 }) });
-        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 2 }) });
-        ctx.SaveChanges();
-
-        var embedding = new Vector(new float[] { 1, 1, 1 });
-        var items = await ctx.Items
+        var itemsB = await db.Items
             .OrderBy(x => x.Embedding!.EuclideanDistance(embedding))
             .Take(5)
             .ToListAsync();
 
-        foreach (Item item in items)
+        foreach (Item item in itemsB)
         {
             if (item.Embedding != null)
             {
                 Console.WriteLine(item.Embedding);
             }
         }
+
+        Assert.Equal(itemsA.Count, itemsB.Count); // Check amount
+        Assert.Equal(itemsA.Select(x => x.Id).ToArray(), itemsB.Select(x => x.Id).ToArray()); // Check order
     }
 
     [Fact]
-    public async Task CosineDistance()
+    public async Task CosineDistanceSelectOredered()
     {
-        await using var ctx = await GetContextAsync();
-
-        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 1 }) });
-        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 2, 2, 2 }) });
-        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 2 }) });
-        ctx.SaveChanges();
+        var db = _fixture.Db;
 
         var embedding = new Vector(new float[] { 1, 1, 1 });
-        var items = await ctx.Items
+
+        var itemsA = await db.Items
+            .FromSql($"SELECT * FROM efcore_items ORDER BY embedding <=> {embedding} LIMIT 5")
+            .ToListAsync();
+
+        var itemsB = await db.Items
             .OrderBy(x => x.Embedding!.CosineDistance(embedding))
             .Take(5)
             .ToListAsync();
 
-        foreach (Item item in items)
+        foreach (Item item in itemsB)
         {
             if (item.Embedding != null)
             {
                 Console.WriteLine(item.Embedding);
             }
         }
+
+        Assert.Equal(itemsA.Count, itemsB.Count); // Check amount
+        Assert.Equal(itemsA.Select(x => x.Id).ToArray(), itemsB.Select(x => x.Id).ToArray()); // Check order
     }
 
     [Fact]
-    public async Task InnerProduct()
+    public async Task InnerProductSelectOredered()
     {
-        await using var ctx = await GetContextAsync();
-
-        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 1 }) });
-        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 2, 2, 2 }) });
-        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 2 }) });
-        ctx.SaveChanges();
+        var db = _fixture.Db;
 
         var embedding = new Vector(new float[] { 1, 1, 1 });
-        var items = await ctx.Items
+
+        var itemsA = await db.Items
+            .FromSql($"SELECT * FROM efcore_items ORDER BY embedding <#> {embedding} LIMIT 5")
+            .ToListAsync();
+
+        var itemsB = await db.Items
             .OrderBy(x => x.Embedding!.InnerProduct(embedding))
             .Take(5)
             .ToListAsync();
 
-        foreach (Item item in items)
+        foreach (Item item in itemsB)
         {
             if (item.Embedding != null)
             {
                 Console.WriteLine(item.Embedding);
             }
         }
+
+        Assert.Equal(itemsA.Count, itemsB.Count); // Check amount
+        Assert.Equal(itemsA.Select(x => x.Id).ToArray(), itemsB.Select(x => x.Id).ToArray()); // Check order
+    }
+
+    [Fact]
+    public void EuclideanDistanceQuery()
+    {
+        var db = _fixture.Db;
+
+        var embedding = new Vector(new float[] { 1, 1, 1 });
+
+        var query = db.Items
+            .OrderBy(x => x.Embedding!.EuclideanDistance(embedding))
+            .Take(5);
+
+        var queryString = query.ToQueryString();
+
+        Console.WriteLine(queryString);
+
+        Assert.Contains("ORDER BY e.embedding <-> @__embedding_0", queryString);
+    }
+
+    [Fact]
+    public void CosineDistanceQuery()
+    {
+        var db = _fixture.Db;
+
+        var embedding = new Vector(new float[] { 1, 1, 1 });
+
+        var query = db.Items
+            .OrderBy(x => x.Embedding!.CosineDistance(embedding))
+            .Take(5);
+
+        var queryString = query.ToQueryString();
+
+        Console.WriteLine(queryString);
+
+        Assert.Contains("ORDER BY e.embedding <=> @__embedding_0", queryString);
+    }
+
+    [Fact]
+    public void InnerProductQuery()
+    {
+        var db = _fixture.Db;
+
+        var embedding = new Vector(new float[] { 1, 1, 1 });
+
+        var query = db.Items
+            .OrderBy(x => x.Embedding!.InnerProduct(embedding))
+            .Take(5);
+
+        var queryString = query.ToQueryString();
+
+        Console.WriteLine(queryString);
+
+        Assert.Contains("ORDER BY e.embedding <#> @__embedding_0", queryString);
     }
 }
