@@ -15,10 +15,8 @@ public static class VectorExtensions
     ///     .ToListAsync();
     /// </code>
     /// </summary>
-    public static double CosineDistance(this Vector a, Vector b)
-    {
-        throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(CosineDistance)));
-    }
+    public static double CosineDistance(this Vector a, Vector b) 
+        => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(CosineDistance)));
 
     /// <summary>
     /// Gets the Euclidean distance (`&lt;-&gt;` or `cosine_distance` in SQL)
@@ -32,9 +30,7 @@ public static class VectorExtensions
     /// </code>
     /// </summary>
     public static double L2Distance(this Vector a, Vector b)
-    {
-        throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(L2Distance)));
-    }
+        => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(L2Distance)));
 
     /// <summary>
     /// Gets the inner negative product (`&lt;#&gt;` or `vector_negative_inner_product` in SQL)
@@ -48,8 +44,6 @@ public static class VectorExtensions
     /// </code>
     /// </summary>
     public static double MaxInnerProduct(this Vector a, Vector b)
-    {
-        throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(MaxInnerProduct)));
-    }
+        => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(MaxInnerProduct)));
 }
 
