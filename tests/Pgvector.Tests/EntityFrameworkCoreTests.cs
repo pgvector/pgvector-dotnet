@@ -153,4 +153,58 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
         Assert.Equal(itemsA.Count, itemsB.Count); // Check amount
         Assert.Equal(itemsA.Select(x => x.Id).ToArray(), itemsB.Select(x => x.Id).ToArray()); // Check order
     }
+
+    [Fact]
+    public void L2DistanceQuery()
+    {
+        var db = _fixture.Db;
+
+        var embedding = new Vector(new float[] { 1, 1, 1 });
+
+        var query = db.Items
+            .OrderBy(x => x.Embedding!.L2Distance(embedding))
+            .Take(5);
+
+        var queryString = query.ToQueryString();
+
+        Console.WriteLine(queryString);
+
+        Assert.Contains("ORDER BY e.embedding <-> @__embedding_0", queryString);
+    }
+
+    [Fact]
+    public void CosineDistanceQuery()
+    {
+        var db = _fixture.Db;
+
+        var embedding = new Vector(new float[] { 1, 1, 1 });
+
+        var query = db.Items
+            .OrderBy(x => x.Embedding!.CosineDistance(embedding))
+            .Take(5);
+
+        var queryString = query.ToQueryString();
+
+        Console.WriteLine(queryString);
+
+        Assert.Contains("ORDER BY e.embedding <=> @__embedding_0", queryString);
+    }
+
+    [Fact]
+    public void MaxInnerProductQuery()
+    {
+        var db = _fixture.Db;
+
+        var embedding = new Vector(new float[] { 1, 1, 1 });
+
+        var query = db.Items
+            .OrderBy(x => x.Embedding!.MaxInnerProduct(embedding))
+            .Take(5);
+
+        var queryString = query.ToQueryString();
+
+        Console.WriteLine(queryString);
+
+        Assert.Contains("ORDER BY e.embedding <#> @__embedding_0", queryString);
+    }
 }
