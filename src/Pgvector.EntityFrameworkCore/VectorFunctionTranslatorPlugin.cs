@@ -10,7 +10,10 @@ namespace Pgvector.EntityFrameworkCore;
 
 public class VectorFunctionTranslatorPlugin : IMethodCallTranslatorPlugin
 {
-    public VectorFunctionTranslatorPlugin(ISqlExpressionFactory sqlExpressionFactory, ITypeMappingSource typeMappingSource)
+    public VectorFunctionTranslatorPlugin(
+        ISqlExpressionFactory sqlExpressionFactory, 
+        IRelationalTypeMappingSource typeMappingSource
+    )
     {
         Translators = new[]
         {
@@ -23,7 +26,7 @@ public class VectorFunctionTranslatorPlugin : IMethodCallTranslatorPlugin
     private class VectorFunctionTranslator : IMethodCallTranslator
     {
         private readonly ISqlExpressionFactory _sqlExpressionFactory;
-        private readonly ITypeMappingSource _typeMappingSource;
+        private readonly IRelationalTypeMappingSource _typeMappingSource;
 
         private static readonly MethodInfo _methodL2Distance = typeof(VectorExtensions)
             .GetRuntimeMethod(nameof(VectorExtensions.L2Distance), new[]
@@ -46,7 +49,10 @@ public class VectorFunctionTranslatorPlugin : IMethodCallTranslatorPlugin
                 typeof(Vector),
             })!;
 
-        public VectorFunctionTranslator(ISqlExpressionFactory sqlExpressionFactory, ITypeMappingSource typeMappingSource)
+        public VectorFunctionTranslator(
+            ISqlExpressionFactory sqlExpressionFactory, 
+            IRelationalTypeMappingSource typeMappingSource
+        )
         {
             _sqlExpressionFactory = sqlExpressionFactory;
             _typeMappingSource = typeMappingSource;
@@ -73,12 +79,14 @@ public class VectorFunctionTranslatorPlugin : IMethodCallTranslatorPlugin
                 var left = arguments[0];
                 var right = arguments[1];
 
+                var resultTypeMapping = _typeMappingSource.FindMapping(method.ReturnType)!;
+
                 return new PostgresUnknownBinaryExpression(
-                    _sqlExpressionFactory.ApplyDefaultTypeMapping(left),
-                    _sqlExpressionFactory.ApplyDefaultTypeMapping(right),
-                    vectorOperator,
-                    typeof(double),
-                    left.TypeMapping
+                    left: _sqlExpressionFactory.ApplyDefaultTypeMapping(left),
+                    right: _sqlExpressionFactory.ApplyDefaultTypeMapping(right),
+                    binaryOperator: vectorOperator,
+                    type: resultTypeMapping.ClrType,
+                    typeMapping: resultTypeMapping
                 );
             }
 
