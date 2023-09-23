@@ -166,7 +166,7 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
             .Take(5);
 
         var items = await query.ToArrayAsync();
-        Assert.True(items.Any());
+        Assert.Equal(new[] { 7, 8, 6, 9, 5 }, items.Select(x => x.Id).ToArray());
 
         var queryString = query.ToQueryString();
 
@@ -187,7 +187,7 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
             .Take(5);
 
         var items = await query.ToArrayAsync();
-        Assert.True(items.Any());
+        Assert.Equal(new[] { 9, 10, 7, 8, 11 }, items.Select(x => x.Id).ToArray());
 
         var queryString = query.ToQueryString();
 
@@ -208,7 +208,7 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
             .Take(5);
 
         var items = await query.ToArrayAsync();
-        Assert.True(items.Any());
+        Assert.Equal(new[] { 11, 10, 9, 8, 7 }, items.Select(x => x.Id).ToArray());
 
         var queryString = query.ToQueryString();
 
