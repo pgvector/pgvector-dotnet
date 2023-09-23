@@ -155,7 +155,7 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
     }
 
     [Fact]
-    public void L2DistanceQuery()
+    public async Task L2DistanceQuery()
     {
         var db = _fixture.Db;
 
@@ -165,6 +165,9 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
             .OrderBy(x => x.Embedding!.L2Distance(embedding))
             .Take(5);
 
+        var items = await query.ToArrayAsync();
+        Assert.True(items.Any());
+
         var queryString = query.ToQueryString();
 
         Console.WriteLine(queryString);
@@ -173,7 +176,7 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
     }
 
     [Fact]
-    public void CosineDistanceQuery()
+    public async Task CosineDistanceQuery()
     {
         var db = _fixture.Db;
 
@@ -183,6 +186,9 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
             .OrderBy(x => x.Embedding!.CosineDistance(embedding))
             .Take(5);
 
+        var items = await query.ToArrayAsync();
+        Assert.True(items.Any());
+
         var queryString = query.ToQueryString();
 
         Console.WriteLine(queryString);
@@ -191,7 +197,7 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
     }
 
     [Fact]
-    public void MaxInnerProductQuery()
+    public async Task MaxInnerProductQuery()
     {
         var db = _fixture.Db;
 
@@ -200,6 +206,9 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
         var query = db.Items
             .OrderBy(x => x.Embedding!.MaxInnerProduct(embedding))
             .Take(5);
+
+        var items = await query.ToArrayAsync();
+        Assert.True(items.Any());
 
         var queryString = query.ToQueryString();
 
