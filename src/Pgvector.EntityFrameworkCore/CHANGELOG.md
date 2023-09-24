@@ -1,3 +1,7 @@
+## 0.1.2 (unreleased)
+
+- Added distance functions
+
 ## 0.1.1 (2023-04-25)
 
 - Added support for .NET 6

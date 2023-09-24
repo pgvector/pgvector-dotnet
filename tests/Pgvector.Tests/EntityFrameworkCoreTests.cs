@@ -57,5 +57,14 @@ public class EntityFrameworkCoreTests
                 Console.WriteLine(item.Embedding);
             }
         }
+
+        items = await ctx.Items.OrderBy(x => x.Embedding!.L2Distance(embedding)).Take(5).ToListAsync();
+        foreach (Item item in items)
+        {
+            if (item.Embedding != null)
+            {
+                Console.WriteLine(item.Embedding);
+            }
+        }
     }
 }
