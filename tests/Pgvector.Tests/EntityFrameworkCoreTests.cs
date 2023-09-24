@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Pgvector.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -166,7 +166,17 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
             .Take(5);
 
         var items = await query.ToArrayAsync();
-        Assert.Equal(new[] { 7, 8, 6, 9, 5 }, items.Select(x => x.Id).ToArray());
+        Assert.Equal(
+            new[] 
+            {
+                new Vector(new float[] { 1, 1, 1 }),
+                new Vector(new float[] { 2, 2, 2 }),
+                new Vector(new float[] { 0, 0, 0 }),
+                new Vector(new float[] { 3, 3, 3 }),
+                new Vector(new float[] { -1, -1, -1 })
+            }, 
+            items.Select(x => x.Embedding).ToArray()
+        );
 
         var queryString = query.ToQueryString();
 
@@ -187,7 +197,17 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
             .Take(5);
 
         var items = await query.ToArrayAsync();
-        Assert.Equal(new[] { 9, 10, 7, 8, 11 }, items.Select(x => x.Id).ToArray());
+        Assert.Equal(
+            new[]
+            {
+                new Vector(new float[] { 3, 3, 3 }),
+                new Vector(new float[] { 4, 4, 4 }),
+                new Vector(new float[] { 1, 1, 1 }),
+                new Vector(new float[] { 2, 2, 2 }),
+                new Vector(new float[] { 5, 5, 5 })
+            },
+            items.Select(x => x.Embedding).ToArray()
+        );
 
         var queryString = query.ToQueryString();
 
@@ -208,7 +228,17 @@ public class EntityFrameworkCoreTests : IClassFixture<EntityFrameworkCoreFixture
             .Take(5);
 
         var items = await query.ToArrayAsync();
-        Assert.Equal(new[] { 11, 10, 9, 8, 7 }, items.Select(x => x.Id).ToArray());
+        Assert.Equal(
+            new[]
+            {
+                new Vector(new float[] { 5, 5, 5 }),
+                new Vector(new float[] { 4, 4, 4 }),
+                new Vector(new float[] { 3, 3, 3 }),
+                new Vector(new float[] { 2, 2, 2 }),
+                new Vector(new float[] { 1, 1, 1 })
+            },
+            items.Select(x => x.Embedding).ToArray()
+        );
 
         var queryString = query.ToQueryString();
 
