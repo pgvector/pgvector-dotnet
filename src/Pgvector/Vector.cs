@@ -19,4 +19,34 @@ public class Vector
 
     public float[] ToArray()
         => vec;
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is not Vector vector)
+        {
+            return false;
+        }
+
+        var arrayA = vec;
+        var arrayB = vector.ToArray();
+
+        if (arrayA.Length != arrayB.Length)
+        {
+            return false;
+        }
+
+        return Enumerable.SequenceEqual(arrayA, arrayB);
+    }
+
+    public override int GetHashCode()
+    {
+        var hashCode = new HashCode();
+
+        foreach (var value in vec)
+        {
+            hashCode.Add(value.GetHashCode());
+        }
+
+        return hashCode.ToHashCode();
+    }
 }
