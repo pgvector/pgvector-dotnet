@@ -27,7 +27,7 @@ public class NpgsqlTests
             await cmd.ExecuteNonQueryAsync();
         }
 
-        await using (var cmd = new NpgsqlCommand("CREATE TABLE items (embedding vector(3))", conn))
+        await using (var cmd = new NpgsqlCommand("CREATE TABLE items (id serial PRIMARY KEY, embedding vector(3))", conn))
         {
             await cmd.ExecuteNonQueryAsync();
         }
@@ -50,13 +50,16 @@ public class NpgsqlTests
 
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
+                var ids = new List<int>();
                 var embeddings = new List<Vector>();
 
                 while (await reader.ReadAsync())
                 {
-                    embeddings.Add((Vector)reader.GetValue(0));
+                    ids.Add((int)reader.GetValue(0));
+                    embeddings.Add((Vector)reader.GetValue(1));
                 }
 
+                Assert.Equal(new int[] { 1, 3, 2 }, ids.ToArray());
                 Assert.Equal(new float[] { 1, 1, 1 }, embeddings[0].ToArray());
                 Assert.Equal(new float[] { 1, 1, 2 }, embeddings[1].ToArray());
                 Assert.Equal(new float[] { 2, 2, 2 }, embeddings[2].ToArray());

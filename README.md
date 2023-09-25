@@ -52,7 +52,7 @@ conn.ReloadTypes();
 Create a table
 
 ```csharp
-await using (var cmd = new NpgsqlCommand("CREATE TABLE items (embedding vector(3))", conn))
+await using (var cmd = new NpgsqlCommand("CREATE TABLE items (id serial PRIMARY KEY, embedding vector(3))", conn))
 {
     await cmd.ExecuteNonQueryAsync();
 }
