@@ -139,6 +139,7 @@ Define a class
 ```csharp
 public class Item
 {
+    public int Id { get; set; }
     public Vector? Embedding { get; set; }
 }
 ```
@@ -146,7 +147,7 @@ public class Item
 Create a table
 
 ```csharp
-conn.Execute("CREATE TABLE items (embedding vector(3))");
+conn.Execute("CREATE TABLE items (id serial PRIMARY KEY, embedding vector(3))");
 ```
 
 Insert a vector

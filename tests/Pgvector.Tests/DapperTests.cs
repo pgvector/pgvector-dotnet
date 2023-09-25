@@ -29,7 +29,7 @@ public class DapperTests
         conn.ReloadTypes();
 
         conn.Execute("DROP TABLE IF EXISTS dapper_items");
-        conn.Execute("CREATE TABLE dapper_items (id bigserial PRIMARY KEY, embedding vector(3))");
+        conn.Execute("CREATE TABLE dapper_items (id serial PRIMARY KEY, embedding vector(3))");
 
         var embedding1 = new Vector(new float[] { 1, 1, 1 });
         var embedding2 = new Vector(new float[] { 2, 2, 2 });
