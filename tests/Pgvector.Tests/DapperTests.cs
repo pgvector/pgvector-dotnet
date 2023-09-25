@@ -38,8 +38,8 @@ public class DapperTests
 
         var embedding = new Vector(new float[] { 1, 1, 1 });
         var items = conn.Query<DapperItem>("SELECT * FROM dapper_items ORDER BY embedding <-> @embedding LIMIT 5", new { embedding }).AsList();
-        Assert.Equal(new int[]{1, 3, 2}, items.Select(v => v.Id).ToArray());
-        Assert.Equal(new float[]{1, 1, 1}, items[0].Embedding!.ToArray());
+        Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
+        Assert.Equal(new float[] { 1, 1, 1 }, items[0].Embedding!.ToArray());
 
         conn.Execute("CREATE INDEX ON dapper_items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)");
     }

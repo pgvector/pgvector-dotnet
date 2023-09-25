@@ -50,15 +50,15 @@ public class EntityFrameworkCoreTests
 
         var embedding = new Vector(new float[] { 1, 1, 1 });
         var items = await ctx.Items.FromSql($"SELECT * FROM efcore_items ORDER BY embedding <-> {embedding} LIMIT 5").ToListAsync();
-        Assert.Equal(new int[]{1, 3, 2}, items.Select(v => v.Id).ToArray());
-        Assert.Equal(new float[]{1, 1, 1}, items[0].Embedding!.ToArray());
+        Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
+        Assert.Equal(new float[] { 1, 1, 1 }, items[0].Embedding!.ToArray());
 
         items = await ctx.Items.OrderBy(x => x.Embedding!.L2Distance(embedding)).Take(5).ToListAsync();
-        Assert.Equal(new int[]{1, 3, 2}, items.Select(v => v.Id).ToArray());
-        Assert.Equal(new float[]{1, 1, 1}, items[0].Embedding!.ToArray());
+        Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
+        Assert.Equal(new float[] { 1, 1, 1 }, items[0].Embedding!.ToArray());
 
         items = await ctx.Items.OrderBy(x => x.Embedding!.MaxInnerProduct(embedding)).Take(5).ToListAsync();
-        Assert.Equal(new int[]{2, 3, 1}, items.Select(v => v.Id).ToArray());
+        Assert.Equal(new int[] { 2, 3, 1 }, items.Select(v => v.Id).ToArray());
 
         items = await ctx.Items.OrderBy(x => x.Embedding!.CosineDistance(embedding)).Take(5).ToListAsync();
         Assert.Equal(3, items[2].Id);
