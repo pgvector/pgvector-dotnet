@@ -217,6 +217,8 @@ Define a model
 ```csharp
 public class Item
 {
+    public int Id { get; set; }
+
     [Column(TypeName = "vector(3)")]
     public Vector? Embedding { get; set; }
 }
