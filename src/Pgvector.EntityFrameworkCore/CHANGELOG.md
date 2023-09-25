@@ -1,4 +1,4 @@
-## 0.1.2 (unreleased)
+## 0.1.2 (2023-09-25)
 
 - Added distance functions
 
