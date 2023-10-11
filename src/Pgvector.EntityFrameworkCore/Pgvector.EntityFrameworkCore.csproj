@@ -9,7 +9,7 @@
     <PackageProjectUrl>https://github.com/pgvector/pgvector-dotnet</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
@@ -19,7 +19,7 @@
     <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" />
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
     <ProjectReference Include="..\Pgvector\Pgvector.csproj" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0-rc.2" />
   </ItemGroup>
 
 </Project>
