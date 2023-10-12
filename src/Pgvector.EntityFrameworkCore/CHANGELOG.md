@@ -1,3 +1,8 @@
+## 0.2.0 (unreleased)
+
+- Added support for Npgsql.EntityFrameworkCore.PostgreSQL 8
+- Dropped support for Npgsql.EntityFrameworkCore.PostgreSQL < 8
+
 ## 0.1.2 (2023-09-25)
 
 - Added distance functions

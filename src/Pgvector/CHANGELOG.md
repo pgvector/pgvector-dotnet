@@ -1,3 +1,8 @@
+## 0.2.0 (unreleased)
+
+- Added support for Npgsql 8
+- Dropped support for Npgsql < 8
+
 ## 0.1.4 (2023-09-25)
 
 - Fixed error with large vectors
