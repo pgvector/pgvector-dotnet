@@ -11,7 +11,7 @@ public class ItemContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var connString = "Host=localhost;Database=pgvector_dotnet_test";
-        optionsBuilder.UseNpgsql(connString, o => o.UseVector()).UseSnakeCaseNamingConvention();
+        optionsBuilder.UseNpgsql(connString, o => o.UseVector());
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -30,7 +30,7 @@ public class Item
 {
     public int Id { get; set; }
 
-    [Column(TypeName = "vector(3)")]
+    [Column("embedding", TypeName = "vector(3)")]
     public Vector? Embedding { get; set; }
 }
 
