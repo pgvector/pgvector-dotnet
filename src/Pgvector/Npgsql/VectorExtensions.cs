@@ -1,6 +1,7 @@
 using Npgsql.TypeMapping;
+using Pgvector.Npgsql;
 
-namespace Pgvector.Npgsql;
+namespace Npgsql;
 
 public static class VectorExtensions
 {
