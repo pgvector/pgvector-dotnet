@@ -20,7 +20,7 @@ public class Vector : IEquatable<Vector>
     public float[] ToArray()
         => Memory.ToArray();
 
-    public bool Equals(Vector other)
+    public bool Equals(Vector? other)
     {
         if (other is null || other.Memory.Length != Memory.Length)
         {
