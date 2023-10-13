@@ -19,7 +19,7 @@
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
     <ProjectReference Include="..\Pgvector\Pgvector.csproj" />
     <PackageReference Include="Dapper" Version="2.0.4" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
   </ItemGroup>
 
 </Project>
