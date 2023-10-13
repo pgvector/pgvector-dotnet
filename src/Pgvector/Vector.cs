@@ -21,25 +21,7 @@ public class Vector : IEquatable<Vector>
         => Memory.ToArray();
 
     public bool Equals(Vector? other)
-    {
-        if (other is null || other.Memory.Length != Memory.Length)
-        {
-            return false;
-        }
-
-        var span1 = Memory.Span;
-        var span2 = other.Memory.Span;
-
-        for (var i = 0; i < Memory.Length; i++)
-        {
-            if (span1[i] != span2[i])
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
+        => other is not null && Memory.Span.SequenceEqual(other.Memory.Span);
 
     public override bool Equals(object? obj)
         => obj is Vector vector && Equals(vector);
