@@ -79,7 +79,7 @@ public class NpgsqlTests
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
                 await reader.ReadAsync();
-                Assert.Equal(embedding.ToArray(), ((Vector)reader.GetValue(0)).ToArray());
+                Assert.Equal(embedding, ((Vector)reader.GetValue(0)));
             }
         }
 
