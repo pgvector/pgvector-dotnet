@@ -57,7 +57,7 @@ public class VectorConverter : PgStreamingConverter<Vector>
         if (writer.ShouldFlush(sizeof(ushort) * 2))
             writer.Flush();
 
-        var vec = value.vec.Span;
+        var vec = value.vec;
         var dim = vec.Length;
         writer.WriteUInt16(Convert.ToUInt16(dim));
         writer.WriteUInt16(0);
@@ -66,7 +66,7 @@ public class VectorConverter : PgStreamingConverter<Vector>
         {
             if (writer.ShouldFlush(sizeof(float)))
                 writer.Flush();
-            writer.WriteFloat(vec[i]);
+            writer.WriteFloat(vec.Span[i]);
         }
     }
 
@@ -76,7 +76,7 @@ public class VectorConverter : PgStreamingConverter<Vector>
         if (writer.ShouldFlush(sizeof(ushort) * 2))
             await writer.FlushAsync(cancellationToken);
 
-        var vec = value.ToArray();
+        var vec = value.vec;
         var dim = vec.Length;
         writer.WriteUInt16(Convert.ToUInt16(dim));
         writer.WriteUInt16(0);
@@ -85,7 +85,7 @@ public class VectorConverter : PgStreamingConverter<Vector>
         {
             if (writer.ShouldFlush(sizeof(float)))
                 await writer.FlushAsync(cancellationToken);
-            writer.WriteFloat(vec[i]);
+            writer.WriteFloat(vec.Span[i]);
         }
     }
 }
