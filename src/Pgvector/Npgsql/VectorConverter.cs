@@ -57,7 +57,7 @@ public class VectorConverter : PgStreamingConverter<Vector>
         if (writer.ShouldFlush(sizeof(ushort) * 2))
             writer.Flush();
 
-        var vec = value.ToArray();
+        var vec = value.vec.Span;
         var dim = vec.Length;
         writer.WriteUInt16(Convert.ToUInt16(dim));
         writer.WriteUInt16(0);

@@ -6,7 +6,7 @@ namespace Pgvector;
 
 public class Vector
 {
-    private ReadOnlyMemory<float> vec;
+    internal ReadOnlyMemory<float> vec;
 
     public Vector(ReadOnlyMemory<float> v)
         => vec = v;
