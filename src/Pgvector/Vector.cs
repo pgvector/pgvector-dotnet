@@ -32,13 +32,10 @@ public class Vector : IEquatable<Vector>
     public override int GetHashCode()
     {
         var hashCode = new HashCode();
-
         var span = Memory.Span;
 
         for (var i = 0; i < span.Length; i++)
-        {
             hashCode.Add(span[i]);
-        }
 
         return hashCode.ToHashCode();
     }
