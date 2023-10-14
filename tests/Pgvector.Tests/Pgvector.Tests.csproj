@@ -25,7 +25,6 @@
     <ProjectReference Include="..\..\src\Pgvector\Pgvector.csproj" />
     <ProjectReference Include="..\..\src\Pgvector.Dapper\Pgvector.Dapper.csproj" />
     <ProjectReference Include="..\..\src\Pgvector.EntityFrameworkCore\Pgvector.EntityFrameworkCore.csproj" />
-    <PackageReference Include="EFCore.NamingConventions" Version="7.0.2" />
   </ItemGroup>
 
   <ItemGroup>
