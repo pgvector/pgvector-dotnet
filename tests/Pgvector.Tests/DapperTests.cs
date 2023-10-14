@@ -1,6 +1,5 @@
 using Dapper;
 using Pgvector.Dapper;
-using Pgvector.Npgsql;
 
 namespace Pgvector.Tests;
 
