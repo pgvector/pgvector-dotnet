@@ -1,5 +1,3 @@
-using Pgvector.Npgsql;
-
 namespace Pgvector.Tests;
 
 public class NpgsqlTests
