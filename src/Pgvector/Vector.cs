@@ -26,8 +26,10 @@ public class Vector : IEquatable<Vector>
     public override bool Equals(object? obj)
         => obj is Vector vector && Equals(vector);
 
-    public static bool operator ==(Vector x, Vector y) => x.Equals(y);
-    public static bool operator !=(Vector x, Vector y) => !(x == y);
+    public static bool operator ==(Vector? x, Vector? y)
+        => x is null && y is null || x is not null && x.Equals(y);
+
+    public static bool operator !=(Vector? x, Vector? y) => !(x == y);
 
     public override int GetHashCode()
     {

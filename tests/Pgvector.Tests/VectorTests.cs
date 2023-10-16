@@ -19,5 +19,9 @@ public class VectorTests
 
         Assert.False(a != b);
         Assert.True(a != c);
+
+        Assert.False(a == null);
+        Assert.False(null == a);
+        Assert.True((Vector?)null == null);
     }
 }
