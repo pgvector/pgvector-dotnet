@@ -27,7 +27,7 @@ public class Vector : IEquatable<Vector>
         => obj is Vector vector && Equals(vector);
 
     public static bool operator ==(Vector? x, Vector? y)
-        => x is null && y is null || x is not null && x.Equals(y);
+        => (x is null && y is null) || (x is not null && x.Equals(y));
 
     public static bool operator !=(Vector? x, Vector? y) => !(x == y);
 
