@@ -247,6 +247,20 @@ foreach (Item item in items)
 
 Also supports `MaxInnerProduct` and `CosineDistance`
 
+Get the distance
+
+```csharp
+public class Neighbor
+{
+    public int Id { get; set; }
+    public double Distance { get; set; }
+}
+
+var neighbors = await ctx.Items
+    .Select(x => new Neighbor { Id = x.Id, Distance = x.Embedding!.L2Distance(embedding) })
+    .ToListAsync();
+```
+
 Add an approximate index
 
 ```csharp
