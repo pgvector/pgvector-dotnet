@@ -250,14 +250,16 @@ Also supports `MaxInnerProduct` and `CosineDistance`
 Get the distance
 
 ```csharp
-public class Neighbor
-{
-    public int Id { get; set; }
-    public double Distance { get; set; }
-}
+var items = await ctx.Items
+    .Select(x => new { Entity = x, Distance = x.Embedding!.L2Distance(embedding) })
+    .ToListAsync();
+```
 
-var neighbors = await ctx.Items
-    .Select(x => new Neighbor { Id = x.Id, Distance = x.Embedding!.L2Distance(embedding) })
+Get items within a certain distance
+
+```csharp
+var items = await ctx.Items
+    .Where(x => x.Embedding!.L2Distance(embedding) < 5)
     .ToListAsync();
 ```
 

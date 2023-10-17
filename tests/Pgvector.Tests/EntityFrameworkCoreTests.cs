@@ -34,12 +34,6 @@ public class Item
     public Vector? Embedding { get; set; }
 }
 
-public class Neighbor
-{
-    public int Id { get; set; }
-    public double Distance { get; set; }
-}
-
 public class EntityFrameworkCoreTests
 {
     [Fact]
@@ -69,11 +63,17 @@ public class EntityFrameworkCoreTests
         items = await ctx.Items.OrderBy(x => x.Embedding!.CosineDistance(embedding)).Take(5).ToListAsync();
         Assert.Equal(3, items[2].Id);
 
+        items = await ctx.Items
+            .OrderBy(x => x.Id)
+            .Where(x => x.Embedding!.L2Distance(embedding) < 1.5)
+            .ToListAsync();
+        Assert.Equal(new int[] { 1, 3 }, items.Select(v => v.Id).ToArray());
+
         var neighbors = await ctx.Items
             .OrderBy(x => x.Embedding!.L2Distance(embedding))
-            .Select(x => new Neighbor { Id = x.Id, Distance = x.Embedding!.L2Distance(embedding) })
+            .Select(x => new { Entity = x, Distance = x.Embedding!.L2Distance(embedding) })
             .ToListAsync();
-        Assert.Equal(new int[] { 1, 3, 2 }, neighbors.Select(v => v.Id).ToArray());
+        Assert.Equal(new int[] { 1, 3, 2 }, neighbors.Select(v => v.Entity.Id).ToArray());
         Assert.Equal(new double[] { 0, 1, Math.Sqrt(3) }, neighbors.Select(v => v.Distance).ToArray());
     }
 }
