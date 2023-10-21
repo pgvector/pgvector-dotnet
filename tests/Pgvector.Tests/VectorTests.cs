@@ -5,6 +5,13 @@ namespace Pgvector.Tests;
 public class VectorTests
 {
     [Fact]
+    public void StringConstructor()
+    {
+        var v = new Vector("[1,2,3]");
+        Assert.Equal("[1,2,3]", v.ToString());
+    }
+
+    [Fact]
     public void Equal()
     {
         var a = new Vector(new float[] { 1, 1, 1 });

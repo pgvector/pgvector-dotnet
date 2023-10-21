@@ -12,7 +12,7 @@ public class Vector : IEquatable<Vector>
         => Memory = v;
 
     public Vector(string s)
-        => new Vector(Array.ConvertAll(s.Substring(1, s.Length - 2).Split(','), v => float.Parse(v, CultureInfo.InvariantCulture)));
+        => Memory = Array.ConvertAll(s.Substring(1, s.Length - 2).Split(','), v => float.Parse(v, CultureInfo.InvariantCulture));
 
     public override string ToString()
         => string.Concat("[", string.Join(",", Memory.ToArray().Select(v => v.ToString(CultureInfo.InvariantCulture))), "]");
