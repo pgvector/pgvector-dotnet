@@ -12,6 +12,13 @@ public class VectorTests
     }
 
     [Fact]
+    public void ArrayConstructor()
+    {
+        var v = new Vector(new float[] { 1, 2, 3 });
+        Assert.Equal(new float[] { 1, 2, 3 }, v.ToArray());
+    }
+
+    [Fact]
     public void Equal()
     {
         var a = new Vector(new float[] { 1, 1, 1 });
