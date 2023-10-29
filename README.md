@@ -14,6 +14,10 @@ Follow the instructions for your database library:
 - [Dapper](#dapper)
 - [Entity Framework Core](#entity-framework-core)
 
+Or check out an example:
+
+- [Embeddings](tests/Pgvector.Tests/OpenAITests.cs) with OpenAI
+
 ## Npgsql
 
 Run:
