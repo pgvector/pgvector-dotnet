@@ -78,7 +78,7 @@ public class VectorDbFunctionsTranslatorPlugin : IMethodCallTranslatorPlugin
             {
                 var resultTypeMapping = _typeMappingSource.FindMapping(method.ReturnType)!;
 
-                return new PostgresUnknownBinaryExpression(
+                return new PgUnknownBinaryExpression(
                     left: _sqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]),
                     right: _sqlExpressionFactory.ApplyDefaultTypeMapping(arguments[1]),
                     binaryOperator: vectorOperator,

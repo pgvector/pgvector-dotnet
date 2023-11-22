@@ -17,7 +17,7 @@
   <ItemGroup>
     <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" />
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
-    <PackageReference Include="Npgsql" Version="8.0.0-rc.2" />
+    <PackageReference Include="Npgsql" Version="8.0.0" />
   </ItemGroup>
 
 </Project>

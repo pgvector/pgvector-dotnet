@@ -21,7 +21,9 @@ public class ItemContext : DbContext
         modelBuilder.Entity<Item>()
             .HasIndex(i => i.Embedding)
             .HasMethod("hnsw")
-            .HasOperators("vector_l2_ops");
+            .HasOperators("vector_l2_ops")
+            .HasStorageParameter("m", 16)
+            .HasStorageParameter("ef_construction", 64);
     }
 }
 

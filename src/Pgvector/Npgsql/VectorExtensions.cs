@@ -7,7 +7,7 @@ public static class VectorExtensions
 {
     public static INpgsqlTypeMapper UseVector(this INpgsqlTypeMapper mapper)
     {
-        mapper.AddTypeInfoResolver(new VectorTypeInfoResolver());
+        mapper.AddTypeInfoResolverFactory(new VectorTypeInfoResolverFactory());
         return mapper;
     }
 }
