@@ -1,4 +1,4 @@
-## 0.2.0 (unreleased)
+## 0.2.0 (2023-11-24)
 
 - Added support for Npgsql.EntityFrameworkCore.PostgreSQL 8
 - Dropped support for Npgsql.EntityFrameworkCore.PostgreSQL < 8

@@ -192,6 +192,8 @@ Run:
 dotnet add package Pgvector.EntityFrameworkCore
 ```
 
+The latest version works with .NET 8. For .NET 6 and 7, use version 0.1.2 and [this readme](https://github.com/pgvector/pgvector-dotnet/blob/efcore-v0.1.2/README.md#entity-framework-core).
+
 Import the library
 
 ```csharp
@@ -278,8 +280,16 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
     modelBuilder.Entity<Item>()
         .HasIndex(i => i.Embedding)
-        .HasMethod("ivfflat") // or hnsw
-        .HasOperators("vector_l2_ops");
+        .HasMethod("ivfflat")
+        .HasOperators("vector_l2_ops")
+        .HasStorageParameter("lists", 100);
+    // or
+    modelBuilder.Entity<Item>()
+        .HasIndex(i => i.Embedding)
+        .HasMethod("hnsw")
+        .HasOperators("vector_l2_ops")
+        .HasStorageParameter("m", 16)
+        .HasStorageParameter("ef_construction", 64);
 }
 ```
 
