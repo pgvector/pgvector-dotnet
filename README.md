@@ -1,6 +1,6 @@
 # pgvector-dotnet
 
-[pgvector](https://github.com/pgvector/pgvector) support for C# and F#
+[pgvector](https://github.com/pgvector/pgvector) support for .NET (C# and F#)
 
 Supports [Npgsql](https://github.com/npgsql/npgsql), [Npgsql.FSharp](https://github.com/Zaid-Ajaj/Npgsql.FSharp), [Dapper](https://github.com/DapperLib/Dapper), and [Entity Framework Core](https://github.com/dotnet/efcore)
 
