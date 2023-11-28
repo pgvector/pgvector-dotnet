@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Pgvector.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -42,8 +44,10 @@ public class EntityFrameworkCoreTests
     public async Task Main()
     {
         await using var ctx = new ItemContext();
-        await ctx.Database.EnsureDeletedAsync();
-        await ctx.Database.EnsureCreatedAsync();
+
+        ctx.Database.ExecuteSql($"DROP TABLE IF EXISTS efcore_items");
+        var databaseCreator = ctx.GetService<IRelationalDatabaseCreator>();
+        databaseCreator.CreateTables();
 
         ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 1 }) });
         ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 2, 2, 2 }) });
