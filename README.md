@@ -27,12 +27,6 @@ Run
 dotnet add package Pgvector
 ```
 
-Import the library
-
-```csharp
-using Pgvector.Npgsql;
-```
-
 Create a connection
 
 ```csharp
@@ -117,7 +111,6 @@ Import the library
 
 ```fsharp
 open Pgvector
-open Pgvector.Npgsql
 ```
 
 Create a connection
@@ -204,7 +197,6 @@ Import the library
 
 ```csharp
 using Pgvector.Dapper;
-using Pgvector.Npgsql;
 ```
 
 Create a connection

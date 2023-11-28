@@ -4,7 +4,6 @@ open Npgsql
 open Npgsql.FSharp
 open NUnit.Framework
 open Pgvector
-open Pgvector.Npgsql
 
 type Item = {
     Id: int
