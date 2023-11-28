@@ -21,7 +21,7 @@ Or check out an example:
 
 ## Npgsql
 
-Run:
+Run
 
 ```sh
 dotnet add package Pgvector
@@ -107,7 +107,7 @@ See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tes
 
 ## Npgsql.FSharp
 
-Run:
+Run
 
 ```sh
 dotnet add package Pgvector
@@ -194,7 +194,7 @@ See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tes
 
 ## Dapper
 
-Run:
+Run
 
 ```sh
 dotnet add package Pgvector.Dapper
@@ -274,7 +274,7 @@ See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tes
 
 ## Entity Framework Core
 
-Run:
+Run
 
 ```sh
 dotnet add package Pgvector.EntityFrameworkCore
