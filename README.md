@@ -11,7 +11,7 @@ Supports [Npgsql](https://github.com/npgsql/npgsql), [Npgsql.FSharp](https://git
 Follow the instructions for your database library:
 
 - [Npgsql](#npgsql)
-- [Npgsql.FSharp](#npgsql-fsharp)
+- [Npgsql.FSharp](#npgsqlfsharp)
 - [Dapper](#dapper)
 - [Entity Framework Core](#entity-framework-core)
 
