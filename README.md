@@ -2,7 +2,7 @@
 
 [pgvector](https://github.com/pgvector/pgvector) support for .NET (C# and F#)
 
-Supports [Npgsql](https://github.com/npgsql/npgsql), [Npgsql.FSharp](https://github.com/Zaid-Ajaj/Npgsql.FSharp), [Dapper](https://github.com/DapperLib/Dapper), and [Entity Framework Core](https://github.com/dotnet/efcore)
+Supports [Npgsql](https://github.com/npgsql/npgsql), [Dapper](https://github.com/DapperLib/Dapper), [Entity Framework Core](https://github.com/dotnet/efcore), and [Npgsql.FSharp](https://github.com/Zaid-Ajaj/Npgsql.FSharp)
 
 [![Build Status](https://github.com/pgvector/pgvector-dotnet/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-dotnet/actions)
 
@@ -10,10 +10,8 @@ Supports [Npgsql](https://github.com/npgsql/npgsql), [Npgsql.FSharp](https://git
 
 Follow the instructions for your database library:
 
-- [Npgsql](#npgsql)
-- [Npgsql.FSharp](#npgsqlfsharp)
-- [Dapper](#dapper)
-- [Entity Framework Core](#entity-framework-core)
+- C# - [Npgsql](#npgsql), [Dapper](#dapper), [Entity Framework Core](#entity-framework-core)
+- F# - [Npgsql.FSharp](#npgsqlfsharp)
 
 Or check out an example:
 
@@ -98,92 +96,6 @@ await using (var cmd = new NpgsqlCommand("CREATE INDEX ON items USING ivfflat (e
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
 See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.Tests/NpgsqlTests.cs)
-
-## Npgsql.FSharp
-
-Run
-
-```sh
-dotnet add package Pgvector
-```
-
-Import the library
-
-```fsharp
-open Pgvector
-```
-
-Create a connection
-
-```fsharp
-let dataSourceBuilder = new NpgsqlDataSourceBuilder(connString)
-dataSourceBuilder.UseVector()
-use dataSource = dataSourceBuilder.Build()
-```
-
-Enable the extension
-
-```fsharp
-dataSource
-|> Sql.fromDataSource
-|> Sql.query "CREATE EXTENSION IF NOT EXISTS vector"
-|> Sql.executeNonQuery
-```
-
-Create a table
-
-```fsharp
-dataSource
-|> Sql.fromDataSource
-|> Sql.query "CREATE TABLE items (id serial PRIMARY KEY, embedding vector(3))"
-|> Sql.executeNonQuery
-```
-
-Insert a vector
-
-```fsharp
-let embedding = new Vector([| 1f; 1f; 1f |])
-let parameter = new NpgsqlParameter("", embedding)
-
-dataSource
-|> Sql.fromDataSource
-|> Sql.query "INSERT INTO items (embedding) VALUES (@embedding)"
-|> Sql.parameters [ "embedding", Sql.parameter parameter ]
-|> Sql.executeNonQuery
-```
-
-Get the nearest neighbors
-
-```fsharp
-type Item = {
-    Id: int
-    Embedding: Vector
-}
-
-dataSource
-|> Sql.fromDataSource
-|> Sql.query "SELECT * FROM items ORDER BY embedding <-> @embedding LIMIT 5"
-|> Sql.parameters [ "embedding", Sql.parameter parameter ]
-|> Sql.execute (fun read ->
-    {
-        Id = read.int "id"
-        Embedding = read.fieldValue<Vector> "embedding"
-    })
-|> printfn "%A"
-```
-
-Add an approximate index
-
-```fsharp
-dataSource
-|> Sql.fromDataSource
-|> Sql.query "CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)"
-|> Sql.executeNonQuery
-```
-
-Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
-
-See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.FSharp.Tests/NpgsqlFSharpTests.fs)
 
 ## Dapper
 
@@ -376,6 +288,92 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
 See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.Tests/EntityFrameworkCoreTests.cs)
+
+## Npgsql.FSharp
+
+Run
+
+```sh
+dotnet add package Pgvector
+```
+
+Import the library
+
+```fsharp
+open Pgvector
+```
+
+Create a connection
+
+```fsharp
+let dataSourceBuilder = new NpgsqlDataSourceBuilder(connString)
+dataSourceBuilder.UseVector()
+use dataSource = dataSourceBuilder.Build()
+```
+
+Enable the extension
+
+```fsharp
+dataSource
+|> Sql.fromDataSource
+|> Sql.query "CREATE EXTENSION IF NOT EXISTS vector"
+|> Sql.executeNonQuery
+```
+
+Create a table
+
+```fsharp
+dataSource
+|> Sql.fromDataSource
+|> Sql.query "CREATE TABLE items (id serial PRIMARY KEY, embedding vector(3))"
+|> Sql.executeNonQuery
+```
+
+Insert a vector
+
+```fsharp
+let embedding = new Vector([| 1f; 1f; 1f |])
+let parameter = new NpgsqlParameter("", embedding)
+
+dataSource
+|> Sql.fromDataSource
+|> Sql.query "INSERT INTO items (embedding) VALUES (@embedding)"
+|> Sql.parameters [ "embedding", Sql.parameter parameter ]
+|> Sql.executeNonQuery
+```
+
+Get the nearest neighbors
+
+```fsharp
+type Item = {
+    Id: int
+    Embedding: Vector
+}
+
+dataSource
+|> Sql.fromDataSource
+|> Sql.query "SELECT * FROM items ORDER BY embedding <-> @embedding LIMIT 5"
+|> Sql.parameters [ "embedding", Sql.parameter parameter ]
+|> Sql.execute (fun read ->
+    {
+        Id = read.int "id"
+        Embedding = read.fieldValue<Vector> "embedding"
+    })
+|> printfn "%A"
+```
+
+Add an approximate index
+
+```fsharp
+dataSource
+|> Sql.fromDataSource
+|> Sql.query "CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)"
+|> Sql.executeNonQuery
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
+
+See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.FSharp.Tests/NpgsqlFSharpTests.fs)
 
 ## History
 
