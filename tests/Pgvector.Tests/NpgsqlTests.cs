@@ -9,7 +9,7 @@ public class NpgsqlTests
 
         var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
         dataSourceBuilder.UseVector();
-        await using var dataSource = dataSourceBuilder.Build();
+        var dataSource = dataSourceBuilder.Build();
 
         var conn = dataSource.OpenConnection();
 
