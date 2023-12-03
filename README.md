@@ -447,7 +447,7 @@ End Using
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.VisualBasic.Tests/NpgsqlTests.vs)
+See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.VisualBasic.Tests/NpgsqlTests.vb)
 
 ## History
 
