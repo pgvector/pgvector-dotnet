@@ -1,6 +1,6 @@
 # pgvector-dotnet
 
-[pgvector](https://github.com/pgvector/pgvector) support for .NET (C# and F#)
+[pgvector](https://github.com/pgvector/pgvector) support for .NET (C#, F#, and Visual Basic)
 
 Supports [Npgsql](https://github.com/npgsql/npgsql), [Dapper](https://github.com/DapperLib/Dapper), [Entity Framework Core](https://github.com/dotnet/efcore), and [Npgsql.FSharp](https://github.com/Zaid-Ajaj/Npgsql.FSharp)
 
@@ -10,14 +10,15 @@ Supports [Npgsql](https://github.com/npgsql/npgsql), [Dapper](https://github.com
 
 Follow the instructions for your database library:
 
-- C# - [Npgsql](#npgsql), [Dapper](#dapper), [Entity Framework Core](#entity-framework-core)
+- C# - [Npgsql](#npgsql-c), [Dapper](#dapper), [Entity Framework Core](#entity-framework-core)
 - F# - [Npgsql.FSharp](#npgsqlfsharp)
+- Visual Basic - [Npgsql](#npgsql-visual-basic)
 
 Or check out an example:
 
 - [Embeddings](tests/Pgvector.Tests/OpenAITests.cs) with OpenAI
 
-## Npgsql
+## Npgsql (C#)
 
 Run
 
@@ -374,6 +375,79 @@ dataSource
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
 See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.FSharp.Tests/NpgsqlFSharpTests.fs)
+
+## Npgsql (Visual Basic)
+
+Run
+
+```sh
+dotnet add package Pgvector
+```
+
+Create a connection
+
+```vb
+Dim dataSourceBuilder As New NpgsqlDataSourceBuilder(connString)
+dataSourceBuilder.UseVector()
+Dim dataSource = dataSourceBuilder.Build()
+
+Dim conn = dataSource.OpenConnection()
+```
+
+Enable the extension
+
+```vb
+Using cmd As New NpgsqlCommand("CREATE EXTENSION IF NOT EXISTS vector", conn)
+    cmd.ExecuteNonQuery()
+End Using
+
+conn.ReloadTypes()
+```
+
+Create a table
+
+```vb
+Using cmd As New NpgsqlCommand("CREATE TABLE items (id serial PRIMARY KEY, embedding vector(3))", conn)
+    cmd.ExecuteNonQuery()
+End Using
+```
+
+Insert a vector
+
+```vb
+Using cmd As New NpgsqlCommand("INSERT INTO items (embedding) VALUES ($1)", conn)
+    Dim embedding As New Vector(New Single() {1, 1, 1})
+    cmd.Parameters.AddWithValue(embedding)
+    cmd.ExecuteNonQuery()
+End Using
+```
+
+Get the nearest neighbors
+
+```vb
+Using cmd As New NpgsqlCommand("SELECT * FROM items ORDER BY embedding <-> $1 LIMIT 5", conn)
+    Dim embedding As New Vector(New Single() {1, 1, 1})
+    cmd.Parameters.AddWithValue(embedding)
+
+    Using reader As NpgsqlDataReader = cmd.ExecuteReader()
+        While reader.Read()
+            Console.WriteLine(reader.GetValue(0))
+        End While
+    End Using
+End Using
+```
+
+Add an approximate index
+
+```vb
+Using cmd As New NpgsqlCommand("CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)", conn)
+    cmd.ExecuteNonQuery()
+End Using
+```
+
+Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
+
+See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.VisualBasic.Tests/NpgsqlTests.vs)
 
 ## History
 
