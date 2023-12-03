@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pgvector", "src\Pgvector\Pg
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4C5546A5-6119-4D42-A65B-2327280E1881}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pgvector.Tests", "tests\Pgvector.Tests\Pgvector.Tests.csproj", "{E9267E87-A783-414F-8916-49D5A5F55634}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pgvector.CSharp.Tests", "tests\Pgvector.CSharp.Tests\Pgvector.CSharp.Tests.csproj", "{E9267E87-A783-414F-8916-49D5A5F55634}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pgvector.Dapper", "src\Pgvector.Dapper\Pgvector.Dapper.csproj", "{FF6D3EDD-C96A-4AD5-A298-0A7E53BB3A07}"
 EndProject
