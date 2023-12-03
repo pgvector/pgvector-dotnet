@@ -31,7 +31,7 @@ Create a connection
 ```csharp
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
 dataSourceBuilder.UseVector();
-var dataSource = dataSourceBuilder.Build();
+await using var dataSource = dataSourceBuilder.Build();
 
 var conn = dataSource.OpenConnection();
 ```
@@ -119,7 +119,7 @@ SqlMapper.AddTypeHandler(new VectorTypeHandler());
 
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
 dataSourceBuilder.UseVector();
-var dataSource = dataSourceBuilder.Build();
+await using var dataSource = dataSourceBuilder.Build();
 
 var conn = dataSource.OpenConnection();
 ```

@@ -12,7 +12,7 @@ public class DapperItem
 public class DapperTests
 {
     [Fact]
-    public void Main()
+    public async Task Main()
     {
         SqlMapper.AddTypeHandler(new VectorTypeHandler());
 
@@ -20,7 +20,7 @@ public class DapperTests
 
         var dataSourceBuilder = new NpgsqlDataSourceBuilder(connString);
         dataSourceBuilder.UseVector();
-        var dataSource = dataSourceBuilder.Build();
+        await using var dataSource = dataSourceBuilder.Build();
 
         var conn = dataSource.OpenConnection();
 
