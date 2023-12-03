@@ -79,7 +79,7 @@ await using (var cmd = new NpgsqlCommand("SELECT * FROM items ORDER BY embedding
     {
         while (await reader.ReadAsync())
         {
-            Console.WriteLine((Vector)reader.GetValue(0));
+            Console.WriteLine(reader.GetValue(0));
         }
     }
 }
