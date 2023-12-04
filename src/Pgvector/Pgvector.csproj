@@ -4,7 +4,7 @@
     <PackageId>Pgvector</PackageId>
     <Version>0.2.0</Version>
     <Authors>ankane</Authors>
-    <Description>pgvector support for .NET (C# and F#)</Description>
+    <Description>pgvector support for .NET (C#, F#, and Visual Basic)</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/pgvector/pgvector-dotnet</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
