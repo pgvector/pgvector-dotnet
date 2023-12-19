@@ -78,6 +78,15 @@ public class VectorDbFunctionsTranslatorPlugin : IMethodCallTranslatorPlugin
             {
                 var resultTypeMapping = _typeMappingSource.FindMapping(method.ReturnType)!;
 
+#if NET6_0 || NET7_0
+                return new PostgresUnknownBinaryExpression(
+                    left: _sqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]),
+                    right: _sqlExpressionFactory.ApplyDefaultTypeMapping(arguments[1]),
+                    binaryOperator: vectorOperator,
+                    type: resultTypeMapping.ClrType,
+                    typeMapping: resultTypeMapping
+                );
+#else
                 return new PgUnknownBinaryExpression(
                     left: _sqlExpressionFactory.ApplyDefaultTypeMapping(arguments[0]),
                     right: _sqlExpressionFactory.ApplyDefaultTypeMapping(arguments[1]),
@@ -85,6 +94,8 @@ public class VectorDbFunctionsTranslatorPlugin : IMethodCallTranslatorPlugin
                     type: resultTypeMapping.ClrType,
                     typeMapping: resultTypeMapping
                 );
+
+#endif
             }
 
             return null;
