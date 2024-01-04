@@ -16,7 +16,7 @@ Follow the instructions for your database library:
 
 Or check out an example:
 
-- [Embeddings](tests/Pgvector.Tests/OpenAITests.cs) with OpenAI
+- [Embeddings](tests/Pgvector.CSharp.Tests/OpenAITests.cs) with OpenAI
 
 ## Npgsql (C#)
 
@@ -175,7 +175,7 @@ conn.Execute("CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)");
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.Tests/DapperTests.cs)
+See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.CSharp.Tests/DapperTests.cs)
 
 ## Entity Framework Core
 
@@ -288,7 +288,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.Tests/EntityFrameworkCoreTests.cs)
+See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.CSharp.Tests/EntityFrameworkCoreTests.cs)
 
 ## Npgsql.FSharp
 
