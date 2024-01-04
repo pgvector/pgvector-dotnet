@@ -16,7 +16,7 @@ Follow the instructions for your database library:
 
 Or check out an example:
 
-- [Embeddings](tests/Pgvector.CSharp.Tests/OpenAITests.cs) with OpenAI
+- [Embeddings](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.CSharp.Tests/OpenAITests.cs) with OpenAI
 
 ## Npgsql (C#)
 
@@ -96,7 +96,7 @@ await using (var cmd = new NpgsqlCommand("CREATE INDEX ON items USING ivfflat (e
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
 
-See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.Tests/NpgsqlTests.cs)
+See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.CSharp.Tests/NpgsqlTests.cs)
 
 ## Dapper
 
