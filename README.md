@@ -4,7 +4,7 @@
 
 Supports [Npgsql](https://github.com/npgsql/npgsql), [Dapper](https://github.com/DapperLib/Dapper), [Entity Framework Core](https://github.com/dotnet/efcore), and [Npgsql.FSharp](https://github.com/Zaid-Ajaj/Npgsql.FSharp)
 
-[![Build Status](https://github.com/pgvector/pgvector-dotnet/workflows/build/badge.svg?branch=master)](https://github.com/pgvector/pgvector-dotnet/actions)
+[![Build Status](https://github.com/pgvector/pgvector-dotnet/actions/workflows/build.yml/badge.svg)](https://github.com/pgvector/pgvector-dotnet/actions)
 
 ## Getting Started
 
