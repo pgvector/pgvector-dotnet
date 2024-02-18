@@ -88,7 +88,7 @@ await using (var cmd = new NpgsqlCommand("SELECT * FROM items ORDER BY embedding
 Add an approximate index
 
 ```csharp
-await using (var cmd = new NpgsqlCommand("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)", conn))
+await using (var cmd = new NpgsqlCommand("CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)", conn))
 {
     await cmd.ExecuteNonQueryAsync();
 }
@@ -168,9 +168,9 @@ foreach (Item item in items)
 Add an approximate index
 
 ```csharp
-conn.Execute("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)");
-// or
 conn.Execute("CREATE INDEX ON items USING hnsw (embedding vector_l2_ops)");
+// or
+conn.Execute("CREATE INDEX ON items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)");
 ```
 
 Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distance
@@ -273,16 +273,16 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
     modelBuilder.Entity<Item>()
         .HasIndex(i => i.Embedding)
-        .HasMethod("ivfflat")
-        .HasOperators("vector_l2_ops")
-        .HasStorageParameter("lists", 100);
-    // or
-    modelBuilder.Entity<Item>()
-        .HasIndex(i => i.Embedding)
         .HasMethod("hnsw")
         .HasOperators("vector_l2_ops")
         .HasStorageParameter("m", 16)
         .HasStorageParameter("ef_construction", 64);
+    // or
+    modelBuilder.Entity<Item>()
+        .HasIndex(i => i.Embedding)
+        .HasMethod("ivfflat")
+        .HasOperators("vector_l2_ops")
+        .HasStorageParameter("lists", 100);
 }
 ```
 
