@@ -69,6 +69,20 @@ public class NpgsqlTests
             await cmd.ExecuteNonQueryAsync();
         }
 
+        await using (var writer = conn.BeginBinaryImport("COPY items (embedding) FROM STDIN WITH (FORMAT BINARY)"))
+        {
+            writer.StartRow();
+            writer.Write(new Vector(new float[] { 1, 1, 1 }));
+
+            writer.StartRow();
+            writer.Write(new Vector(new float[] { 2, 2, 2 }));
+
+            writer.StartRow();
+            writer.Write(new Vector(new float[] { 1, 1, 2 }));
+
+            writer.Complete();
+        }
+
         await using (var cmd = new NpgsqlCommand("SELECT $1", conn))
         {
             var embedding = new Vector(new float[16000]);
