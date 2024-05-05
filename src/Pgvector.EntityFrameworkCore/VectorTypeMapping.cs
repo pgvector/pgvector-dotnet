@@ -6,6 +6,10 @@ namespace Pgvector.EntityFrameworkCore;
 
 public class VectorTypeMapping : RelationalTypeMapping
 {
+    public static VectorTypeMapping Default { get; } = new();
+
+    public VectorTypeMapping() : base("vector", typeof(Vector)) { }
+
     public VectorTypeMapping(string storeType) : base(storeType, typeof(Vector)) { }
 
     protected VectorTypeMapping(RelationalTypeMappingParameters parameters) : base(parameters) { }

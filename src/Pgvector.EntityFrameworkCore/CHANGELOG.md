@@ -1,3 +1,7 @@
+## 0.2.1 (unreleased)
+
+- Added support for compiled models
+
 ## 0.2.0 (2023-11-24)
 
 - Added support for Npgsql.EntityFrameworkCore.PostgreSQL 8
