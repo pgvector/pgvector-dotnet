@@ -38,6 +38,32 @@ public class SparseVector
         Values = values.ToArray();
     }
 
+    public SparseVector(string s)
+    {
+        var parts = s.Split('/', 2);
+        var elements = parts[0].Substring(1, parts[0].Length - 2).Split(',');
+        var nnz = elements.Length;
+        var indices = new int[nnz];
+        var values = new float[nnz];
+
+        for (int i = 0; i < nnz; i++)
+        {
+            var ep = elements[i].Split(':', 2);
+            indices[i] = Int32.Parse(ep[0], CultureInfo.InvariantCulture) - 1;
+            values[i] = float.Parse(ep[1], CultureInfo.InvariantCulture);
+        }
+
+        Dimensions = Int32.Parse(parts[1], CultureInfo.InvariantCulture);
+        Indices = indices.ToArray();
+        Values = values.ToArray();
+    }
+
+    public override string ToString()
+    {
+        var elements = Indices.ToArray().Zip(Values.ToArray(), (i, v) => string.Concat((i + 1).ToString(CultureInfo.InvariantCulture), ":", v.ToString(CultureInfo.InvariantCulture)));
+        return string.Concat("{", string.Join(",", elements), "}/", Dimensions);
+    }
+
     public float[] ToArray()
     {
         var result = new float[Dimensions];
