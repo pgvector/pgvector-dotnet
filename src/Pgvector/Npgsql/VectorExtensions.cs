@@ -9,6 +9,7 @@ public static class VectorExtensions
     {
         mapper.AddTypeInfoResolverFactory(new VectorTypeInfoResolverFactory());
         mapper.AddTypeInfoResolverFactory(new HalfvecTypeInfoResolverFactory());
+        mapper.AddTypeInfoResolverFactory(new SparsevecTypeInfoResolverFactory());
         return mapper;
     }
 }

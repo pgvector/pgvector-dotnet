@@ -1,6 +1,6 @@
 ## 0.3.0 (unreleased)
 
-- Added support for `halfvec` type
+- Added support for `halfvec` and `sparsevec` types
 - Dropped support for .NET Standard
 
 ## 0.2.0 (2023-11-24)

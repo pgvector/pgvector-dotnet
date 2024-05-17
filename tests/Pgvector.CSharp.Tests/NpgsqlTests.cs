@@ -25,12 +25,12 @@ public class NpgsqlTests
             await cmd.ExecuteNonQueryAsync();
         }
 
-        await using (var cmd = new NpgsqlCommand("CREATE TABLE items (id serial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3))", conn))
+        await using (var cmd = new NpgsqlCommand("CREATE TABLE items (id serial PRIMARY KEY, embedding vector(3), half_embedding halfvec(3), sparse_embedding sparsevec(3))", conn))
         {
             await cmd.ExecuteNonQueryAsync();
         }
 
-        await using (var cmd = new NpgsqlCommand("INSERT INTO items (embedding, half_embedding) VALUES ($1, $2), ($3, $4), ($5, $6)", conn))
+        await using (var cmd = new NpgsqlCommand("INSERT INTO items (embedding, half_embedding, sparse_embedding) VALUES ($1, $2, $3), ($4, $5, $6), ($7, $8, $9)", conn))
         {
             var embedding1 = new Vector(new float[] { 1, 1, 1 });
             var embedding2 = new Vector(new float[] { 2, 2, 2 });
@@ -38,12 +38,18 @@ public class NpgsqlTests
             var halfEmbedding1 = new HalfVector(new Half[] { (Half)1, (Half)1, (Half)1 });
             var halfEmbedding2 = new HalfVector(new Half[] { (Half)2, (Half)2, (Half)2 });
             var halfEmbedding3 = new HalfVector(new Half[] { (Half)1, (Half)1, (Half)2 });
+            var sparseEmbedding1 = new SparseVector(new float[] { 1, 1, 1 });
+            var sparseEmbedding2 = new SparseVector(new float[] { 2, 2, 2 });
+            var sparseEmbedding3 = new SparseVector(new float[] { 1, 1, 2 });
             cmd.Parameters.AddWithValue(embedding1);
             cmd.Parameters.AddWithValue(halfEmbedding1);
+            cmd.Parameters.AddWithValue(sparseEmbedding1);
             cmd.Parameters.AddWithValue(embedding2);
             cmd.Parameters.AddWithValue(halfEmbedding2);
+            cmd.Parameters.AddWithValue(sparseEmbedding2);
             cmd.Parameters.AddWithValue(embedding3);
             cmd.Parameters.AddWithValue(halfEmbedding3);
+            cmd.Parameters.AddWithValue(sparseEmbedding3);
             await cmd.ExecuteNonQueryAsync();
         }
 
@@ -57,12 +63,14 @@ public class NpgsqlTests
                 var ids = new List<int>();
                 var embeddings = new List<Vector>();
                 var halfEmbeddings = new List<HalfVector>();
+                var sparseEmbeddings = new List<SparseVector>();
 
                 while (await reader.ReadAsync())
                 {
                     ids.Add((int)reader.GetValue(0));
                     embeddings.Add((Vector)reader.GetValue(1));
                     halfEmbeddings.Add((HalfVector)reader.GetValue(2));
+                    sparseEmbeddings.Add((SparseVector)reader.GetValue(3));
                 }
 
                 Assert.Equal(new int[] { 1, 3, 2 }, ids.ToArray());
@@ -72,6 +80,9 @@ public class NpgsqlTests
                 Assert.Equal(new Half[] { (Half)1, (Half)1, (Half)1 }, halfEmbeddings[0].ToArray());
                 Assert.Equal(new Half[] { (Half)1, (Half)1, (Half)2 }, halfEmbeddings[1].ToArray());
                 Assert.Equal(new Half[] { (Half)2, (Half)2, (Half)2 }, halfEmbeddings[2].ToArray());
+                Assert.Equal(new float[] { 1, 1, 1 }, sparseEmbeddings[0].ToArray());
+                Assert.Equal(new float[] { 1, 1, 2 }, sparseEmbeddings[1].ToArray());
+                Assert.Equal(new float[] { 2, 2, 2 }, sparseEmbeddings[2].ToArray());
             }
         }
 
