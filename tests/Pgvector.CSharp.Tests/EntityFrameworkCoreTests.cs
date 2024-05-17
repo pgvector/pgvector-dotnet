@@ -39,6 +39,9 @@ public class Item
 
     [Column("half_embedding", TypeName = "halfvec(3)")]
     public HalfVector? HalfEmbedding { get; set; }
+
+    [Column("sparse_embedding", TypeName = "sparsevec(3)")]
+    public SparseVector? SparseEmbedding { get; set; }
 }
 
 public class EntityFrameworkCoreTests
@@ -52,9 +55,9 @@ public class EntityFrameworkCoreTests
         var databaseCreator = ctx.GetService<IRelationalDatabaseCreator>();
         databaseCreator.CreateTables();
 
-        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 1 }), HalfEmbedding = new HalfVector(new Half[] { (Half)1, (Half)1, (Half)1 }) });
-        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 2, 2, 2 }), HalfEmbedding = new HalfVector(new Half[] { (Half)2, (Half)2, (Half)2 }) });
-        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 2 }), HalfEmbedding = new HalfVector(new Half[] { (Half)1, (Half)1, (Half)2 }) });
+        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 1 }), HalfEmbedding = new HalfVector(new Half[] { (Half)1, (Half)1, (Half)1 }), SparseEmbedding = new SparseVector(new float[] { 1, 1, 1 }) });
+        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 2, 2, 2 }), HalfEmbedding = new HalfVector(new Half[] { (Half)2, (Half)2, (Half)2 }), SparseEmbedding = new SparseVector(new float[] { 2, 2, 2 }) });
+        ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 2 }), HalfEmbedding = new HalfVector(new Half[] { (Half)1, (Half)1, (Half)2 }), SparseEmbedding = new SparseVector(new float[] { 1, 1, 2 }) });
         ctx.SaveChanges();
 
         var embedding = new Vector(new float[] { 1, 1, 1 });
@@ -78,6 +81,10 @@ public class EntityFrameworkCoreTests
 
         var halfEmbedding = new HalfVector(new Half[] { (Half)1, (Half)1, (Half)1 });
         items = await ctx.Items.OrderBy(x => x.HalfEmbedding!.L2Distance(halfEmbedding)).Take(5).ToListAsync();
+        Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
+
+        var sparseEmbedding = new SparseVector(new float[] { 1, 1, 1 });
+        items = await ctx.Items.OrderBy(x => x.SparseEmbedding!.L2Distance(sparseEmbedding)).Take(5).ToListAsync();
         Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
 
         items = await ctx.Items
