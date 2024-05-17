@@ -17,6 +17,7 @@ public class VectorDbContextOptionsExtension : IDbContextOptionsExtension
             .TryAdd<IMethodCallTranslatorPlugin, VectorDbFunctionsTranslatorPlugin>();
 
         services.AddSingleton<IRelationalTypeMappingSourcePlugin, VectorTypeMappingSourcePlugin>();
+        services.AddSingleton<IRelationalTypeMappingSourcePlugin, HalfvecTypeMappingSourcePlugin>();
     }
 
     public void Validate(IDbContextOptions options) { }

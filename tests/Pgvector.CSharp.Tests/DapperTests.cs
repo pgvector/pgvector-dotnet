@@ -7,6 +7,7 @@ public class DapperItem
 {
     public int Id { get; set; }
     public Vector? Embedding { get; set; }
+    public HalfVector? HalfEmbedding { get; set; }
 }
 
 public class DapperTests
@@ -15,6 +16,7 @@ public class DapperTests
     public async Task Main()
     {
         SqlMapper.AddTypeHandler(new VectorTypeHandler());
+        SqlMapper.AddTypeHandler(new HalfvecTypeHandler());
 
         var connString = "Host=localhost;Database=pgvector_dotnet_test";
 
@@ -28,17 +30,21 @@ public class DapperTests
         conn.ReloadTypes();
 
         conn.Execute("DROP TABLE IF EXISTS dapper_items");
-        conn.Execute("CREATE TABLE dapper_items (id serial PRIMARY KEY, embedding vector(3))");
+        conn.Execute("CREATE TABLE dapper_items (id serial PRIMARY KEY, embedding vector(3), halfembedding halfvec(3))");
 
         var embedding1 = new Vector(new float[] { 1, 1, 1 });
         var embedding2 = new Vector(new float[] { 2, 2, 2 });
         var embedding3 = new Vector(new float[] { 1, 1, 2 });
-        conn.Execute(@"INSERT INTO dapper_items (embedding) VALUES (@embedding1), (@embedding2), (@embedding3)", new { embedding1, embedding2, embedding3 });
+        var halfEmbedding1 = new HalfVector(new Half[] { (Half)1, (Half)1, (Half)1 });
+        var halfEmbedding2 = new HalfVector(new Half[] { (Half)2, (Half)2, (Half)2 });
+        var halfEmbedding3 = new HalfVector(new Half[] { (Half)1, (Half)1, (Half)2 });
+        conn.Execute(@"INSERT INTO dapper_items (embedding, halfembedding) VALUES (@embedding1, @halfEmbedding1), (@embedding2, @halfEmbedding2), (@embedding3, @halfEmbedding3)", new { embedding1, halfEmbedding1, embedding2, halfEmbedding2, embedding3, halfEmbedding3 });
 
         var embedding = new Vector(new float[] { 1, 1, 1 });
         var items = conn.Query<DapperItem>("SELECT * FROM dapper_items ORDER BY embedding <-> @embedding LIMIT 5", new { embedding }).AsList();
         Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
         Assert.Equal(new float[] { 1, 1, 1 }, items[0].Embedding!.ToArray());
+        Assert.Equal(new Half[] { (Half)1, (Half)1, (Half)1 }, items[0].HalfEmbedding!.ToArray());
 
         conn.Execute("CREATE INDEX ON dapper_items USING ivfflat (embedding vector_l2_ops) WITH (lists = 100)");
     }

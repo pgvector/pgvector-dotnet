@@ -31,29 +31,29 @@ public class VectorDbFunctionsTranslatorPlugin : IMethodCallTranslatorPlugin
         private static readonly MethodInfo _methodL2Distance = typeof(VectorDbFunctionsExtensions)
             .GetRuntimeMethod(nameof(VectorDbFunctionsExtensions.L2Distance), new[]
             {
-                typeof(Vector),
-                typeof(Vector),
+                typeof(object),
+                typeof(object),
             })!;
 
         private static readonly MethodInfo _methodMaxInnerProduct = typeof(VectorDbFunctionsExtensions)
             .GetRuntimeMethod(nameof(VectorDbFunctionsExtensions.MaxInnerProduct), new[]
             {
-                typeof(Vector),
-                typeof(Vector),
+                typeof(object),
+                typeof(object),
             })!;
 
         private static readonly MethodInfo _methodCosineDistance = typeof(VectorDbFunctionsExtensions)
             .GetRuntimeMethod(nameof(VectorDbFunctionsExtensions.CosineDistance), new[]
             {
-                typeof(Vector),
-                typeof(Vector),
+                typeof(object),
+                typeof(object),
             })!;
 
         private static readonly MethodInfo _methodL1Distance = typeof(VectorDbFunctionsExtensions)
             .GetRuntimeMethod(nameof(VectorDbFunctionsExtensions.L1Distance), new[]
             {
-                typeof(Vector),
-                typeof(Vector),
+                typeof(object),
+                typeof(object),
             })!;
 
         public VectorDbFunctionsTranslator(

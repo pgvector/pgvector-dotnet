@@ -1,5 +1,6 @@
 ## 0.2.1 (unreleased)
 
+- Added support for `halfvec` type
 - Added support for compiled models
 - Added `L1Distance` function
 
