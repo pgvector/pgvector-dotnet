@@ -68,8 +68,8 @@ public class EntityFrameworkCoreTests
         var items = await ctx.Items.FromSql($"SELECT * FROM efcore_items ORDER BY embedding <-> {embedding} LIMIT 5").ToListAsync();
         Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
         Assert.Equal(new float[] { 1, 1, 1 }, items[0].Embedding!.ToArray());
-        Assert.Equal(new BitArray(new bool[] { false, false, false }), items[0].BinaryEmbedding!);
         Assert.Equal(new Half[] { (Half)1, (Half)1, (Half)1 }, items[0].HalfEmbedding!.ToArray());
+        Assert.Equal(new BitArray(new bool[] { false, false, false }), items[0].BinaryEmbedding!);
         Assert.Equal(new float[] { 1, 1, 1 }, items[0].SparseEmbedding!.ToArray());
 
         // vector distance functions
