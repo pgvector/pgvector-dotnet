@@ -56,6 +56,20 @@ public class VectorDbFunctionsTranslatorPlugin : IMethodCallTranslatorPlugin
                 typeof(object),
             })!;
 
+        private static readonly MethodInfo _methodHammingDistance = typeof(VectorDbFunctionsExtensions)
+            .GetRuntimeMethod(nameof(VectorDbFunctionsExtensions.HammingDistance), new[]
+            {
+                typeof(object),
+                typeof(object),
+            })!;
+
+        private static readonly MethodInfo _methodJaccardDistance = typeof(VectorDbFunctionsExtensions)
+            .GetRuntimeMethod(nameof(VectorDbFunctionsExtensions.JaccardDistance), new[]
+            {
+                typeof(object),
+                typeof(object),
+            })!;
+
         public VectorDbFunctionsTranslator(
             ISqlExpressionFactory sqlExpressionFactory,
             IRelationalTypeMappingSource typeMappingSource
@@ -79,6 +93,8 @@ public class VectorDbFunctionsTranslatorPlugin : IMethodCallTranslatorPlugin
                 _ when ReferenceEquals(method, _methodMaxInnerProduct) => "<#>",
                 _ when ReferenceEquals(method, _methodCosineDistance) => "<=>",
                 _ when ReferenceEquals(method, _methodL1Distance) => "<+>",
+                _ when ReferenceEquals(method, _methodHammingDistance) => "<~>",
+                _ when ReferenceEquals(method, _methodJaccardDistance) => "<%>",
                 _ => null
             };
 

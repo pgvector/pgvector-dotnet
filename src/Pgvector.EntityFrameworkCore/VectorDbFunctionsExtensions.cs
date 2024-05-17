@@ -15,4 +15,10 @@ public static class VectorDbFunctionsExtensions
 
     public static double L1Distance(this object a, object b)
         => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(L1Distance)));
+
+    public static double HammingDistance(this object a, object b)
+        => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(HammingDistance)));
+
+    public static double JaccardDistance(this object a, object b)
+        => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(JaccardDistance)));
 }

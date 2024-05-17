@@ -2,7 +2,7 @@
 
 - Added support for `halfvec` and `sparsevec` types
 - Added support for compiled models
-- Added `L1Distance` function
+- Added `L1Distance`, `HammingDistance`, and `JaccardDistance` functions
 
 ## 0.2.0 (2023-11-24)
 
