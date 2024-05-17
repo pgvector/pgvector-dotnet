@@ -64,6 +64,8 @@ public class EntityFrameworkCoreTests
         ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 2 }), HalfEmbedding = new HalfVector(new Half[] { (Half)1, (Half)1, (Half)2 }), BinaryEmbedding = new BitArray(new bool[] { true, true, true }), SparseEmbedding = new SparseVector(new float[] { 1, 1, 2 }) });
         ctx.SaveChanges();
 
+        // vector
+
         var embedding = new Vector(new float[] { 1, 1, 1 });
         var items = await ctx.Items.FromSql($"SELECT * FROM efcore_items ORDER BY embedding <-> {embedding} LIMIT 5").ToListAsync();
         Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
@@ -83,13 +85,37 @@ public class EntityFrameworkCoreTests
         items = await ctx.Items.OrderBy(x => x.Embedding!.L1Distance(embedding)).Take(5).ToListAsync();
         Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
 
+        // halfvec
+
         var halfEmbedding = new HalfVector(new Half[] { (Half)1, (Half)1, (Half)1 });
         items = await ctx.Items.OrderBy(x => x.HalfEmbedding!.L2Distance(halfEmbedding)).Take(5).ToListAsync();
         Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
 
+        items = await ctx.Items.OrderBy(x => x.HalfEmbedding!.MaxInnerProduct(halfEmbedding)).Take(5).ToListAsync();
+        Assert.Equal(new int[] { 2, 3, 1 }, items.Select(v => v.Id).ToArray());
+
+        items = await ctx.Items.OrderBy(x => x.HalfEmbedding!.CosineDistance(halfEmbedding)).Take(5).ToListAsync();
+        Assert.Equal(3, items[2].Id);
+
+        items = await ctx.Items.OrderBy(x => x.HalfEmbedding!.L1Distance(halfEmbedding)).Take(5).ToListAsync();
+        Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
+
+        // sparsevec
+
         var sparseEmbedding = new SparseVector(new float[] { 1, 1, 1 });
         items = await ctx.Items.OrderBy(x => x.SparseEmbedding!.L2Distance(sparseEmbedding)).Take(5).ToListAsync();
         Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
+
+        items = await ctx.Items.OrderBy(x => x.SparseEmbedding!.MaxInnerProduct(sparseEmbedding)).Take(5).ToListAsync();
+        Assert.Equal(new int[] { 2, 3, 1 }, items.Select(v => v.Id).ToArray());
+
+        items = await ctx.Items.OrderBy(x => x.SparseEmbedding!.CosineDistance(sparseEmbedding)).Take(5).ToListAsync();
+        Assert.Equal(3, items[2].Id);
+
+        items = await ctx.Items.OrderBy(x => x.SparseEmbedding!.L1Distance(sparseEmbedding)).Take(5).ToListAsync();
+        Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
+
+        // bit
 
         var binaryEmbedding = new BitArray(new bool[] { true, false, true });
         items = await ctx.Items.OrderBy(x => x.BinaryEmbedding!.HammingDistance(binaryEmbedding)).Take(5).ToListAsync();
@@ -97,6 +123,8 @@ public class EntityFrameworkCoreTests
 
         items = await ctx.Items.OrderBy(x => x.BinaryEmbedding!.JaccardDistance(binaryEmbedding)).Take(5).ToListAsync();
         Assert.Equal(new int[] { 2, 3, 1 }, items.Select(v => v.Id).ToArray());
+
+        // additional
 
         items = await ctx.Items
             .OrderBy(x => x.Id)
