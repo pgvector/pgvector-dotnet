@@ -69,6 +69,9 @@ public class EntityFrameworkCoreTests
         items = await ctx.Items.OrderBy(x => x.Embedding!.CosineDistance(embedding)).Take(5).ToListAsync();
         Assert.Equal(3, items[2].Id);
 
+        items = await ctx.Items.OrderBy(x => x.Embedding!.L1Distance(embedding)).Take(5).ToListAsync();
+        Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
+
         items = await ctx.Items
             .OrderBy(x => x.Id)
             .Where(x => x.Embedding!.L2Distance(embedding) < 1.5)

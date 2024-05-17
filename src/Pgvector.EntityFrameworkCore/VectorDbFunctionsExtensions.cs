@@ -12,4 +12,7 @@ public static class VectorDbFunctionsExtensions
 
     public static double CosineDistance(this Vector a, Vector b)
         => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(CosineDistance)));
+
+    public static double L1Distance(this Vector a, Vector b)
+        => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(L1Distance)));
 }

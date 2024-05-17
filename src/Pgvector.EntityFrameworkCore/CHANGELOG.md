@@ -1,6 +1,7 @@
 ## 0.2.1 (unreleased)
 
 - Added support for compiled models
+- Added `L1Distance` function
 
 ## 0.2.0 (2023-11-24)
 

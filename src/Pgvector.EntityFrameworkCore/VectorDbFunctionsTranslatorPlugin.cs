@@ -49,6 +49,13 @@ public class VectorDbFunctionsTranslatorPlugin : IMethodCallTranslatorPlugin
                 typeof(Vector),
             })!;
 
+        private static readonly MethodInfo _methodL1Distance = typeof(VectorDbFunctionsExtensions)
+            .GetRuntimeMethod(nameof(VectorDbFunctionsExtensions.L1Distance), new[]
+            {
+                typeof(Vector),
+                typeof(Vector),
+            })!;
+
         public VectorDbFunctionsTranslator(
             ISqlExpressionFactory sqlExpressionFactory,
             IRelationalTypeMappingSource typeMappingSource
@@ -71,6 +78,7 @@ public class VectorDbFunctionsTranslatorPlugin : IMethodCallTranslatorPlugin
                 _ when ReferenceEquals(method, _methodL2Distance) => "<->",
                 _ when ReferenceEquals(method, _methodMaxInnerProduct) => "<#>",
                 _ when ReferenceEquals(method, _methodCosineDistance) => "<=>",
+                _ when ReferenceEquals(method, _methodL1Distance) => "<+>",
                 _ => null
             };
 
