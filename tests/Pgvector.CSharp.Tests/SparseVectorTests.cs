@@ -7,9 +7,9 @@ public class SparseVectorTests
     [Fact]
     public void StringConstructor()
     {
-        var v = new SparseVector("{1:1,2:2,3:3}/3");
-        Assert.Equal("{1:1,2:2,3:3}/3", v.ToString());
-        Assert.Equal(new float[] { 1, 2, 3 }, v.ToArray());
+        var v = new SparseVector("{1:1,3:2,5:3}/6");
+        Assert.Equal("{1:1,3:2,5:3}/6", v.ToString());
+        Assert.Equal(new float[] { 1, 0, 2, 0, 3, 0 }, v.ToArray());
     }
 
     [Fact]
