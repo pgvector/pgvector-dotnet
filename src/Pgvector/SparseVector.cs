@@ -12,11 +12,11 @@ public class SparseVector
     public ReadOnlyMemory<float> Values { get; }
 
     // caller must ensure:
-    // 1. indices are sorted and unique
+    // 1. indices are sorted, unique, >= 0, and < dimensions
     // 2. values does not contain zeros
     public SparseVector(int dimensions, ReadOnlyMemory<int> indices, ReadOnlyMemory<float> values)
     {
-        if (values.Length != indices.Length)
+        if (indices.Length != values.Length)
         {
             throw new ArgumentException("indices and values must be same length");
         }
