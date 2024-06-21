@@ -45,6 +45,28 @@ public class SparseVector
         Values = values.ToArray();
     }
 
+    public SparseVector(IDictionary<int, float> dictionary, int dimensions)
+    {
+        List<KeyValuePair<int, float>> elements = dictionary.ToList();
+        elements.Sort((a, b) => a.Key.CompareTo(b.Key));
+
+        var indices = new List<int>();
+        var values = new List<float>();
+
+        foreach (KeyValuePair<int, float> e in elements)
+        {
+            if (e.Value != 0)
+            {
+                indices.Add(e.Key);
+                values.Add(e.Value);
+            }
+        }
+
+        Dimensions = dimensions;
+        Indices = indices.ToArray();
+        Values = values.ToArray();
+    }
+
     public SparseVector(string s)
     {
         var parts = s.Split('/', 2);
