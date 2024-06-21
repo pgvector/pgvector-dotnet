@@ -16,7 +16,8 @@ public class SparseVector
     // 2. values does not contain zeros
     public SparseVector(int dimensions, ReadOnlyMemory<int> indices, ReadOnlyMemory<float> values)
     {
-        if (values.Length != indices.Length) {
+        if (values.Length != indices.Length)
+        {
             throw new ArgumentException("indices and values must be same length");
         }
 
