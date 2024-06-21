@@ -18,7 +18,7 @@ public class SparseVector
     {
         if (indices.Length != values.Length)
         {
-            throw new ArgumentException("indices and values must be same length");
+            throw new ArgumentException("indices and values must be the same length");
         }
 
         Dimensions = dimensions;
