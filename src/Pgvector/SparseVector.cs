@@ -105,4 +105,32 @@ public class SparseVector
 
         return result;
     }
+
+    public bool Equals(SparseVector? other)
+        => other is not null && Dimensions == other.Dimensions && Indices.Span.SequenceEqual(other.Indices.Span) && Values.Span.SequenceEqual(other.Values.Span);
+
+    public override bool Equals(object? obj)
+        => obj is SparseVector vector && Equals(vector);
+
+    public static bool operator ==(SparseVector? x, SparseVector? y)
+        => (x is null && y is null) || (x is not null && x.Equals(y));
+
+    public static bool operator !=(SparseVector? x, SparseVector? y) => !(x == y);
+
+    public override int GetHashCode()
+    {
+        var hashCode = new HashCode();
+
+        hashCode.Add(Dimensions);
+
+        var indices = Indices.Span;
+        for (var i = 0; i < indices.Length; i++)
+            hashCode.Add(indices[i]);
+
+        var values = Values.Span;
+        for (var i = 0; i < values.Length; i++)
+            hashCode.Add(values[i]);
+
+        return hashCode.ToHashCode();
+    }
 }

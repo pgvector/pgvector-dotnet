@@ -31,4 +31,25 @@ public class SparseVectorTests
         Assert.Equal(new float[] { 1, 0, 2, 0, 3, 0 }, v.ToArray());
         Assert.Equal(new int[] { 0, 2, 4 }, v.Indices.ToArray());
     }
+
+    [Fact]
+    public void Equal()
+    {
+        var a = new SparseVector(new float[] { 1, 1, 1 });
+        var b = new SparseVector(new float[] { 1, 1, 1 });
+        var c = new SparseVector(new float[] { 1, 2, 3 });
+
+        Assert.Equal(a, b);
+        Assert.NotEqual(a, c);
+
+        Assert.True(a == b);
+        Assert.False(a == c);
+
+        Assert.False(a != b);
+        Assert.True(a != c);
+
+        Assert.False(a == null);
+        Assert.False(null == a);
+        Assert.True((Vector?)null == null);
+    }
 }
