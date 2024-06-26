@@ -1,4 +1,4 @@
-## 0.3.0 (unreleased)
+## 0.3.0 (2024-06-25)
 
 - Added support for `halfvec` and `sparsevec` types
 - Dropped support for .NET Standard
