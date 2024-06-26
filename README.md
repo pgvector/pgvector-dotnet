@@ -142,6 +142,8 @@ public class Item
 }
 ```
 
+Also supports `HalfVector` and `SparseVector`
+
 Create a table
 
 ```csharp
@@ -224,6 +226,8 @@ public class Item
 }
 ```
 
+Also supports `HalfVector` and `SparseVector`
+
 Insert a vector
 
 ```csharp
@@ -249,7 +253,7 @@ foreach (Item item in items)
 }
 ```
 
-Also supports `MaxInnerProduct` and `CosineDistance`
+Also supports `MaxInnerProduct`, `CosineDistance`, `L1Distance`, `HammingDistance`, and `JaccardDistance`
 
 Get the distance
 
