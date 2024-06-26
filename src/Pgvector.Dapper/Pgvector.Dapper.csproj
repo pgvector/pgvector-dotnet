@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>Pgvector.Dapper</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Authors>ankane</Authors>
     <Description>pgvector support for Dapper</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
