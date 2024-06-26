@@ -1,4 +1,4 @@
-## 0.2.1 (unreleased)
+## 0.2.1 (2024-06-25)
 
 - Added support for `halfvec` and `sparsevec` types
 - Added support for compiled models
