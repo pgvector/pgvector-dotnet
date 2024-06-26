@@ -12,12 +12,13 @@
     <TargetFrameworks>net6.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
+    <NoWarn>NPG9001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" />
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
-    <PackageReference Include="Npgsql" Version="8.0.0" />
+    <PackageReference Include="Npgsql" Version="8.0.3" />
   </ItemGroup>
 
 </Project>
