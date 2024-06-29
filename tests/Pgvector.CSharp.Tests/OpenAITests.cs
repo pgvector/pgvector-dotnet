@@ -86,7 +86,7 @@ public class OpenAITests
         var data = new
         {
             input = input,
-            model = "text-embedding-ada-002"
+            model = "text-embedding-3-small"
         };
         var client = new HttpClient();
         client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiKey);
