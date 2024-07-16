@@ -17,6 +17,7 @@ Follow the instructions for your database library:
 Or check out an example:
 
 - [Embeddings](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.CSharp.Tests/OpenAITests.cs) with OpenAI
+- [Binary embeddings](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.CSharp.Tests/CohereTests.cs) with Cohere
 - [Bulk loading](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.CSharp.Tests/LoadingTests.cs) with `COPY`
 
 ## Npgsql (C#)
