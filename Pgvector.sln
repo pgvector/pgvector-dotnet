@@ -19,6 +19,10 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Pgvector.FSharp.Tests", "te
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Pgvector.VisualBasic.Tests", "tests\Pgvector.VisualBasic.Tests\Pgvector.VisualBasic.Tests.vbproj", "{1C52EAE5-7888-48E9-86E2-FADA289CE658}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{C1527E1A-14A6-4270-ADDF-B2185A3F75A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pgvector.CSharp.Examples", "examples\Pgvector.CSharp.Examples\Pgvector.CSharp.Examples.csproj", "{86020933-4712-48F8-B811-F1D972BD9E04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +56,10 @@ Global
 		{1C52EAE5-7888-48E9-86E2-FADA289CE658}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C52EAE5-7888-48E9-86E2-FADA289CE658}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C52EAE5-7888-48E9-86E2-FADA289CE658}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86020933-4712-48F8-B811-F1D972BD9E04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86020933-4712-48F8-B811-F1D972BD9E04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86020933-4712-48F8-B811-F1D972BD9E04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86020933-4712-48F8-B811-F1D972BD9E04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3C580CE2-B935-4656-BCC9-4FB4035089E4} = {B76AB67C-094F-433B-AF25-807B50D2888E}
@@ -60,5 +68,6 @@ Global
 		{4493B7D8-112B-4867-9373-C08B6F996875} = {B76AB67C-094F-433B-AF25-807B50D2888E}
 		{2D51D6AE-2355-4BAE-8FDC-7001EBAE78BD} = {4C5546A5-6119-4D42-A65B-2327280E1881}
 		{1C52EAE5-7888-48E9-86E2-FADA289CE658} = {4C5546A5-6119-4D42-A65B-2327280E1881}
+		{86020933-4712-48F8-B811-F1D972BD9E04} = {C1527E1A-14A6-4270-ADDF-B2185A3F75A0}
 	EndGlobalSection
 EndGlobal
