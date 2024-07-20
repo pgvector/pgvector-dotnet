@@ -13,7 +13,7 @@ class EmbeddingsObject
     public required int[][] ubinary { get; set; }
 }
 
-public class Example
+class Program
 {
     static async Task Main()
     {
@@ -80,7 +80,7 @@ public class Example
         }
     }
 
-    static async Task<byte[][]> FetchEmbeddings(string[] texts, string inputType, string apiKey)
+    private static async Task<byte[][]> FetchEmbeddings(string[] texts, string inputType, string apiKey)
     {
         var url = "https://api.cohere.com/v1/embed";
         var data = new

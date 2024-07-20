@@ -12,7 +12,7 @@ class ApiObject
     public required float[] embedding { get; set; }
 }
 
-public class Example
+class Program
 {
     static async Task Main()
     {
@@ -77,7 +77,7 @@ public class Example
         }
     }
 
-    static async Task<float[][]> FetchEmbeddings(string[] input, string apiKey)
+    private static async Task<float[][]> FetchEmbeddings(string[] input, string apiKey)
     {
         var url = "https://api.openai.com/v1/embeddings";
         var data = new

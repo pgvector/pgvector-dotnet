@@ -1,4 +1,4 @@
-public class Example
+class Program
 {
     static async Task Main()
     {
