@@ -1,13 +1,7 @@
-namespace Pgvector.Tests;
-
-public class LoadingTests
+public class Example
 {
-    [Fact]
-    public async Task Main()
+    static async Task Main()
     {
-        if (Environment.GetEnvironmentVariable("TEST_LOADING") is null)
-            return;
-
         // generate random data
         var rows = 1000000;
         var dimensions = 128;

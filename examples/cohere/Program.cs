@@ -1,27 +1,25 @@
-namespace Pgvector.Tests;
-
+using System.Collections;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 
-class ApiResponse
+class EmbedResponse
 {
-    public required ApiObject[] data { get; set; }
+    public required EmbeddingsObject embeddings { get; set; }
 }
 
-class ApiObject
+class EmbeddingsObject
 {
-    public required float[] embedding { get; set; }
+    public required int[][] ubinary { get; set; }
 }
 
-public class OpenAITests
+public class Example
 {
-    [Fact]
-    public async Task Main()
+    static async Task Main()
     {
-        var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+        var apiKey = Environment.GetEnvironmentVariable("CO_API_KEY");
         if (apiKey is null)
-            return;
+            throw new Exception("Set CO_API_KEY");
 
         var connString = "Host=localhost;Database=pgvector_example";
 
@@ -43,7 +41,7 @@ public class OpenAITests
             await cmd.ExecuteNonQueryAsync();
         }
 
-        await using (var cmd = new NpgsqlCommand("CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding vector(1536))", conn))
+        await using (var cmd = new NpgsqlCommand("CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding bit(1024))", conn))
         {
             await cmd.ExecuteNonQueryAsync();
         }
@@ -53,46 +51,50 @@ public class OpenAITests
             "The cat is purring",
             "The bear is growling"
         };
-        var embeddings = await FetchEmbeddings(input, apiKey);
+        var embeddings = await FetchEmbeddings(input, "search_document", apiKey);
 
         for (int i = 0; i < input.Length; i++)
         {
             await using (var cmd = new NpgsqlCommand("INSERT INTO documents (content, embedding) VALUES ($1, $2)", conn))
             {
                 cmd.Parameters.AddWithValue(input[i]);
-                cmd.Parameters.AddWithValue(new Vector(embeddings[i]));
+                cmd.Parameters.AddWithValue(new BitArray(embeddings[i]));
                 await cmd.ExecuteNonQueryAsync();
             }
         }
 
-        var documentId = 2;
-        await using (var cmd = new NpgsqlCommand("SELECT * FROM documents WHERE id != $1 ORDER BY embedding <=> (SELECT embedding FROM documents WHERE id = $1) LIMIT 5", conn))
+        var query = "forest";
+        var queryEmbedding = await FetchEmbeddings(new string[] { query }, "search_query", apiKey);
+
+        await using (var cmd = new NpgsqlCommand("SELECT content FROM documents ORDER BY embedding <~> $1 LIMIT 5", conn))
         {
-            cmd.Parameters.AddWithValue(documentId);
+            cmd.Parameters.AddWithValue(new BitArray(queryEmbedding[0]));
 
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
                 while (await reader.ReadAsync())
                 {
-                    Console.WriteLine((string)reader.GetValue(1));
+                    Console.WriteLine((string)reader.GetValue(0));
                 }
             }
         }
     }
 
-    private async Task<float[][]> FetchEmbeddings(string[] input, string apiKey)
+    static async Task<byte[][]> FetchEmbeddings(string[] texts, string inputType, string apiKey)
     {
-        var url = "https://api.openai.com/v1/embeddings";
+        var url = "https://api.cohere.com/v1/embed";
         var data = new
         {
-            input = input,
-            model = "text-embedding-3-small"
+            texts = texts,
+            model = "embed-english-v3.0",
+            input_type = inputType,
+            embedding_types = new string[] { "ubinary" }
         };
         var client = new HttpClient();
         client.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiKey);
         using HttpResponseMessage response = await client.PostAsJsonAsync(url, data);
         response.EnsureSuccessStatusCode();
-        var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse>();
-        return apiResponse!.data.Select(e => e.embedding).ToArray();
+        var apiResponse = await response.Content.ReadFromJsonAsync<EmbedResponse>();
+        return apiResponse!.embeddings.ubinary.Select(e => e.Select(v => (byte)v).ToArray()).ToArray();
     }
 }
