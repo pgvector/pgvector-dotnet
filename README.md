@@ -19,6 +19,7 @@ Or check out an example:
 - [Embeddings](https://github.com/pgvector/pgvector-dotnet/blob/master/examples/OpenAI/Program.cs) with OpenAI
 - [Binary embeddings](https://github.com/pgvector/pgvector-dotnet/blob/master/examples/Cohere/Program.cs) with Cohere
 - [Recommendations](https://github.com/pgvector/pgvector-dotnet/blob/master/examples/Disco/Program.cs) with Disco
+- [Topic modeling](https://github.com/pgvector/pgvector-dotnet/blob/master/examples/TopicModeling/Program.cs) with ML.NET
 - [Bulk loading](https://github.com/pgvector/pgvector-dotnet/blob/master/examples/Loading/Program.cs) with `COPY`
 
 ## Npgsql (C#)
