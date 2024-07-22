@@ -20,6 +20,7 @@ Or check out an example:
 - [Binary embeddings](https://github.com/pgvector/pgvector-dotnet/blob/master/examples/Cohere/Program.cs) with Cohere
 - [Recommendations](https://github.com/pgvector/pgvector-dotnet/blob/master/examples/Disco/Program.cs) with Disco
 - [Topic modeling](https://github.com/pgvector/pgvector-dotnet/blob/master/examples/TopicModeling/Program.cs) with ML.NET
+- [Horizontal scaling](https://github.com/pgvector/pgvector-dotnet/blob/master/examples/Citus/Program.cs) with Citus
 - [Bulk loading](https://github.com/pgvector/pgvector-dotnet/blob/master/examples/Loading/Program.cs) with `COPY`
 
 ## Npgsql (C#)
