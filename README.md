@@ -14,7 +14,7 @@ Follow the instructions for your database library:
 - F# - [Npgsql.FSharp](#npgsqlfsharp)
 - Visual Basic - [Npgsql](#npgsql-visual-basic)
 
-Or check out an example:
+Or check out some examples:
 
 - [Embeddings](https://github.com/pgvector/pgvector-dotnet/blob/master/examples/OpenAI/Program.cs) with OpenAI
 - [Binary embeddings](https://github.com/pgvector/pgvector-dotnet/blob/master/examples/Cohere/Program.cs) with Cohere
