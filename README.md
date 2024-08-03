@@ -481,3 +481,11 @@ cd pgvector-dotnet
 createdb pgvector_dotnet_test
 dotnet test
 ```
+
+To run an example:
+
+```sh
+cd examples/Loading
+createdb pgvector_example
+dotnet run
+```
