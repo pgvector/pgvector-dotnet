@@ -18,6 +18,7 @@ Or check out some examples:
 
 - [Embeddings](https://github.com/pgvector/pgvector-dotnet/blob/master/examples/OpenAI/Program.cs) with OpenAI
 - [Binary embeddings](https://github.com/pgvector/pgvector-dotnet/blob/master/examples/Cohere/Program.cs) with Cohere
+- [Hybrid search](https://github.com/pgvector/pgvector-dotnet/blob/master/examples/Hybrid/Program.cs) with Ollama (Reciprocal Rank Fusion)
 - [Recommendations](https://github.com/pgvector/pgvector-dotnet/blob/master/examples/Disco/Program.cs) with Disco
 - [Topic modeling](https://github.com/pgvector/pgvector-dotnet/blob/master/examples/TopicModeling/Program.cs) with ML.NET
 - [Horizontal scaling](https://github.com/pgvector/pgvector-dotnet/blob/master/examples/Citus/Program.cs) with Citus
