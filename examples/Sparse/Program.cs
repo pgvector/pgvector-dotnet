@@ -49,7 +49,7 @@ class Program
             "The cat is purring",
             "The bear is growling"
         };
-        var embeddings = await FetchEmbeddings(input);
+        var embeddings = await Embed(input);
 
         for (int i = 0; i < input.Length; i++)
         {
@@ -62,10 +62,10 @@ class Program
         }
 
         var query = "forest";
-        var queryEmbeddings = await FetchEmbeddings(new string[] { query });
+        var queryEmbedding = (await Embed(new string[] { query }))[0];
         await using (var cmd = new NpgsqlCommand("SELECT content FROM documents ORDER BY embedding <#> $1 LIMIT 5", conn))
         {
-            cmd.Parameters.AddWithValue(new SparseVector(queryEmbeddings[0], 30522));
+            cmd.Parameters.AddWithValue(new SparseVector(queryEmbedding, 30522));
 
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
@@ -77,7 +77,7 @@ class Program
         }
     }
 
-    private static async Task<Dictionary<int, float>[]> FetchEmbeddings(string[] inputs)
+    private static async Task<Dictionary<int, float>[]> Embed(string[] inputs)
     {
         var url = "http://localhost:3000/embed_sparse";
         var data = new

@@ -46,7 +46,7 @@ class Program
             "The cat is purring",
             "The bear is growling"
         };
-        var embeddings = await FetchEmbeddings(input);
+        var embeddings = await Embed(input, "search_document");
 
         for (int i = 0; i < input.Length; i++)
         {
@@ -82,12 +82,12 @@ class Program
         LIMIT 5
         ";
         var query = "growling bear";
-        var queryEmbedding = await FetchEmbeddings(new string[] { query });
+        var queryEmbedding = (await Embed(new string[] { query }, "search_query"))[0];
         var k = 60;
         await using (var cmd = new NpgsqlCommand(sql, conn))
         {
             cmd.Parameters.AddWithValue(query);
-            cmd.Parameters.AddWithValue(new Vector(queryEmbedding[0]));
+            cmd.Parameters.AddWithValue(new Vector(queryEmbedding));
             cmd.Parameters.AddWithValue(k);
 
             await using (var reader = await cmd.ExecuteReaderAsync())
@@ -100,8 +100,12 @@ class Program
         }
     }
 
-    private static async Task<float[][]> FetchEmbeddings(string[] input)
+    private static async Task<float[][]> Embed(string[] input, string taskType)
     {
+        // nomic-embed-text uses a task prefix
+        // https://huggingface.co/nomic-ai/nomic-embed-text-v1.5
+        input = input.Select(v => taskType + ": " + v).ToArray();
+
         var url = "http://localhost:11434/api/embed";
         var data = new
         {

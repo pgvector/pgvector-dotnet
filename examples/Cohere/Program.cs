@@ -51,7 +51,7 @@ class Program
             "The cat is purring",
             "The bear is growling"
         };
-        var embeddings = await FetchEmbeddings(input, "search_document", apiKey);
+        var embeddings = await Embed(input, "search_document", apiKey);
 
         for (int i = 0; i < input.Length; i++)
         {
@@ -64,11 +64,11 @@ class Program
         }
 
         var query = "forest";
-        var queryEmbedding = await FetchEmbeddings(new string[] { query }, "search_query", apiKey);
+        var queryEmbedding = (await Embed(new string[] { query }, "search_query", apiKey))[0];
 
         await using (var cmd = new NpgsqlCommand("SELECT content FROM documents ORDER BY embedding <~> $1 LIMIT 5", conn))
         {
-            cmd.Parameters.AddWithValue(new BitArray(queryEmbedding[0]));
+            cmd.Parameters.AddWithValue(new BitArray(queryEmbedding));
 
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
@@ -80,7 +80,7 @@ class Program
         }
     }
 
-    private static async Task<byte[][]> FetchEmbeddings(string[] texts, string inputType, string apiKey)
+    private static async Task<byte[][]> Embed(string[] texts, string inputType, string apiKey)
     {
         var url = "https://api.cohere.com/v1/embed";
         var data = new

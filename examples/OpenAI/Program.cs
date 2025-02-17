@@ -50,7 +50,7 @@ class Program
             "The cat is purring",
             "The bear is growling"
         };
-        var embeddings = await FetchEmbeddings(input, apiKey);
+        var embeddings = await Embed(input, apiKey);
 
         for (int i = 0; i < input.Length; i++)
         {
@@ -62,22 +62,24 @@ class Program
             }
         }
 
-        var documentId = 2;
-        await using (var cmd = new NpgsqlCommand("SELECT * FROM documents WHERE id != $1 ORDER BY embedding <=> (SELECT embedding FROM documents WHERE id = $1) LIMIT 5", conn))
+        var query = "forest";
+        var queryEmbedding = (await Embed(new string[] { query }, apiKey))[0];
+
+        await using (var cmd = new NpgsqlCommand("SELECT content FROM documents ORDER BY embedding <=> $1 LIMIT 5", conn))
         {
-            cmd.Parameters.AddWithValue(documentId);
+            cmd.Parameters.AddWithValue(new Vector(queryEmbedding));
 
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
                 while (await reader.ReadAsync())
                 {
-                    Console.WriteLine((string)reader.GetValue(1));
+                    Console.WriteLine((string)reader.GetValue(0));
                 }
             }
         }
     }
 
-    private static async Task<float[][]> FetchEmbeddings(string[] input, string apiKey)
+    private static async Task<float[][]> Embed(string[] input, string apiKey)
     {
         var url = "https://api.openai.com/v1/embeddings";
         var data = new
