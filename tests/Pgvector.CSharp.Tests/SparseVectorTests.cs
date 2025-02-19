@@ -10,6 +10,9 @@ public class SparseVectorTests
         var v = new SparseVector("{1:1,3:2,5:3}/6");
         Assert.Equal("{1:1,3:2,5:3}/6", v.ToString());
         Assert.Equal(new float[] { 1, 0, 2, 0, 3, 0 }, v.ToArray());
+        Assert.Equal(6, v.Dimensions);
+        Assert.Equal(new int[] { 0, 2, 4 }, v.Indices.ToArray());
+        Assert.Equal(new float[] { 1, 2, 3 }, v.Values.ToArray());
     }
 
     [Fact]
@@ -17,6 +20,9 @@ public class SparseVectorTests
     {
         var v = new SparseVector(new float[] { 1, 0, 2, 0, 3, 0 });
         Assert.Equal(new float[] { 1, 0, 2, 0, 3, 0 }, v.ToArray());
+        Assert.Equal(6, v.Dimensions);
+        Assert.Equal(new int[] { 0, 2, 4 }, v.Indices.ToArray());
+        Assert.Equal(new float[] { 1, 2, 3 }, v.Values.ToArray());
     }
 
     [Fact]
@@ -29,7 +35,9 @@ public class SparseVectorTests
         dictionary.Add(3, 0);
         var v = new SparseVector(dictionary, 6);
         Assert.Equal(new float[] { 1, 0, 2, 0, 3, 0 }, v.ToArray());
+        Assert.Equal(6, v.Dimensions);
         Assert.Equal(new int[] { 0, 2, 4 }, v.Indices.ToArray());
+        Assert.Equal(new float[] { 1, 2, 3 }, v.Values.ToArray());
     }
 
     [Fact]
