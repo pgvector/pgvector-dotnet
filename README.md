@@ -460,6 +460,80 @@ Use `vector_ip_ops` for inner product and `vector_cosine_ops` for cosine distanc
 
 See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tests/Pgvector.VisualBasic.Tests/NpgsqlTests.vb)
 
+## Reference
+
+### Vectors
+
+Create a vector from an array
+
+```csharp
+var vec = new Vector(new float[] { 1, 2, 3 });
+```
+
+Get an array
+
+```csharp
+var arr = vec.ToArray();
+```
+
+### Half Vectors
+
+Create a half vector from an array
+
+```csharp
+var vec = new HalfVector(new Half[] { (Half)1, (Half)2, (Half)3 });
+```
+
+Get an array
+
+```csharp
+var arr = vec.ToArray();
+```
+
+### Sparse Vectors
+
+Create a sparse vector from an array
+
+```csharp
+var vec = new SparseVector(new float[] { 1, 0, 2, 0, 3, 0 });
+```
+
+Or a dictionary of non-zero elements
+
+```csharp
+var dictionary = new Dictionary<int, float>();
+dictionary.Add(0, 1);
+dictionary.Add(2, 2);
+dictionary.Add(4, 3);
+var vec = new SparseVector(dictionary, 6);
+```
+
+Note: Indices start at 0
+
+Get the number of dimensions
+
+```csharp
+var dim = vec.Dimensions;
+```
+
+Get the indices of non-zero elements
+
+```csharp
+var indices = vec.Indices;
+```
+
+Get the values of non-zero elements
+
+```csharp
+var values = vec.Values;
+```
+
+Get an array
+
+```csharp
+var arr = vec.ToArray();
+```
+
 ## History
 
 - [Pgvector](https://github.com/pgvector/pgvector-dotnet/blob/master/src/Pgvector/CHANGELOG.md)
