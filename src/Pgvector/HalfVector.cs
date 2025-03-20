@@ -2,6 +2,8 @@ using System;
 using System.Globalization;
 using System.Linq;
 
+#if NET5_0_OR_GREATER
+
 namespace Pgvector;
 
 public class HalfVector : IEquatable<HalfVector>
@@ -42,3 +44,5 @@ public class HalfVector : IEquatable<HalfVector>
         return hashCode.ToHashCode();
     }
 }
+
+#endif

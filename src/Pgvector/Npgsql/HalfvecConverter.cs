@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Npgsql.Internal;
 
+#if NET5_0_OR_GREATER
+
 namespace Pgvector.Npgsql;
 
 public class HalfvecConverter : PgStreamingConverter<HalfVector>
@@ -89,3 +91,5 @@ public class HalfvecConverter : PgStreamingConverter<HalfVector>
         }
     }
 }
+
+#endif
