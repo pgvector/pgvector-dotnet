@@ -70,7 +70,7 @@ public class SparseVector
 
     public SparseVector(string s)
     {
-        var parts = s.Split('/', 2);
+        var parts = s.Split(['/'], 2);
         var elements = parts[0].Substring(1, parts[0].Length - 2).Split(',');
         var nnz = elements.Length;
         var indices = new int[nnz];
@@ -78,7 +78,7 @@ public class SparseVector
 
         for (int i = 0; i < nnz; i++)
         {
-            var ep = elements[i].Split(':', 2);
+            var ep = elements[i].Split([':'], 2);
             indices[i] = Int32.Parse(ep[0], CultureInfo.InvariantCulture) - 1;
             values[i] = float.Parse(ep[1], CultureInfo.InvariantCulture);
         }

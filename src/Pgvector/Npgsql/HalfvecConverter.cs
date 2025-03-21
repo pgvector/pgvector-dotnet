@@ -5,6 +5,8 @@ using Npgsql.Internal;
 
 namespace Pgvector.Npgsql;
 
+#if NET5_0_OR_GREATER
+
 public class HalfvecConverter : PgStreamingConverter<HalfVector>
 {
     public override HalfVector Read(PgReader reader)
@@ -89,3 +91,5 @@ public class HalfvecConverter : PgStreamingConverter<HalfVector>
         }
     }
 }
+
+#endif

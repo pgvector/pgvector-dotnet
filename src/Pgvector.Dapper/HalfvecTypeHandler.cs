@@ -6,6 +6,8 @@ using System.Data.SqlClient;
 
 namespace Pgvector.Dapper;
 
+#if NET5_0_OR_GREATER
+
 public class HalfvecTypeHandler : SqlMapper.TypeHandler<HalfVector?>
 {
     public override HalfVector? Parse(object value)
@@ -26,3 +28,5 @@ public class HalfvecTypeHandler : SqlMapper.TypeHandler<HalfVector?>
         }
     }
 }
+
+#endif

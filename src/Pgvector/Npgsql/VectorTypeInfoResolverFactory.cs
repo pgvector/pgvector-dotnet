@@ -21,8 +21,10 @@ public class VectorTypeInfoResolverFactory : PgTypeInfoResolverFactory
         {
             mappings.AddType<Vector>("vector",
                 static (options, mapping, _) => mapping.CreateInfo(options, new VectorConverter()), isDefault: true);
+#if NET5_0_OR_GREATER
             mappings.AddType<HalfVector>("halfvec",
                 static (options, mapping, _) => mapping.CreateInfo(options, new HalfvecConverter()), isDefault: true);
+#endif
             mappings.AddType<SparseVector>("sparsevec",
                 static (options, mapping, _) => mapping.CreateInfo(options, new SparsevecConverter()), isDefault: true);
             return mappings;
@@ -40,7 +42,9 @@ public class VectorTypeInfoResolverFactory : PgTypeInfoResolverFactory
         static TypeInfoMappingCollection AddMappings(TypeInfoMappingCollection mappings)
         {
             mappings.AddArrayType<Vector>("vector");
+#if NET5_0_OR_GREATER
             mappings.AddArrayType<HalfVector>("halfvec");
+#endif
             mappings.AddArrayType<SparseVector>("sparsevec");
             return mappings;
         }

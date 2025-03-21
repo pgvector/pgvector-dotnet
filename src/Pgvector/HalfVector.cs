@@ -4,6 +4,8 @@ using System.Linq;
 
 namespace Pgvector;
 
+#if NET5_0_OR_GREATER
+
 public class HalfVector : IEquatable<HalfVector>
 {
     public ReadOnlyMemory<Half> Memory { get; }
@@ -42,3 +44,5 @@ public class HalfVector : IEquatable<HalfVector>
         return hashCode.ToHashCode();
     }
 }
+
+#endif
