@@ -1,4 +1,4 @@
-## 0.3.1 (unreleased)
+## 0.3.1 (2025-03-21)
 
 - Restored support for .NET Standard 2.0
 
