@@ -66,65 +66,65 @@ public class EntityFrameworkCoreTests
 
         var embedding = new Vector(new float[] { 1, 1, 1 });
         var items = await ctx.Items.FromSql($"SELECT * FROM efcore_items ORDER BY embedding <-> {embedding} LIMIT 5").ToListAsync();
-        Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
-        Assert.Equal(new float[] { 1, 1, 1 }, items[0].Embedding!.ToArray());
-        Assert.Equal(new Half[] { (Half)1, (Half)1, (Half)1 }, items[0].HalfEmbedding!.ToArray());
+        Assert.Equal([1, 3, 2], items.Select(v => v.Id).ToArray());
+        Assert.Equal([1, 1, 1], items[0].Embedding!.ToArray());
+        Assert.Equal([(Half)1, (Half)1, (Half)1], items[0].HalfEmbedding!.ToArray());
         Assert.Equal(new BitArray(new bool[] { false, false, false }), items[0].BinaryEmbedding!);
-        Assert.Equal(new float[] { 1, 1, 1 }, items[0].SparseEmbedding!.ToArray());
+        Assert.Equal([1, 1, 1], items[0].SparseEmbedding!.ToArray());
 
         // vector distance functions
 
         items = await ctx.Items.OrderBy(x => x.Embedding!.L2Distance(embedding)).Take(5).ToListAsync();
-        Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
-        Assert.Equal(new float[] { 1, 1, 1 }, items[0].Embedding!.ToArray());
+        Assert.Equal([1, 3, 2], items.Select(v => v.Id).ToArray());
+        Assert.Equal([1, 1, 1], items[0].Embedding!.ToArray());
 
         items = await ctx.Items.OrderBy(x => x.Embedding!.MaxInnerProduct(embedding)).Take(5).ToListAsync();
-        Assert.Equal(new int[] { 2, 3, 1 }, items.Select(v => v.Id).ToArray());
+        Assert.Equal([2, 3, 1], items.Select(v => v.Id).ToArray());
 
         items = await ctx.Items.OrderBy(x => x.Embedding!.CosineDistance(embedding)).Take(5).ToListAsync();
         Assert.Equal(3, items[2].Id);
 
         items = await ctx.Items.OrderBy(x => x.Embedding!.L1Distance(embedding)).Take(5).ToListAsync();
-        Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
+        Assert.Equal([1, 3, 2], items.Select(v => v.Id).ToArray());
 
         // halfvec distance functions
 
         var halfEmbedding = new HalfVector(new Half[] { (Half)1, (Half)1, (Half)1 });
         items = await ctx.Items.OrderBy(x => x.HalfEmbedding!.L2Distance(halfEmbedding)).Take(5).ToListAsync();
-        Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
+        Assert.Equal([1, 3, 2], items.Select(v => v.Id).ToArray());
 
         items = await ctx.Items.OrderBy(x => x.HalfEmbedding!.MaxInnerProduct(halfEmbedding)).Take(5).ToListAsync();
-        Assert.Equal(new int[] { 2, 3, 1 }, items.Select(v => v.Id).ToArray());
+        Assert.Equal([2, 3, 1], items.Select(v => v.Id).ToArray());
 
         items = await ctx.Items.OrderBy(x => x.HalfEmbedding!.CosineDistance(halfEmbedding)).Take(5).ToListAsync();
         Assert.Equal(3, items[2].Id);
 
         items = await ctx.Items.OrderBy(x => x.HalfEmbedding!.L1Distance(halfEmbedding)).Take(5).ToListAsync();
-        Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
+        Assert.Equal([1, 3, 2], items.Select(v => v.Id).ToArray());
 
         // sparsevec distance functions
 
         var sparseEmbedding = new SparseVector(new float[] { 1, 1, 1 });
         items = await ctx.Items.OrderBy(x => x.SparseEmbedding!.L2Distance(sparseEmbedding)).Take(5).ToListAsync();
-        Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
+        Assert.Equal([1, 3, 2], items.Select(v => v.Id).ToArray());
 
         items = await ctx.Items.OrderBy(x => x.SparseEmbedding!.MaxInnerProduct(sparseEmbedding)).Take(5).ToListAsync();
-        Assert.Equal(new int[] { 2, 3, 1 }, items.Select(v => v.Id).ToArray());
+        Assert.Equal([2, 3, 1], items.Select(v => v.Id).ToArray());
 
         items = await ctx.Items.OrderBy(x => x.SparseEmbedding!.CosineDistance(sparseEmbedding)).Take(5).ToListAsync();
         Assert.Equal(3, items[2].Id);
 
         items = await ctx.Items.OrderBy(x => x.SparseEmbedding!.L1Distance(sparseEmbedding)).Take(5).ToListAsync();
-        Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
+        Assert.Equal([1, 3, 2], items.Select(v => v.Id).ToArray());
 
         // bit distance functions
 
         var binaryEmbedding = new BitArray(new bool[] { true, false, true });
         items = await ctx.Items.OrderBy(x => x.BinaryEmbedding!.HammingDistance(binaryEmbedding)).Take(5).ToListAsync();
-        Assert.Equal(new int[] { 2, 3, 1 }, items.Select(v => v.Id).ToArray());
+        Assert.Equal([2, 3, 1], items.Select(v => v.Id).ToArray());
 
         items = await ctx.Items.OrderBy(x => x.BinaryEmbedding!.JaccardDistance(binaryEmbedding)).Take(5).ToListAsync();
-        Assert.Equal(new int[] { 2, 3, 1 }, items.Select(v => v.Id).ToArray());
+        Assert.Equal([2, 3, 1], items.Select(v => v.Id).ToArray());
 
         // additional
 
@@ -132,13 +132,49 @@ public class EntityFrameworkCoreTests
             .OrderBy(x => x.Id)
             .Where(x => x.Embedding!.L2Distance(embedding) < 1.5)
             .ToListAsync();
-        Assert.Equal(new int[] { 1, 3 }, items.Select(v => v.Id).ToArray());
+        Assert.Equal([1, 3], items.Select(v => v.Id).ToArray());
 
         var neighbors = await ctx.Items
             .OrderBy(x => x.Embedding!.L2Distance(embedding))
             .Select(x => new { Entity = x, Distance = x.Embedding!.L2Distance(embedding) })
             .ToListAsync();
-        Assert.Equal(new int[] { 1, 3, 2 }, neighbors.Select(v => v.Entity.Id).ToArray());
-        Assert.Equal(new double[] { 0, 1, Math.Sqrt(3) }, neighbors.Select(v => v.Distance).ToArray());
+        Assert.Equal([1, 3, 2], neighbors.Select(v => v.Entity.Id).ToArray());
+        Assert.Equal([0, 1, Math.Sqrt(3)], neighbors.Select(v => v.Distance).ToArray());
+    }
+
+    [Theory]
+    [InlineData(typeof(Vector), null, "vector")]
+    [InlineData(typeof(Vector), 3, "vector(3)")]
+    [InlineData(typeof(HalfVector), null, "halfvec")]
+    [InlineData(typeof(HalfVector), 3, "halfvec(3)")]
+    [InlineData(typeof(SparseVector), null, "sparsevec")]
+    [InlineData(typeof(SparseVector), 3, "sparsevec(3)")]
+    public void By_StoreType(Type type, int? size, string expectedStoreType)
+    {
+        using var ctx = new ItemContext();
+        var typeMappingSource = ctx.GetService<IRelationalTypeMappingSource>();
+
+        var typeMapping = typeMappingSource.FindMapping(type, storeTypeName: null, size: size)!;
+        Assert.Equal(expectedStoreType, typeMapping.StoreType);
+        Assert.Same(type, typeMapping.ClrType);
+        Assert.Equal(size, typeMapping.Size);
+    }
+
+    [Theory]
+    [InlineData("vector", typeof(Vector), null)]
+    [InlineData("vector(3)", typeof(Vector), 3)]
+    [InlineData("halfvec", typeof(HalfVector), null)]
+    [InlineData("halfvec(3)", typeof(HalfVector), 3)]
+    [InlineData("sparsevec", typeof(SparseVector), null)]
+    [InlineData("sparsevec(3)", typeof(SparseVector), 3)]
+    public void By_ClrType(string storeType, Type expectedType, int? expectedSize)
+    {
+        using var ctx = new ItemContext();
+        var typeMappingSource = ctx.GetService<IRelationalTypeMappingSource>();
+
+        var typeMapping = typeMappingSource.FindMapping(storeType)!;
+        Assert.Equal(storeType, typeMapping.StoreType);
+        Assert.Same(expectedType, typeMapping.ClrType);
+        Assert.Equal(expectedSize, typeMapping.Size);
     }
 }
