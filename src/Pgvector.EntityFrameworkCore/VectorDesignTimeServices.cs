@@ -10,7 +10,5 @@ public class VectorDesignTimeServices : IDesignTimeServices
     public virtual void ConfigureDesignTimeServices(IServiceCollection serviceCollection)
         => serviceCollection
             .AddSingleton<IRelationalTypeMappingSourcePlugin, VectorTypeMappingSourcePlugin>()
-            .AddSingleton<IRelationalTypeMappingSourcePlugin, HalfvecTypeMappingSourcePlugin>()
-            .AddSingleton<IRelationalTypeMappingSourcePlugin, SparsevecTypeMappingSourcePlugin>()
             .AddSingleton<IProviderCodeGeneratorPlugin, VectorCodeGeneratorPlugin>();
 }

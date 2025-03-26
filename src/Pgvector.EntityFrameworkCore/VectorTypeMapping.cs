@@ -12,6 +12,8 @@ public class VectorTypeMapping : RelationalTypeMapping
 
     public VectorTypeMapping(string storeType) : base(storeType, typeof(Vector)) { }
 
+    public VectorTypeMapping(string storeType, Type clrType) : base(storeType, clrType) { }
+
     protected VectorTypeMapping(RelationalTypeMappingParameters parameters) : base(parameters) { }
 
     protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
