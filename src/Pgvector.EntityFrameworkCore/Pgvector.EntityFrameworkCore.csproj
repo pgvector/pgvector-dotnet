@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>Pgvector.EntityFrameworkCore</PackageId>
-    <Version>0.2.1</Version>
+    <Version>0.2.2</Version>
     <Authors>ankane</Authors>
     <Description>pgvector support for Entity Framework Core</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

@@ -1,4 +1,4 @@
-## 0.2.2 (unreleased)
+## 0.2.2 (2025-03-26)
 
 - Added support for scaffolding
 - Added support for `MaxLength`
