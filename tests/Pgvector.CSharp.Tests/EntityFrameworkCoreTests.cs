@@ -141,4 +141,44 @@ public class EntityFrameworkCoreTests
         Assert.Equal(new int[] { 1, 3, 2 }, neighbors.Select(v => v.Entity.Id).ToArray());
         Assert.Equal(new double[] { 0, 1, Math.Sqrt(3) }, neighbors.Select(v => v.Distance).ToArray());
     }
+
+    [Theory]
+    [InlineData(typeof(Vector), null, "vector")]
+    [InlineData(typeof(Vector), 3, "vector(3)")]
+    [InlineData(typeof(HalfVector), null, "halfvec")]
+    [InlineData(typeof(HalfVector), 3, "halfvec(3)")]
+    [InlineData(typeof(BitArray), null, "bit varying")]
+    [InlineData(typeof(BitArray), 3, "bit varying(3)")]
+    [InlineData(typeof(SparseVector), null, "sparsevec")]
+    [InlineData(typeof(SparseVector), 3, "sparsevec(3)")]
+    public void ByStoreType(Type type, int? size, string expectedStoreType)
+    {
+        using var ctx = new ItemContext();
+        var typeMappingSource = ctx.GetService<IRelationalTypeMappingSource>();
+
+        var typeMapping = typeMappingSource.FindMapping(type, storeTypeName: null, size: size)!;
+        Assert.Equal(expectedStoreType, typeMapping.StoreType);
+        Assert.Same(type, typeMapping.ClrType);
+        Assert.Equal(size, typeMapping.Size);
+    }
+
+    [Theory]
+    [InlineData("vector", typeof(Vector), null)]
+    [InlineData("vector(3)", typeof(Vector), 3)]
+    [InlineData("halfvec", typeof(HalfVector), null)]
+    [InlineData("halfvec(3)", typeof(HalfVector), 3)]
+    [InlineData("bit varying", typeof(BitArray), null)]
+    [InlineData("bit(3)", typeof(BitArray), 3)]
+    [InlineData("sparsevec", typeof(SparseVector), null)]
+    [InlineData("sparsevec(3)", typeof(SparseVector), 3)]
+    public void ByClrType(string storeType, Type expectedType, int? expectedSize)
+    {
+        using var ctx = new ItemContext();
+        var typeMappingSource = ctx.GetService<IRelationalTypeMappingSource>();
+
+        var typeMapping = typeMappingSource.FindMapping(storeType)!;
+        Assert.Equal(storeType, typeMapping.StoreType);
+        Assert.Same(expectedType, typeMapping.ClrType);
+        Assert.Equal(expectedSize, typeMapping.Size);
+    }
 }

@@ -6,13 +6,18 @@ namespace Pgvector.EntityFrameworkCore;
 
 public class VectorTypeMapping : RelationalTypeMapping
 {
-    public static VectorTypeMapping Default { get; } = new();
+    public static VectorTypeMapping Default { get; } = new("vector", typeof(Vector));
 
-    public VectorTypeMapping() : base("vector", typeof(Vector)) { }
-
-    public VectorTypeMapping(string storeType) : base(storeType, typeof(Vector)) { }
-
-    public VectorTypeMapping(string storeType, Type clrType) : base(storeType, clrType) { }
+    public VectorTypeMapping(string storeType, Type clrType, int? size = null)
+        : this(
+            new RelationalTypeMappingParameters(
+                new CoreTypeMappingParameters(clrType),
+                storeType,
+                StoreTypePostfix.Size,
+                size: size,
+                fixedLength: size is not null))
+    {
+    }
 
     protected VectorTypeMapping(RelationalTypeMappingParameters parameters) : base(parameters) { }
 
