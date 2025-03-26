@@ -6,6 +6,7 @@ public class VectorTypeMappingSourcePlugin : IRelationalTypeMappingSourcePlugin
 {
     public RelationalTypeMapping? FindMapping(in RelationalTypeMappingInfo mappingInfo)
     {
+        // for scaffolding
         if (mappingInfo.ClrType == null)
         {
             return (mappingInfo.StoreTypeNameBase ?? mappingInfo.StoreTypeName) switch
@@ -17,6 +18,7 @@ public class VectorTypeMappingSourcePlugin : IRelationalTypeMappingSourcePlugin
             };
         }
 
+        // for entities
         return mappingInfo.ClrType switch
         {
             var t when t == typeof(Vector) => new VectorTypeMapping(mappingInfo.StoreTypeName ?? "vector", typeof(Vector), mappingInfo.Size),
