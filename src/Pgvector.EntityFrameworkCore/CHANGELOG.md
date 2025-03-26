@@ -1,3 +1,7 @@
+## 0.2.2 (unreleased)
+
+- Added support for scaffolding
+
 ## 0.2.1 (2024-06-25)
 
 - Added support for `halfvec` and `sparsevec` types
