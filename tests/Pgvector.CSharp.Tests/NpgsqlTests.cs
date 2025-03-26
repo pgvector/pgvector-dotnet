@@ -1,6 +1,6 @@
-namespace Pgvector.Tests;
-
 using System.Collections;
+
+namespace Pgvector.Tests;
 
 public class NpgsqlTests
 {
