@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
 
 namespace Pgvector.EntityFrameworkCore;
 
@@ -13,7 +14,8 @@ public class VectorDbContextOptionsExtension : IDbContextOptionsExtension
 
     public void ApplyServices(IServiceCollection services)
     {
-        new EntityFrameworkRelationalServicesBuilder(services)
+        new EntityFrameworkNpgsqlServicesBuilder(services)
+            .TryAdd<INpgsqlDataSourceConfigurationPlugin, VectorDataSourceConfigurationPlugin>()
             .TryAdd<IMethodCallTranslatorPlugin, VectorDbFunctionsTranslatorPlugin>();
 
         services.AddSingleton<IRelationalTypeMappingSourcePlugin, VectorTypeMappingSourcePlugin>();
