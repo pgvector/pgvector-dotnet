@@ -41,7 +41,7 @@ class Program
             await cmd.ExecuteNonQueryAsync();
         }
 
-        await using (var cmd = new NpgsqlCommand("CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding bit(1024))", conn))
+        await using (var cmd = new NpgsqlCommand("CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding bit(1536))", conn))
         {
             await cmd.ExecuteNonQueryAsync();
         }
@@ -82,11 +82,11 @@ class Program
 
     private static async Task<byte[][]> Embed(string[] texts, string inputType, string apiKey)
     {
-        var url = "https://api.cohere.com/v1/embed";
+        var url = "https://api.cohere.com/v2/embed";
         var data = new
         {
             texts = texts,
-            model = "embed-english-v3.0",
+            model = "embed-v4.0",
             input_type = inputType,
             embedding_types = new string[] { "ubinary" }
         };
