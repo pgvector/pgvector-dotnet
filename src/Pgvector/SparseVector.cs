@@ -52,25 +52,38 @@ public class SparseVector
 
     public SparseVector(IDictionary<int, float> dictionary, int dimensions)
     {
-        List<KeyValuePair<int, float>> elements = dictionary.ToList();
-        elements.Sort((a, b) => a.Key.CompareTo(b.Key));
+        var count = dictionary.Count;
 
-        var indices = new int[StartCapacity];
-        var values = new float[StartCapacity];
-        var at = 0;
+        // Initialize with count, assuming that the number of values equal to zero will be close to none
+        var indices = new int[count];
+        var values = new float[count];
 
-        foreach (KeyValuePair<int, float> e in elements)
+        dictionary.Keys.CopyTo(indices, 0);
+        dictionary.Values.CopyTo(values, 0);
+
+        // Sort by indexes
+        Array.Sort(indices, values);
+
+        var gaps = 0;
+
+        // A single pass fixups to skip zero values. 
+        // If zeroes are frequent, this should be probably vectorized or the caller should reconsider using other ctor.
+        for (var i = 0; i < count; i++)
         {
-            if (e.Value != 0)
+            if (values[i] == 0)
             {
-                Set(ref indices, ref values, e.Key, at, e.Value);
-                at++;
+                gaps++;
+            }
+            else if (gaps > 0)
+            {
+                indices[i - gaps] = indices[i];
+                values[i - gaps] = values[i];
             }
         }
 
         Dimensions = dimensions;
-        Indices = new ReadOnlyMemory<int>(indices, 0, at);
-        Values = new ReadOnlyMemory<float>(values, 0, at);
+        Indices = new ReadOnlyMemory<int>(indices, 0, count - gaps);
+        Values = new ReadOnlyMemory<float>(values, 0, count - gaps);
     }
 
     public SparseVector(string s)
