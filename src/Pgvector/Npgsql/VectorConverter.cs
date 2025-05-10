@@ -50,7 +50,7 @@ public class VectorConverter : PgStreamingConverter<Vector>
     }
 
     public override Size GetSize(SizeContext context, Vector value, ref object? writeState)
-        => sizeof(ushort) * 2 + sizeof(float) * value.ToArray().Length;
+        => sizeof(ushort) * 2 + sizeof(float) * value.Memory.Length;
 
     public override void Write(PgWriter writer, Vector value)
     {
