@@ -7,6 +7,8 @@ namespace Pgvector;
 
 public class SparseVector
 {
+    private const int StartCapacity = 4;
+
     public int Dimensions { get; }
     public ReadOnlyMemory<int> Indices { get; }
     public ReadOnlyMemory<float> Values { get; }
@@ -29,21 +31,23 @@ public class SparseVector
     public SparseVector(ReadOnlyMemory<float> v)
     {
         var dense = v.Span;
-        var indices = new List<int>();
-        var values = new List<float>();
+
+        var indices = new int[StartCapacity];
+        var values = new float[StartCapacity];
+        var at = 0;
 
         for (var i = 0; i < dense.Length; i++)
         {
             if (dense[i] != 0)
             {
-                indices.Add(i);
-                values.Add(dense[i]);
+                Set(ref indices, ref values, i, at, dense[i]);
+                at++;
             }
         }
 
         Dimensions = v.Length;
-        Indices = indices.ToArray();
-        Values = values.ToArray();
+        Indices = new ReadOnlyMemory<int>(indices, 0, at);
+        Values = new ReadOnlyMemory<float>(values, 0, at);
     }
 
     public SparseVector(IDictionary<int, float> dictionary, int dimensions)
@@ -51,21 +55,22 @@ public class SparseVector
         List<KeyValuePair<int, float>> elements = dictionary.ToList();
         elements.Sort((a, b) => a.Key.CompareTo(b.Key));
 
-        var indices = new List<int>();
-        var values = new List<float>();
+        var indices = new int[StartCapacity];
+        var values = new float[StartCapacity];
+        var at = 0;
 
         foreach (KeyValuePair<int, float> e in elements)
         {
             if (e.Value != 0)
             {
-                indices.Add(e.Key);
-                values.Add(e.Value);
+                Set(ref indices, ref values, e.Key, at, e.Value);
+                at++;
             }
         }
 
         Dimensions = dimensions;
-        Indices = indices.ToArray();
-        Values = values.ToArray();
+        Indices = new ReadOnlyMemory<int>(indices, 0, at);
+        Values = new ReadOnlyMemory<float>(values, 0, at);
     }
 
     public SparseVector(string s)
@@ -84,13 +89,28 @@ public class SparseVector
         }
 
         Dimensions = Int32.Parse(parts[1], CultureInfo.InvariantCulture);
-        Indices = indices.ToArray();
-        Values = values.ToArray();
+        Indices = indices;
+        Values = values;
+    }
+
+    private static void Set(ref int[] indices, ref float[] values, int index, int at, float value)
+    {
+        if (at >= indices.Length)
+        {
+            var length = indices.Length * 2;
+            Array.Resize(ref indices, length);
+            Array.Resize(ref values, length);
+        }
+
+        indices[at] = index;
+        values[at] = value;
     }
 
     public override string ToString()
     {
-        var elements = Indices.ToArray().Zip(Values.ToArray(), (i, v) => string.Concat((i + 1).ToString(CultureInfo.InvariantCulture), ":", v.ToString(CultureInfo.InvariantCulture)));
+        var elements = Indices.ToArray().Zip(Values.ToArray(),
+            (i, v) => string.Concat((i + 1).ToString(CultureInfo.InvariantCulture), ":",
+                v.ToString(CultureInfo.InvariantCulture)));
         return string.Concat("{", string.Join(",", elements), "}/", Dimensions);
     }
 
@@ -107,7 +127,8 @@ public class SparseVector
     }
 
     public bool Equals(SparseVector? other)
-        => other is not null && Dimensions == other.Dimensions && Indices.Span.SequenceEqual(other.Indices.Span) && Values.Span.SequenceEqual(other.Values.Span);
+        => other is not null && Dimensions == other.Dimensions && Indices.Span.SequenceEqual(other.Indices.Span) &&
+           Values.Span.SequenceEqual(other.Values.Span);
 
     public override bool Equals(object? obj)
         => obj is SparseVector vector && Equals(vector);
