@@ -52,7 +52,7 @@ public class HalfvecConverter : PgStreamingConverter<HalfVector>
     }
 
     public override Size GetSize(SizeContext context, HalfVector value, ref object? writeState)
-        => sizeof(ushort) * 2 + sizeof(ushort) * value.ToArray().Length;
+        => sizeof(ushort) * 2 + sizeof(ushort) * value.Memory.Length;
 
     public override void Write(PgWriter writer, HalfVector value)
     {
