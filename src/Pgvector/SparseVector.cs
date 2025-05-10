@@ -30,7 +30,11 @@ public class SparseVector
     {
         var dense = v.Span;
         var count = 0;
-        var capacity = 4;
+        var capacity = 0;
+
+        for (var i = 0; i < dense.Length; i++)
+            capacity += Convert.ToInt32(dense[i] != 0);
+
         var indices = new int[capacity];
         var values = new float[capacity];
 
@@ -38,13 +42,6 @@ public class SparseVector
         {
             if (dense[i] != 0)
             {
-                if (count == capacity)
-                {
-                    capacity = capacity >= dense.Length / 2 ? dense.Length : capacity * 2;
-                    Array.Resize(ref indices, capacity);
-                    Array.Resize(ref values, capacity);
-                }
-
                 indices[count] = i;
                 values[count] = dense[i];
                 count++;
@@ -52,8 +49,8 @@ public class SparseVector
         }
 
         Dimensions = v.Length;
-        Indices = new ReadOnlyMemory<int>(indices, 0, count);
-        Values = new ReadOnlyMemory<float>(values, 0, count);
+        Indices = indices;
+        Values = values;
     }
 
     public SparseVector(IDictionary<int, float> dictionary, int dimensions)
