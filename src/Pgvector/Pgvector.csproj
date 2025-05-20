@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>Pgvector</PackageId>
-    <Version>0.3.1</Version>
+    <Version>0.3.2</Version>
     <Authors>ankane</Authors>
     <Description>pgvector support for Npgsql</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

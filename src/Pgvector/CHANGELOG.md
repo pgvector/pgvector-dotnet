@@ -1,4 +1,4 @@
-## 0.3.2 (unreleased)
+## 0.3.2 (2025-05-20)
 
 - Reduced allocations
 
