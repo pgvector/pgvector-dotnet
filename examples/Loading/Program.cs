@@ -39,12 +39,12 @@ class Program
             var i = 0;
             foreach (var embedding in embeddings)
             {
+                writer.StartRow();
+                writer.Write(new Vector(embedding));
+
                 // show progress
                 if (i++ % 10000 == 0)
                     Console.Write(".");
-
-                writer.StartRow();
-                writer.Write(new Vector(embedding));
             }
 
             writer.Complete();
