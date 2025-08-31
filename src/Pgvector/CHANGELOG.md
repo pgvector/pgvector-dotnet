@@ -1,3 +1,7 @@
+## 0.3.2 (2025-05-20)
+
+- Reduced allocations
+
 ## 0.3.1 (2025-03-21)
 
 - Restored support for .NET Standard 2.0

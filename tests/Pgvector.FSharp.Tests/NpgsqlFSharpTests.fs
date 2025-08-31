@@ -63,10 +63,10 @@ let Main () =
                 Embedding = read.fieldValue<Vector> "embedding"
             })
 
-    Assert.AreEqual([| 1; 3; 2 |], [| for i in items -> i.Id |])
-    Assert.AreEqual([| 1f; 1f; 1f |], items[0].Embedding.ToArray())
-    Assert.AreEqual([| 1f; 1f; 2f |], items[1].Embedding.ToArray())
-    Assert.AreEqual([| 2f; 2f; 2f |], items[2].Embedding.ToArray())
+    Assert.That([| for i in items -> i.Id |], Is.EquivalentTo([| 1; 3; 2 |]))
+    Assert.That(items[0].Embedding.ToArray(), Is.EquivalentTo([| 1f; 1f; 1f |]))
+    Assert.That(items[1].Embedding.ToArray(), Is.EquivalentTo([| 1f; 1f; 2f |]))
+    Assert.That(items[2].Embedding.ToArray(), Is.EquivalentTo([| 2f; 2f; 2f |]))
 
     dataSource
     |> Sql.fromDataSource
