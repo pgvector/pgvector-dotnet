@@ -1,6 +1,4 @@
-using Pgvector;
-
-namespace Pgvector.Tests;
+namespace Pgvector.CSharp.Tests;
 
 public class VectorTests
 {

@@ -1,11 +1,11 @@
+using System.Collections;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Pgvector.EntityFrameworkCore;
-using System.Collections;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Pgvector.Tests;
+namespace Pgvector.CSharp.Tests;
 
 public class ItemContext : DbContext
 {
@@ -55,14 +55,14 @@ public class EntityFrameworkCoreTests
     {
         await using var ctx = new ItemContext();
 
-        ctx.Database.ExecuteSql($"DROP TABLE IF EXISTS efcore_items");
+        await ctx.Database.ExecuteSqlAsync($"DROP TABLE IF EXISTS efcore_items");
         var databaseCreator = ctx.GetService<IRelationalDatabaseCreator>();
-        databaseCreator.CreateTables();
+        await databaseCreator.CreateTablesAsync();
 
         ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 1 }), HalfEmbedding = new HalfVector(new Half[] { (Half)1, (Half)1, (Half)1 }), BinaryEmbedding = new BitArray(new bool[] { false, false, false }), SparseEmbedding = new SparseVector(new float[] { 1, 1, 1 }) });
         ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 2, 2, 2 }), HalfEmbedding = new HalfVector(new Half[] { (Half)2, (Half)2, (Half)2 }), BinaryEmbedding = new BitArray(new bool[] { true, false, true }), SparseEmbedding = new SparseVector(new float[] { 2, 2, 2 }) });
         ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 2 }), HalfEmbedding = new HalfVector(new Half[] { (Half)1, (Half)1, (Half)2 }), BinaryEmbedding = new BitArray(new bool[] { true, true, true }), SparseEmbedding = new SparseVector(new float[] { 1, 1, 2 }) });
-        ctx.SaveChanges();
+        await ctx.SaveChangesAsync();
 
         var embedding = new Vector(new float[] { 1, 1, 1 });
         var items = await ctx.Items.FromSql($"SELECT * FROM efcore_items ORDER BY embedding <-> {embedding} LIMIT 5").ToListAsync();

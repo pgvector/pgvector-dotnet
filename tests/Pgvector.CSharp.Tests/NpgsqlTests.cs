@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace Pgvector.Tests;
+namespace Pgvector.CSharp.Tests;
 
 public class NpgsqlTests
 {
@@ -13,14 +13,14 @@ public class NpgsqlTests
         dataSourceBuilder.UseVector();
         await using var dataSource = dataSourceBuilder.Build();
 
-        var conn = dataSource.OpenConnection();
+        var conn = await dataSource.OpenConnectionAsync();
 
         await using (var cmd = new NpgsqlCommand("CREATE EXTENSION IF NOT EXISTS vector", conn))
         {
             await cmd.ExecuteNonQueryAsync();
         }
 
-        conn.ReloadTypes();
+        await conn.ReloadTypesAsync();
 
         await using (var cmd = new NpgsqlCommand("DROP TABLE IF EXISTS items", conn))
         {
@@ -104,18 +104,18 @@ public class NpgsqlTests
             await cmd.ExecuteNonQueryAsync();
         }
 
-        await using (var writer = conn.BeginBinaryImport("COPY items (embedding) FROM STDIN WITH (FORMAT BINARY)"))
+        await using (var writer = await conn.BeginBinaryImportAsync("COPY items (embedding) FROM STDIN WITH (FORMAT BINARY)"))
         {
-            writer.StartRow();
-            writer.Write(new Vector(new float[] { 1, 1, 1 }));
+            await writer.StartRowAsync();
+            await writer.WriteAsync(new Vector(new float[] { 1, 1, 1 }));
 
-            writer.StartRow();
-            writer.Write(new Vector(new float[] { 2, 2, 2 }));
+            await writer.StartRowAsync();
+            await writer.WriteAsync(new Vector(new float[] { 2, 2, 2 }));
 
-            writer.StartRow();
-            writer.Write(new Vector(new float[] { 1, 1, 2 }));
+            await writer.StartRowAsync();
+            await writer.WriteAsync(new Vector(new float[] { 1, 1, 2 }));
 
-            writer.Complete();
+            await writer.CompleteAsync();
         }
 
         await using (var cmd = new NpgsqlCommand("SELECT $1", conn))
