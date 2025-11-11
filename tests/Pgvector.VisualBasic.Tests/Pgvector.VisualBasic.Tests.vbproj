@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <RootNamespace>Pgvector.VisualBasic.Tests</RootNamespace>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
