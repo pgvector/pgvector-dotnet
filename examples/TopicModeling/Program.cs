@@ -9,7 +9,7 @@ class LdaInput
 
 class LdaOutput
 {
-    public float[] Features { get; set; }
+    public float[]? Features { get; set; }
 }
 
 class Program
@@ -86,6 +86,6 @@ class Program
             .Append(mlContext.Transforms.Text.LatentDirichletAllocation("Features", "Tokens", numberOfTopics: 20));
         var model = pipeline.Fit(dataView);
         var engine = mlContext.Model.CreatePredictionEngine<LdaInput, LdaOutput>(model);
-        return input.Select((v) => engine.Predict(v).Features).ToArray();
+        return input.Select((v) => engine.Predict(v).Features!).ToArray();
     }
 }
