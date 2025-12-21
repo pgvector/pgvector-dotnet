@@ -1,4 +1,4 @@
-## 0.3.0 (unreleased)
+## 0.3.0 (2025-12-20)
 
 - Improved type registration
 - Dropped support for Npgsql.EntityFrameworkCore.PostgreSQL < 9
