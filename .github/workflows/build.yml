@@ -17,4 +17,5 @@ jobs:
           make
           sudo make install
       - run: psql -d pgvector_dotnet_test -c "CREATE EXTENSION vector"
-      - run: dotnet test
+      - run: dotnet test -f net8.0
+      - run: dotnet test -f net10.0

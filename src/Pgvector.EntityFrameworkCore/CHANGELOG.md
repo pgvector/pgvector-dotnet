@@ -1,3 +1,8 @@
+## 0.3.1 (unreleased)
+
+- Added explicit support for .NET 10
+- Updated tests and CI to run on .NET 8 and .NET 10
+
 ## 0.3.0 (2025-12-20)
 
 - Improved type registration
