@@ -220,6 +220,19 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 }
 ```
 
+Note: If using an [external data source](https://www.npgsql.org/efcore/?tabs=onconfiguring#using-an-external-npgsqldatasource), it must also be configured
+
+```csharp
+protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+{
+    var dataSourceBuilder = new NpgsqlDataSourceBuilder("connString");
+    dataSourceBuilder.UseVector();
+    var dataSource = dataSourceBuilder.Build();
+
+    optionsBuilder.UseNpgsql(dataSource, o => o.UseVector());
+}
+```
+
 Define a model
 
 ```csharp
