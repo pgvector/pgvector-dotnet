@@ -216,7 +216,11 @@ Configure the connection
 ```csharp
 protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 {
-    optionsBuilder.UseNpgsql("connString", o => o.UseVector());
+    NpgsqlDataSourceBuilder dataSourceBuilder = new("connString");
+    dataSourceBuilder.UseVector();
+    NpgSqlDataSource dataSource = dataSourceBuilder.Build();
+
+    optionsBuilder.UseNpgsql(dataSource, o => o.UseVector());
 }
 ```
 
