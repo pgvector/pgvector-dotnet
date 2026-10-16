@@ -50,10 +50,21 @@ public class Item
 
 public class EntityFrameworkCoreTests
 {
+    private class AutoLoadedItemContext : ItemContext
+    {
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Item>().Property(x => x.Embedding).Metadata.IsAutoLoaded = true;
+            modelBuilder.Entity<Item>().Property(x => x.HalfEmbedding).Metadata.IsAutoLoaded = true;
+            modelBuilder.Entity<Item>().Property(x => x.SparseEmbedding).Metadata.IsAutoLoaded = true;
+        }
+    }
+
     [Fact]
     public async Task Main()
     {
-        await using var ctx = new ItemContext();
+        await using var ctx = new AutoLoadedItemContext();
 
         ctx.Database.ExecuteSql($"DROP TABLE IF EXISTS efcore_items");
         var databaseCreator = ctx.GetService<IRelationalDatabaseCreator>();
@@ -63,6 +74,7 @@ public class EntityFrameworkCoreTests
         ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 2, 2, 2 }), HalfEmbedding = new HalfVector(new Half[] { (Half)2, (Half)2, (Half)2 }), BinaryEmbedding = new BitArray(new bool[] { true, false, true }), SparseEmbedding = new SparseVector(new float[] { 2, 2, 2 }) });
         ctx.Items.Add(new Item { Embedding = new Vector(new float[] { 1, 1, 2 }), HalfEmbedding = new HalfVector(new Half[] { (Half)1, (Half)1, (Half)2 }), BinaryEmbedding = new BitArray(new bool[] { true, true, true }), SparseEmbedding = new SparseVector(new float[] { 1, 1, 2 }) });
         ctx.SaveChanges();
+        ctx.ChangeTracker.Clear();
 
         var embedding = new Vector(new float[] { 1, 1, 1 });
         var items = await ctx.Items.FromSql($"SELECT * FROM efcore_items ORDER BY embedding <-> {embedding} LIMIT 5").ToListAsync();
@@ -140,6 +152,70 @@ public class EntityFrameworkCoreTests
             .ToListAsync();
         Assert.Equal(new int[] { 1, 3, 2 }, neighbors.Select(v => v.Entity.Id).ToArray());
         Assert.Equal(new double[] { 0, 1, Math.Sqrt(3) }, neighbors.Select(v => v.Distance).ToArray());
+    }
+
+    [Fact]
+    public async Task VectorPropertiesAreNotAutoLoaded()
+    {
+        await using var ctx = new ItemContext();
+        var entityType = ctx.Model.FindEntityType(typeof(Item))!;
+        Assert.False(entityType.FindProperty(nameof(Item.Embedding))!.IsAutoLoaded);
+        Assert.False(entityType.FindProperty(nameof(Item.HalfEmbedding))!.IsAutoLoaded);
+        Assert.False(entityType.FindProperty(nameof(Item.SparseEmbedding))!.IsAutoLoaded);
+        Assert.True(entityType.FindProperty(nameof(Item.Id))!.IsAutoLoaded);
+        Assert.True(entityType.FindProperty(nameof(Item.BinaryEmbedding))!.IsAutoLoaded);
+
+        await ctx.Database.ExecuteSqlAsync($"DROP TABLE IF EXISTS efcore_items");
+        ctx.GetService<IRelationalDatabaseCreator>().CreateTables();
+
+        var embedding = new Vector(new float[] { 1, 2, 3 });
+        var halfEmbedding = new HalfVector(new Half[] { (Half)1, (Half)2, (Half)3 });
+        var sparseEmbedding = new SparseVector(new float[] { 1, 2, 3 });
+        var binaryEmbedding = new BitArray(new bool[] { true, false, true });
+        ctx.Items.Add(new Item
+        {
+            Embedding = embedding,
+            HalfEmbedding = halfEmbedding,
+            SparseEmbedding = sparseEmbedding,
+            BinaryEmbedding = binaryEmbedding
+        });
+        await ctx.SaveChangesAsync();
+        ctx.ChangeTracker.Clear();
+
+        var sql = ctx.Items.ToQueryString();
+        Assert.DoesNotContain(".embedding", sql);
+        Assert.DoesNotContain(".half_embedding", sql);
+        Assert.DoesNotContain(".sparse_embedding", sql);
+        Assert.Contains(".binary_embedding", sql);
+
+        var untracked = await ctx.Items.AsNoTracking().SingleAsync();
+        Assert.Null(untracked.Embedding);
+        Assert.Null(untracked.HalfEmbedding);
+        Assert.Null(untracked.SparseEmbedding);
+        Assert.Equal(binaryEmbedding, untracked.BinaryEmbedding);
+
+        var neighbor = await ctx.Items
+            .Where(x => x.Embedding!.L2Distance(embedding) < 1)
+            .OrderBy(x => x.Embedding!.L2Distance(embedding))
+            .Select(x => new { Entity = x, Distance = x.Embedding!.L2Distance(embedding) })
+            .SingleAsync();
+        Assert.Equal(untracked.Id, neighbor.Entity.Id);
+        Assert.Equal(0, neighbor.Distance);
+        Assert.Null(neighbor.Entity.Embedding);
+        Assert.Null(neighbor.Entity.HalfEmbedding);
+        Assert.Null(neighbor.Entity.SparseEmbedding);
+        Assert.Equal(binaryEmbedding, neighbor.Entity.BinaryEmbedding);
+
+        neighbor.Entity.BinaryEmbedding = new BitArray(new bool[] { false, true, false });
+        await ctx.SaveChangesAsync();
+
+        var projected = await ctx.Items
+            .Select(x => new { x.Embedding, x.HalfEmbedding, x.SparseEmbedding, x.BinaryEmbedding })
+            .SingleAsync();
+        Assert.Equal(embedding, projected.Embedding);
+        Assert.Equal(halfEmbedding, projected.HalfEmbedding);
+        Assert.Equal(sparseEmbedding, projected.SparseEmbedding);
+        Assert.Equal(neighbor.Entity.BinaryEmbedding, projected.BinaryEmbedding);
     }
 
     [Theory]

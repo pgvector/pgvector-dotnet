@@ -1,3 +1,9 @@
+## 0.4.0-rc.1 (unreleased)
+
+- Updated Npgsql.EntityFrameworkCore.PostgreSQL to 11.0.0-rc.1.1
+- Dropped support for .NET < 11
+- Disabled automatic loading of `Vector`, `HalfVector`, and `SparseVector` properties by default
+
 ## 0.3.0 (2025-12-20)
 
 - Improved type registration

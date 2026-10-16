@@ -191,10 +191,10 @@ See a [full example](https://github.com/pgvector/pgvector-dotnet/blob/master/tes
 Run
 
 ```sh
-dotnet add package Pgvector.EntityFrameworkCore
+dotnet add package Pgvector.EntityFrameworkCore --version 0.4.0-rc.1
 ```
 
-The latest version works with Entity Framework Core 9 and 10. For Entity Framework Core 8, use version 0.2.2 and [this readme](https://github.com/pgvector/pgvector-dotnet/blob/efcore-v0.2.2/README.md#entity-framework-core).
+Version 0.4.0-rc.1 requires .NET 11 and works with Entity Framework Core 11 (currently Npgsql.EntityFrameworkCore.PostgreSQL 11.0.0-rc.1.1). This is a release candidate, as Entity Framework Core 11 has not yet been released. For Entity Framework Core 9 and 10, use version 0.3.0. For Entity Framework Core 8, use version 0.2.2 and [this readme](https://github.com/pgvector/pgvector-dotnet/blob/efcore-v0.2.2/README.md#entity-framework-core).
 
 Import the library
 
@@ -247,6 +247,20 @@ public class Item
 
 Also supports `HalfVector` and `SparseVector`
 
+Vector properties are not automatically loaded when querying entities. They remain available for filtering, ordering, and explicit projections:
+
+```csharp
+var embeddings = await ctx.Items.Select(x => x.Embedding).ToListAsync();
+```
+
+To automatically load a vector property, configure it explicitly in `OnModelCreating`:
+
+```csharp
+modelBuilder.Entity<Item>().Property(x => x.Embedding).Metadata.IsAutoLoaded = true;
+```
+
+This also applies to `HalfVector` and `SparseVector`, but not `BitArray` properties.
+
 Insert a vector
 
 ```csharp
@@ -265,10 +279,7 @@ var items = await ctx.Items
 
 foreach (Item item in items)
 {
-    if (item.Embedding != null)
-    {
-        Console.WriteLine(item.Embedding);
-    }
+    Console.WriteLine(item.Id);
 }
 ```
 

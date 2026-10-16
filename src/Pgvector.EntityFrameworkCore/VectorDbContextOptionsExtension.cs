@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,7 @@ public class VectorDbContextOptionsExtension : IDbContextOptionsExtension
     {
         new EntityFrameworkNpgsqlServicesBuilder(services)
             .TryAdd<INpgsqlDataSourceConfigurationPlugin, VectorDataSourceConfigurationPlugin>()
+            .TryAdd<IConventionSetPlugin, VectorConventionSetPlugin>()
             .TryAdd<IMethodCallTranslatorPlugin, VectorDbFunctionsTranslatorPlugin>();
 
         services.AddSingleton<IRelationalTypeMappingSourcePlugin, VectorTypeMappingSourcePlugin>();
