@@ -1,3 +1,8 @@
+## 10.0.0 (unreleased)
+
+- Updated Npgsql.EntityFrameworkCore.PostgreSQL to 10
+- Dropped support for .NET < 10
+
 ## 0.3.0 (2025-12-20)
 
 - Improved type registration

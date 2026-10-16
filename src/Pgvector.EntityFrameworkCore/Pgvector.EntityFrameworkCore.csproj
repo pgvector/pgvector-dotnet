@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>Pgvector.EntityFrameworkCore</PackageId>
-    <Version>0.3.0</Version>
+    <Version>10.0.0</Version>
     <Authors>ankane</Authors>
     <Description>pgvector support for Entity Framework Core</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -10,7 +10,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
 
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
@@ -22,7 +22,7 @@
     <None Include="..\..\icon.png" Pack="true" PackagePath="\" />
     <None Include="build\**\*" Pack="true" PackagePath="build" />
     <ProjectReference Include="..\Pgvector\Pgvector.csproj" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.1" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
   </ItemGroup>
 
 </Project>
