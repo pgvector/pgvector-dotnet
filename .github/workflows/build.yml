@@ -5,14 +5,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/setup-dotnet@v6
       - uses: ankane/setup-postgres@v1
         with:
           database: pgvector_dotnet_test
           dev-files: true
       - run: |
           cd /tmp
-          git clone --branch v0.8.5 https://github.com/pgvector/pgvector.git
+          git clone --branch v0.8.7 https://github.com/pgvector/pgvector.git
           cd pgvector
           make
           sudo make install
