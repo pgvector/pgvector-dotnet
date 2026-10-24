@@ -1,6 +1,6 @@
 ## 0.4.0 (unreleased)
 
-- Added support for configuring autoloading for `Vector`, `HalfVector`, and `SparseVector` properties
+- Changed `Vector`, `HalfVector`, and `SparseVector` properties to no longer load by default (matching EF Core)
 - Dropped support for Npgsql.EntityFrameworkCore.PostgreSQL < 11
 
 ## 0.3.0 (2025-12-20)

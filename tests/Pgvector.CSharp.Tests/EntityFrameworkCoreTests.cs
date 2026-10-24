@@ -30,14 +30,14 @@ public class ItemContext : DbContext
     }
 }
 
-public class NotAutoLoadedItemContext : ItemContext
+public class AutoLoadedItemContext : ItemContext
 {
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<Item>().Property(x => x.Embedding).Metadata.IsAutoLoaded = false;
-        modelBuilder.Entity<Item>().Property(x => x.HalfEmbedding).Metadata.IsAutoLoaded = false;
-        modelBuilder.Entity<Item>().Property(x => x.SparseEmbedding).Metadata.IsAutoLoaded = false;
+        modelBuilder.Entity<Item>().Property(x => x.Embedding).Metadata.IsAutoLoaded = true;
+        modelBuilder.Entity<Item>().Property(x => x.HalfEmbedding).Metadata.IsAutoLoaded = true;
+        modelBuilder.Entity<Item>().Property(x => x.SparseEmbedding).Metadata.IsAutoLoaded = true;
     }
 }
 
@@ -79,16 +79,19 @@ public class EntityFrameworkCoreTests
         var embedding = new Vector(new float[] { 1, 1, 1 });
         var items = await ctx.Items.FromSql($"SELECT * FROM efcore_items ORDER BY embedding <-> {embedding} LIMIT 5").ToListAsync();
         Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
-        Assert.Equal(new float[] { 1, 1, 1 }, items[0].Embedding!.ToArray());
-        Assert.Equal(new Half[] { (Half)1, (Half)1, (Half)1 }, items[0].HalfEmbedding!.ToArray());
+        Assert.Null(items[0].Embedding);
+        Assert.Null(items[0].HalfEmbedding);
         Assert.Equal(new BitArray(new bool[] { false, false, false }), items[0].BinaryEmbedding!);
-        Assert.Equal(new float[] { 1, 1, 1 }, items[0].SparseEmbedding!.ToArray());
+        Assert.Null(items[0].SparseEmbedding);
 
         // vector distance functions
 
         items = await ctx.Items.OrderBy(x => x.Embedding!.L2Distance(embedding)).Take(5).ToListAsync();
         Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
-        Assert.Equal(new float[] { 1, 1, 1 }, items[0].Embedding!.ToArray());
+        Assert.Null(items[0].Embedding);
+        Assert.Null(items[0].HalfEmbedding);
+        Assert.Equal(new BitArray(new bool[] { false, false, false }), items[0].BinaryEmbedding!);
+        Assert.Null(items[0].SparseEmbedding);
 
         items = await ctx.Items.OrderBy(x => x.Embedding!.MaxInnerProduct(embedding)).Take(5).ToListAsync();
         Assert.Equal(new int[] { 2, 3, 1 }, items.Select(v => v.Id).ToArray());
@@ -155,9 +158,9 @@ public class EntityFrameworkCoreTests
     }
 
     [Fact]
-    public async Task NotAutoLoaded()
+    public async Task AutoLoaded()
     {
-        await using var ctx = new NotAutoLoadedItemContext();
+        await using var ctx = new AutoLoadedItemContext();
 
         ctx.Database.ExecuteSql($"DROP TABLE IF EXISTS efcore_items");
         var databaseCreator = ctx.GetService<IRelationalDatabaseCreator>();
@@ -172,10 +175,10 @@ public class EntityFrameworkCoreTests
         var embedding = new Vector(new float[] { 1, 1, 1 });
         var items = await ctx.Items.OrderBy(x => x.Embedding!.L2Distance(embedding)).Take(5).ToListAsync();
         Assert.Equal(new int[] { 1, 3, 2 }, items.Select(v => v.Id).ToArray());
-        Assert.Null(items[0].Embedding);
-        Assert.Null(items[0].HalfEmbedding);
+        Assert.Equal(new float[] { 1, 1, 1 }, items[0].Embedding!.ToArray());
+        Assert.Equal(new Half[] { (Half)1, (Half)1, (Half)1 }, items[0].HalfEmbedding!.ToArray());
         Assert.Equal(new BitArray(new bool[] { false, false, false }), items[0].BinaryEmbedding!);
-        Assert.Null(items[0].SparseEmbedding);
+        Assert.Equal(new float[] { 1, 1, 1 }, items[0].SparseEmbedding!.ToArray());
     }
 
     [Theory]

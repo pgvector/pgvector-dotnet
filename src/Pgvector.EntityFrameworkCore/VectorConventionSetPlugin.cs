@@ -24,6 +24,8 @@ public class VectorConventionSetPlugin : IConventionSetPlugin
         public VectorAutoLoadConvention(ProviderConventionSetBuilderDependencies dependencies) : base(dependencies) { }
 
         protected override bool ShouldBeAutoLoaded(IConventionProperty property)
-            => true;
+            => property.ClrType != typeof(Vector)
+                && property.ClrType != typeof(HalfVector)
+                && property.ClrType != typeof(SparseVector);
     }
 }

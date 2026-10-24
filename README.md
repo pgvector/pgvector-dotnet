@@ -265,10 +265,7 @@ var items = await ctx.Items
 
 foreach (Item item in items)
 {
-    if (item.Embedding != null)
-    {
-        Console.WriteLine(item.Embedding);
-    }
+    Console.WriteLine(item.Id);
 }
 ```
 
