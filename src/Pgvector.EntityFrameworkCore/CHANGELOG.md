@@ -1,3 +1,8 @@
+## 0.4.0 (unreleased)
+
+- Added support for configuring autoloading for `Vector`, `HalfVector`, and `SparseVector` properties
+- Dropped support for Npgsql.EntityFrameworkCore.PostgreSQL < 11
+
 ## 0.3.0 (2025-12-20)
 
 - Improved type registration
