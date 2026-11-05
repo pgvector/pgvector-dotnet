@@ -41,7 +41,7 @@ class Program
             await cmd.ExecuteNonQueryAsync();
         }
 
-        await using (var cmd = new NpgsqlCommand("CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding bit(1536))", conn))
+        await using (var cmd = new NpgsqlCommand("CREATE TABLE documents (id bigserial PRIMARY KEY, content text, embedding bit(2048))", conn))
         {
             await cmd.ExecuteNonQueryAsync();
         }
@@ -86,7 +86,7 @@ class Program
         var data = new
         {
             texts = texts,
-            model = "embed-v4.0",
+            model = "embed-v5.0-pro",
             input_type = inputType,
             embedding_types = new string[] { "ubinary" }
         };
