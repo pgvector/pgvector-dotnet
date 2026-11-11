@@ -22,7 +22,7 @@
     <None Include="..\..\icon.png" Pack="true" PackagePath="\" />
     <None Include="build\**\*" Pack="true" PackagePath="build" />
     <ProjectReference Include="..\Pgvector\Pgvector.csproj" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="11.0.0-rc.2" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="11.0.0-rc.3" />
   </ItemGroup>
 
 </Project>
