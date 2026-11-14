@@ -40,6 +40,21 @@ public class SparseVectorTests
         Assert.Equal(new float[] { 1, 2, 3 }, v.Values.ToArray());
     }
 
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(6)]
+    public void DictionaryConstructorRejectsIndicesOutsideDimensions(int index)
+    {
+        var dictionary = new Dictionary<int, float> { [index] = 1 };
+        Assert.Throws<ArgumentOutOfRangeException>(() => new SparseVector(dictionary, 6));
+    }
+
+    [Fact]
+    public void DictionaryConstructorRejectsNegativeDimensions()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => new SparseVector(new Dictionary<int, float>(), -1));
+    }
+
     [Fact]
     public void Equal()
     {

@@ -55,6 +55,11 @@ public class SparseVector
 
     public SparseVector(IDictionary<int, float> dictionary, int dimensions)
     {
+        if (dimensions < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(dimensions));
+        }
+
         var count = 0;
         var capacity = dictionary.Count;
         var indices = new int[capacity];
@@ -64,6 +69,12 @@ public class SparseVector
         {
             if (e.Value != 0)
             {
+                if (e.Key < 0 || e.Key >= dimensions)
+                {
+                    throw new ArgumentOutOfRangeException(
+                        nameof(dictionary), e.Key, "Dictionary keys must be within the vector dimensions.");
+                }
+
                 indices[count] = e.Key;
                 values[count] = e.Value;
                 count++;
