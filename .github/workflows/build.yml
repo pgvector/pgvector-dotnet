@@ -8,7 +8,6 @@ jobs:
       - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 11.0.x
-          dotnet-quality: preview
       - uses: ankane/setup-postgres@v1
         with:
           database: pgvector_dotnet_test
