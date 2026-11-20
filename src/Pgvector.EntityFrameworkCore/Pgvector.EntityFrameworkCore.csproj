@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>Pgvector.EntityFrameworkCore</PackageId>
-    <Version>0.3.0</Version>
+    <Version>0.4.0</Version>
     <Authors>ankane</Authors>
     <Description>pgvector support for Entity Framework Core</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -22,7 +22,7 @@
     <None Include="..\..\icon.png" Pack="true" PackagePath="\" />
     <None Include="build\**\*" Pack="true" PackagePath="build" />
     <ProjectReference Include="..\Pgvector\Pgvector.csproj" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="11.0.0-rc.3" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="11.0.0" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-## 0.4.0 (unreleased)
+## 0.4.0 (2026-11-20)
 
 - Changed `Vector`, `HalfVector`, and `SparseVector` properties to no longer load by default (matching EF Core)
 - Dropped support for Npgsql.EntityFrameworkCore.PostgreSQL < 11
