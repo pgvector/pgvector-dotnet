@@ -194,7 +194,7 @@ Run
 dotnet add package Pgvector.EntityFrameworkCore
 ```
 
-The latest version works with Entity Framework Core 9 and 10. For Entity Framework Core 8, use version 0.2.2 and [this readme](https://github.com/pgvector/pgvector-dotnet/blob/efcore-v0.2.2/README.md#entity-framework-core).
+The latest version works with Entity Framework Core 9, 10, and 11. For Entity Framework Core 8, use version 0.2.2 and [this readme](https://github.com/pgvector/pgvector-dotnet/blob/efcore-v0.2.2/README.md#entity-framework-core).
 
 Import the library
 
